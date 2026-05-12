@@ -12,6 +12,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Spread — CFB26 Playbook</title>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.165.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.165.0/examples/jsm/"
+      }
+    }
+  </script>
   <script src="assets/scripts/theme.js?v=1"></script>
   <link rel="stylesheet" href="assets/styles/theme.css?v=1">
   <link rel="stylesheet" href="assets/styles/site-nav.css?v=1">
@@ -381,7 +390,30 @@ details > :not(summary) {
     min-width: 520px;
   }
 }
-  </style>
+
+.formation-canvas-wrap {
+  border: 1px solid var(--cp-border);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  margin: 1rem 0;
+  background: #1a3d18;
+}
+.formation-webgl-canvas {
+  width: 100%;
+  height: 320px;
+  display: none;
+  cursor: grab;
+}
+.formation-webgl-canvas:active {
+  cursor: grabbing;
+}
+.formation-fallback {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+</style>
 </head>
 <body data-nav-root="." class="scheme-spread">
   <main class="wrap">
@@ -487,11 +519,247 @@ details > :not(summary) {
 <li>⚡ Throw quick, high-efficiency passes</li>
 <li>🧩 Use RPOs and tempo to keep the defense in bad looks</li>
 </ul>
-<pre class="code-block text"><code>      WR                      OL                       WR
-               SB                               BS
-        (Slot Receiver)                   (Big Slot/TE)
-                          QB (Gun)
-                             RB</code></pre>
+
+<div class="formation-canvas-wrap" data-formation-diagram="spread">
+  <canvas class="formation-webgl-canvas" aria-label="Spread formation diagram"></canvas>
+  <pre class="code-block text formation-fallback"><code>      WR                      OL                       WR
+                SB                               BS
+         (Slot Receiver)                   (Big Slot/TE)
+                           QB (Gun)
+                              RB</code></pre>
+</div>
+<script type="module">
+  import * as THREE from 'three';
+  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+  const formationRoot = document.querySelector('[data-formation-diagram="spread"]');
+
+  if (formationRoot) {
+    const canvas = formationRoot.querySelector('.formation-webgl-canvas');
+    const fallback = formationRoot.querySelector('.formation-fallback');
+    const players = [{"label": "WR", "role": "WR", "x": -40, "y": 0}, {"label": "LT", "role": "OL", "x": -8, "y": 0}, {"label": "LG", "role": "OL", "x": -4, "y": 0}, {"label": "C", "role": "OL", "x": 0, "y": 0}, {"label": "RG", "role": "OL", "x": 4, "y": 0}, {"label": "RT", "role": "OL", "x": 8, "y": 0}, {"label": "WR", "role": "WR", "x": 40, "y": 0}, {"label": "SB", "role": "SB", "x": -20, "y": -3}, {"label": "BS", "role": "BS", "x": 20, "y": -3}, {"label": "QB", "role": "QB", "x": 0, "y": -7}, {"label": "RB", "role": "RB", "x": 0, "y": -12}];
+    const raycaster = new THREE.Raycaster();
+    const pointer = new THREE.Vector2(2, 2);
+    let hoveredMarker = null;
+
+    const cssColor = (name, fallbackColor) => {
+      const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+      return new THREE.Color(value || fallbackColor);
+    };
+
+    const roleColors = {
+      OL: cssColor('--cp-border-strong', '#a3a3a3'),
+      QB: new THREE.Color('#f4c542'),
+      WR: new THREE.Color('#4da6ff'),
+      RB: new THREE.Color('#ff6b6b'),
+      TE: new THREE.Color('#ff9f43'),
+      SB: new THREE.Color('#53d8fb'),
+      BS: new THREE.Color('#ff9f43')
+    };
+
+    const createLabelSprite = (text) => {
+      const labelCanvas = document.createElement('canvas');
+      labelCanvas.width = 256;
+      labelCanvas.height = 96;
+      const context = labelCanvas.getContext('2d');
+      const roundedRect = (x, y, width, height, radius) => {
+        if (typeof context.roundRect === 'function') {
+          context.roundRect(x, y, width, height, radius);
+          return;
+        }
+        context.moveTo(x + radius, y);
+        context.lineTo(x + width - radius, y);
+        context.quadraticCurveTo(x + width, y, x + width, y + radius);
+        context.lineTo(x + width, y + height - radius);
+        context.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+        context.lineTo(x + radius, y + height);
+        context.quadraticCurveTo(x, y + height, x, y + height - radius);
+        context.lineTo(x, y + radius);
+        context.quadraticCurveTo(x, y, x + radius, y);
+      };
+      context.clearRect(0, 0, labelCanvas.width, labelCanvas.height);
+      context.fillStyle = 'rgba(12, 24, 18, 0.78)';
+      context.beginPath();
+      roundedRect(14, 18, 228, 54, 18);
+      context.fill();
+      context.fillStyle = '#f7f7f7';
+      context.font = '600 30px "Segoe UI", sans-serif';
+      context.textAlign = 'center';
+      context.textBaseline = 'middle';
+      context.fillText(text, labelCanvas.width / 2, labelCanvas.height / 2 + 1);
+      const texture = new THREE.CanvasTexture(labelCanvas);
+      texture.colorSpace = THREE.SRGBColorSpace;
+      const material = new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false });
+      const sprite = new THREE.Sprite(material);
+      sprite.scale.set(11, 4.125, 1);
+      return sprite;
+    };
+
+    const initFormation = () => {
+      if (!window.WebGLRenderingContext || !canvas) {
+        return;
+      }
+
+      let renderer;
+      try {
+        renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+      } catch (error) {
+        return;
+      }
+
+      canvas.style.display = 'block';
+      if (fallback) {
+        fallback.hidden = true;
+        fallback.style.display = 'none';
+      }
+
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setClearColor(0x000000, 0);
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+      const scene = new THREE.Scene();
+      scene.fog = new THREE.Fog(0x183117, 60, 140);
+
+      const camera = new THREE.OrthographicCamera(-40, 40, 24, -24, 0.1, 200);
+      camera.position.set(0, 56, 20);
+      camera.lookAt(0, 0, -4);
+
+      const controls = new OrbitControls(camera, canvas);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.06;
+      controls.minZoom = 0.85;
+      controls.maxZoom = 1.9;
+      controls.enablePan = true;
+      controls.target.set(0, 0, -4);
+      controls.minPolarAngle = Math.PI / 3.9;
+      controls.maxPolarAngle = Math.PI / 2.25;
+      controls.update();
+
+      const ambientLight = new THREE.AmbientLight(0xffffff, 1.15);
+      const sunLight = new THREE.DirectionalLight(0xffffff, 1.05);
+      sunLight.position.set(18, 40, 12);
+      scene.add(ambientLight, sunLight);
+
+      const field = new THREE.Mesh(
+        new THREE.PlaneGeometry(96, 44),
+        new THREE.MeshPhongMaterial({ color: 0x2d5a27, shininess: 18 })
+      );
+      field.rotation.x = -Math.PI / 2;
+      scene.add(field);
+
+      const stripeMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.92 });
+      [-14, 0, 14].forEach((z) => {
+        const yardLine = new THREE.Mesh(new THREE.PlaneGeometry(92, 0.36), stripeMaterial.clone());
+        yardLine.rotation.x = -Math.PI / 2;
+        yardLine.position.set(0, 0.02, z);
+        scene.add(yardLine);
+      });
+
+      [-16, 16].forEach((x) => {
+        for (let z = -18; z <= 18; z += 6) {
+          const hash = new THREE.Mesh(new THREE.PlaneGeometry(1.8, 0.28), stripeMaterial.clone());
+          hash.rotation.x = -Math.PI / 2;
+          hash.position.set(x, 0.025, z);
+          scene.add(hash);
+        }
+      });
+
+      const markers = [];
+      const markerGeometry = new THREE.CylinderGeometry(1.4, 1.4, 0.8, 28);
+
+      players.forEach((player, index) => {
+        const color = roleColors[player.role] || new THREE.Color('#f7f7f7');
+        const material = new THREE.MeshStandardMaterial({
+          color,
+          emissive: color.clone(),
+          emissiveIntensity: 0.38,
+          metalness: 0.08,
+          roughness: 0.34
+        });
+        const mesh = new THREE.Mesh(markerGeometry, material);
+        mesh.userData.playerIndex = index;
+
+        const markerGroup = new THREE.Group();
+        markerGroup.position.set(player.x, 0.9, player.y);
+        markerGroup.add(mesh);
+
+        const label = createLabelSprite(player.label);
+        label.position.set(0, 2.85, player.labelOffset || 0);
+        markerGroup.add(label);
+        scene.add(markerGroup);
+
+        markers.push({ group: markerGroup, mesh, material, label, baseY: 0.9, phase: index * 0.55 });
+      });
+
+      const setHoveredMarker = (target) => {
+        hoveredMarker = target;
+        markers.forEach((entry) => {
+          const active = entry === hoveredMarker;
+          entry.material.emissiveIntensity = active ? 1 : 0.38;
+          entry.label.material.opacity = active ? 1 : 0.92;
+        });
+      };
+
+      const updatePointer = (event) => {
+        const rect = canvas.getBoundingClientRect();
+        pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+      };
+
+      const clearPointer = () => {
+        pointer.set(2, 2);
+        setHoveredMarker(null);
+      };
+
+      canvas.addEventListener('pointermove', updatePointer);
+      canvas.addEventListener('pointerleave', clearPointer);
+
+      const resize = () => {
+        const width = formationRoot.clientWidth;
+        const height = 320;
+        const aspect = width / height;
+        const frustum = 26;
+        camera.left = -frustum * aspect;
+        camera.right = frustum * aspect;
+        camera.top = frustum;
+        camera.bottom = -frustum;
+        camera.updateProjectionMatrix();
+        renderer.setSize(width, height, false);
+      };
+
+      resize();
+      if (window.ResizeObserver) {
+        new ResizeObserver(resize).observe(formationRoot);
+      } else {
+        window.addEventListener('resize', resize);
+      }
+
+      const clock = new THREE.Clock();
+
+      const animate = () => {
+        const elapsed = clock.getElapsedTime();
+        raycaster.setFromCamera(pointer, camera);
+        const hits = raycaster.intersectObjects(markers.map((entry) => entry.mesh), false);
+        setHoveredMarker(hits.length ? markers[hits[0].object.userData.playerIndex] : null);
+
+        markers.forEach((entry, index) => {
+          const bob = Math.sin(elapsed * 1.65 + entry.phase) * 0.12;
+          const pulse = 1 + Math.sin(elapsed * 2.3 + index) * 0.035 + (entry === hoveredMarker ? 0.12 : 0);
+          entry.group.position.y = entry.baseY + bob;
+          entry.mesh.scale.setScalar(pulse);
+        });
+
+        controls.update();
+        renderer.render(scene, camera);
+        requestAnimationFrame(animate);
+      };
+
+      animate();
+    };
+
+    initFormation();
+  }
+</script>
 <p>Different teams “spread” differently. In games, the most common flavors are:</p>
 <ul>
 <li><strong>Spread-to-run</strong> (zone read, QB run, RPO)</li>

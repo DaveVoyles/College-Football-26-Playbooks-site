@@ -14,8 +14,6 @@ const PRECACHE_PATHS = [
   "./west-coast.html",
   "./option.html",
   "./run-and-shoot.html",
-  "./visualizations/webgl-scheme-selector.html",
-  "./visualizations/webgl-scheme-pillars.html",
   "./visualizations/webgl-formations.html",
   "./visualizations/webgl-route-tree.html",
   "./visualizations/webgl-coverage.html",

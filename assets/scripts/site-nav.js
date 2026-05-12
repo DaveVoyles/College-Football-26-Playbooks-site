@@ -25,8 +25,6 @@
     {
       label: '3D Visualizations',
       links: [
-        { href: `${root}/visualizations/webgl-scheme-selector.html`, label: 'Scheme Selector' },
-        { href: `${root}/visualizations/webgl-scheme-pillars.html`, label: 'Scheme Pillars' },
         { href: `${root}/visualizations/webgl-formations.html`, label: 'Formations' },
         { href: `${root}/visualizations/webgl-route-tree.html`, label: 'Route Tree' },
         { href: `${root}/visualizations/webgl-coverage.html`, label: 'Coverage Shells' },
