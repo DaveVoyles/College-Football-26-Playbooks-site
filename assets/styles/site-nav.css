@@ -152,7 +152,7 @@
 }
 
 /* ---- Desktop: show links inline, hide hamburger ---- */
-@media (min-width: 768px) {
+@media (min-width: 1600px) {
   .site-nav__toggle {
     display: none;
   }
