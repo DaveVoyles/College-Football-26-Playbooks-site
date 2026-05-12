@@ -267,28 +267,28 @@
           <p class="hint">Rotate, zoom, and click defenders to inspect assignments. Man matchups draw live to the nearest receiver.</p>
         </div>
         <label>
-          <span class="eyebrow">Coverage</span>
+          <span class="eyebrow" style="margin-bottom: 0.5rem; display: block;">Coverage</span>
           <select id="coverage-select"></select>
         </label>
         <div class="legend">
-          <div class="legend-item"><span class="swatch" style="background: var(--cp-danger);"></span>Defensive line / pressure</div>
-          <div class="legend-item"><span class="swatch" style="background: var(--cp-warning);"></span>Linebackers / safeties</div>
-          <div class="legend-item"><span class="swatch" style="background: var(--cp-link);"></span>Corners / nickel</div>
-          <div class="legend-item"><span class="swatch" style="background: var(--cp-accent);"></span>Selected defender</div>
+          <div class="legend-item"><span class="swatch" style="background: var(--cp-danger);"></span>🔴 Defensive line / pressure</div>
+          <div class="legend-item"><span class="swatch" style="background: var(--cp-warning);"></span>🟡 Linebackers / safeties</div>
+          <div class="legend-item"><span class="swatch" style="background: var(--cp-link);"></span>🔵 Corners / nickel</div>
+          <div class="legend-item"><span class="swatch" style="background: #00e5ff;"></span>⚡ Selected defender</div>
         </div>
       </section>
       <aside class="panel" id="info-panel">
         <span class="pill" id="coverage-pill">Coverage</span>
         <h2 id="coverage-name">Loading…</h2>
         <div class="meta-list">
-          <div class="meta-card"><strong>Description</strong><span id="coverage-desc"></span></div>
-          <div class="meta-card"><strong>Weakness</strong><span id="coverage-weakness"></span></div>
-          <div class="meta-card"><strong>Beaters</strong><span id="coverage-beaters"></span></div>
+          <div class="meta-card"><strong>📋 Description</strong><span id="coverage-desc"></span></div>
+          <div class="meta-card"><strong>❌ Weakness</strong><span id="coverage-weakness"></span></div>
+          <div class="meta-card"><strong>🎯 Beaters</strong><span id="coverage-beaters"></span></div>
         </div>
         <div class="divider"></div>
         <div class="defender-details">
           <div class="detail-card">
-            <strong id="defender-role">Click a defender</strong>
+            <strong id="defender-role">👆 Click a defender</strong>
             <span id="defender-assignment" class="hint">Assignments update here when you select a sphere on the field.</span>
           </div>
         </div>
@@ -515,7 +515,7 @@
 
     const defenderSlots = Array.from({ length: 11 }, (_, index) => {
       const mesh = new THREE.Mesh(
-        new THREE.SphereGeometry(0.38, 32, 32),
+        new THREE.SphereGeometry(0.46, 32, 32),
         new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x000000, roughness: 0.24, metalness: 0.1 }),
       );
       mesh.castShadow = false;
@@ -596,12 +596,22 @@
     function animate() {
       const delta = clock.getDelta();
       const pulse = 0.5 + Math.sin(clock.elapsedTime * 1.8) * 0.15;
+      const selectedColor = 0x00e5ff;
       defenderSlots.forEach((mesh) => {
         if (!mesh.visible) return;
         mesh.position.lerp(mesh.userData.target, Math.min(1, delta * 5.2));
-        mesh.material.emissive.setHex(mesh.userData.slot === selectedSlot ? theme.accentNumber : mesh.userData.defaultColor);
-        mesh.material.emissiveIntensity = mesh.userData.slot === selectedSlot ? 0.48 + pulse : 0.08;
-        mesh.scale.setScalar(mesh.userData.slot === selectedSlot ? 1.14 : 1);
+        const isSelected = mesh.userData.slot === selectedSlot;
+        if (isSelected) {
+          mesh.material.color.setHex(selectedColor);
+          mesh.material.emissive.setHex(selectedColor);
+          mesh.material.emissiveIntensity = 0.48 + pulse;
+          mesh.scale.setScalar(1.18);
+        } else {
+          mesh.material.color.setHex(mesh.userData.defaultColor);
+          mesh.material.emissive.setHex(mesh.userData.defaultColor);
+          mesh.material.emissiveIntensity = 0.08;
+          mesh.scale.setScalar(1);
+        }
       });
 
       zoneSlots.forEach((zone) => {
@@ -625,7 +635,7 @@
       const assignments = assignReceivers(coverage.defenders.filter((defender) => defender.man));
       select.value = name;
 
-      coverageNameEl.textContent = name;
+      coverageNameEl.textContent = '🛡️ ' + name;
       coverageDescEl.textContent = coverage.desc;
       coverageWeaknessEl.textContent = coverage.weakness;
       coverageBeatersEl.textContent = coverage.beaters;
@@ -720,12 +730,12 @@
 
     function refreshInfo() {
       if (selectedSlot === null || !defenderSlots[selectedSlot]?.visible) {
-        defenderRoleEl.textContent = 'Click a defender';
+        defenderRoleEl.textContent = '👆 Click a defender';
         defenderAssignmentEl.textContent = 'Assignments update here when you select a sphere on the field.';
         return;
       }
       const defender = defenderSlots[selectedSlot].userData.defender;
-      defenderRoleEl.textContent = `${defender.role} assignment`;
+      defenderRoleEl.textContent = `🛡️ ${defender.role} assignment`;
       defenderAssignmentEl.textContent = defenderSlots[selectedSlot].userData.assignment;
     }
 
@@ -740,7 +750,7 @@
         if (!receiver) return;
         const line = manLines[lineIndex++];
         line.visible = true;
-        line.material.color.set(mesh.userData.slot === selectedSlot ? theme.accentNumber : defender.color);
+        line.material.color.set(mesh.userData.slot === selectedSlot ? 0x00e5ff : defender.color);
         const points = [mesh.position.clone(), receiver.position.clone()];
         line.geometry.dispose();
         line.geometry = new THREE.BufferGeometry().setFromPoints(points);
