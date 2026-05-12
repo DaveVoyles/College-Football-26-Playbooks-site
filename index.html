@@ -18,7 +18,7 @@
   <style>
     :root {
       --page-gutter: clamp(1rem, 2vw, 1.5rem);
-      --section-gap: clamp(1.25rem, 2vw, 2rem);
+      --section-gap: clamp(1.5rem, 3vw, 2.5rem);
     }
 
     body {
@@ -26,35 +26,24 @@
       overflow-x: hidden;
     }
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background:
-        radial-gradient(circle at 20% 20%, rgba(105, 168, 255, 0.16), transparent 28%),
-        radial-gradient(circle at 80% 0%, rgba(111, 231, 188, 0.12), transparent 22%),
-        radial-gradient(circle at 50% 100%, rgba(248, 198, 91, 0.08), transparent 30%);
-      z-index: -2;
-    }
-
     main {
-      width: min(calc(100% - 2 * var(--page-gutter)), var(--cp-max-width));
+      width: min(calc(100% - 2 * var(--page-gutter)), 1100px);
       margin: 0 auto;
       padding: 2rem 0 4rem;
       display: grid;
       gap: var(--section-gap);
     }
 
+    /* ---------- HERO ---------- */
     .hero {
       position: relative;
       overflow: hidden;
-      min-height: clamp(420px, 58vw, 580px);
+      min-height: clamp(380px, 50vw, 520px);
       padding: clamp(1.5rem, 4vw, 3rem);
       display: flex;
       align-items: flex-end;
       border: 1px solid var(--cp-border);
-      border-radius: var(--cp-radius-lg);
+      border-radius: 1rem;
       background:
         linear-gradient(135deg, rgba(8, 16, 31, 0.96), rgba(9, 18, 33, 0.82)),
         linear-gradient(135deg, rgba(255, 255, 255, 0.06), transparent 55%);
@@ -70,8 +59,7 @@
       z-index: 1;
     }
 
-    .hero__canvas,
-    .hero__fallback {
+    .hero__canvas, .hero__fallback {
       position: absolute;
       inset: 0;
       z-index: 0;
@@ -101,532 +89,284 @@
       border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.06);
-      color: var(--cp-accent-strong);
+      color: #a5c4e8;
       font-size: 0.9rem;
       font-weight: 700;
-      letter-spacing: 0.02em;
     }
 
-    h1,
-    h2,
-    h3,
-    p {
-      margin: 0;
-    }
+    h1, h2, h3, p { margin: 0; }
 
     .hero h1 {
-      font-size: clamp(2.3rem, 5vw, 4.3rem);
-      line-height: 0.96;
-      letter-spacing: -0.04em;
+      font-size: clamp(2rem, 5vw, 3.8rem);
+      line-height: 0.98;
+      letter-spacing: -0.03em;
+      color: #fff;
     }
 
     .hero__subtitle {
-      font-size: clamp(1rem, 2vw, 1.25rem);
-      color: var(--cp-text-muted);
-      max-width: 55ch;
-    }
-
-    .stats-row {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 0.85rem;
-    }
-
-    .stat-pill {
-      padding: 1rem 1.05rem;
-      border-radius: var(--cp-radius-md);
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-    }
-
-    .stat-pill strong {
-      display: block;
-      font-size: 1.2rem;
-      margin-bottom: 0.15rem;
-    }
-
-    .hero__actions,
-    .quick-links,
-    .card-grid,
-    .search-grid,
-    .viz-grid {
-      display: grid;
-      gap: 1rem;
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: rgba(255, 255, 255, 0.7);
+      max-width: 50ch;
     }
 
     .hero__actions {
-      grid-template-columns: repeat(2, minmax(0, 220px));
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
     }
 
-    .cta,
-    .ghost-cta,
-    .card,
-    .search-card,
-    .quick-link {
-      text-decoration: none;
-    }
-
-    .cta,
-    .ghost-cta {
+    .cta, .ghost-cta {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 48px;
-      padding: 0.9rem 1.2rem;
+      min-height: 46px;
+      padding: 0.8rem 1.4rem;
       border-radius: 999px;
       font-weight: 700;
-      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease;
+      text-decoration: none;
+      transition: transform 180ms ease, box-shadow 180ms ease;
     }
 
     .cta {
       background: linear-gradient(135deg, var(--cp-accent), #80c1ff);
       color: #04111f;
-      box-shadow: 0 12px 25px rgba(105, 168, 255, 0.25);
+      box-shadow: 0 8px 20px rgba(105, 168, 255, 0.22);
     }
 
     .ghost-cta {
-      border: 1px solid var(--cp-border);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       background: rgba(255, 255, 255, 0.06);
-      color: var(--cp-text);
+      color: #fff;
     }
 
-    .cta:hover,
-    .cta:focus-visible,
-    .ghost-cta:hover,
-    .ghost-cta:focus-visible,
-    .card:hover,
-    .card:focus-visible,
-    .search-card:hover,
-    .search-card:focus-visible,
-    .quick-link:hover,
-    .quick-link:focus-visible {
-      transform: translateY(-4px);
-    }
+    .cta:hover, .ghost-cta:hover { transform: translateY(-2px); }
 
+    /* ---------- SECTIONS ---------- */
     .section {
       display: grid;
       gap: 1rem;
     }
 
-    .section__heading {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: end;
-      justify-content: space-between;
-      gap: 0.8rem;
-    }
+    .section__heading { margin-bottom: 0.25rem; }
+    .section__heading h2 { font-size: 1.5rem; }
+    .section__heading p { color: var(--cp-text-muted); max-width: 60ch; margin-top: 0.25rem; }
 
-    .section__heading p {
-      color: var(--cp-text-muted);
-      max-width: 60ch;
-    }
-
-    .panel {
-      padding: clamp(1rem, 3vw, 1.4rem);
-      border-radius: var(--cp-radius-lg);
-      border: 1px solid var(--cp-border);
-      background: linear-gradient(180deg, var(--cp-surface-strong), var(--cp-surface));
-      box-shadow: var(--cp-shadow);
-    }
-
-    .search-shell {
+    /* ---------- CARDS ---------- */
+    .card-grid {
       display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 1rem;
     }
 
-    .search-label {
+    .card {
       display: grid;
-      gap: 0.55rem;
-      font-weight: 700;
-    }
-
-    .search-label span {
-      color: var(--cp-text-muted);
-      font-size: 0.95rem;
-      font-weight: 500;
-    }
-
-    .search-label input {
-      width: 100%;
-      padding: 1rem 1.1rem;
-      border-radius: 16px;
-      border: 1px solid var(--cp-border);
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--cp-text);
-      outline: none;
-    }
-
-    .search-label input:focus {
-      border-color: var(--cp-accent);
-      box-shadow: 0 0 0 4px rgba(105, 168, 255, 0.16);
-    }
-
-    .search-grid,
-    .card-grid,
-    .quick-links,
-    .viz-grid {
-      grid-template-columns: repeat(12, minmax(0, 1fr));
-    }
-
-    .search-card,
-    .card,
-    .quick-link,
-    .viz-card {
-      grid-column: span 4;
-      position: relative;
-      display: grid;
-      gap: 0.75rem;
+      gap: 0.5rem;
       padding: 1.15rem;
-      border-radius: var(--cp-radius-md);
+      border-radius: 0.75rem;
       border: 1px solid var(--cp-border);
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.03));
-      box-shadow: 0 16px 30px rgba(0, 0, 0, 0.2);
-      transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+      background: var(--cp-surface);
+      text-decoration: none;
+      color: var(--cp-text);
+      transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
     }
 
-    .search-card:hover,
-    .search-card:focus-visible,
-    .card:hover,
-    .card:focus-visible,
-    .quick-link:hover,
-    .quick-link:focus-visible,
-    .viz-card:hover,
-    .viz-card:focus-visible {
-      border-color: rgba(105, 168, 255, 0.45);
-      box-shadow: 0 20px 35px rgba(0, 0, 0, 0.28);
-      background: linear-gradient(180deg, rgba(105, 168, 255, 0.12), rgba(255, 255, 255, 0.03));
+    .card:hover, .card:focus-visible {
+      transform: translateY(-3px);
+      border-color: var(--cp-accent);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
     }
 
-    .card__topline,
-    .search-card__topline,
-    .quick-link__topline {
+    .card__topline {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 0.75rem;
-      color: var(--cp-text-muted);
-      font-size: 0.95rem;
+      gap: 0.5rem;
     }
+
+    .card__emoji { font-size: 1.3rem; }
 
     .badge {
-      width: fit-content;
-      padding: 0.35rem 0.65rem;
+      padding: 0.25rem 0.55rem;
       border-radius: 999px;
       background: var(--cp-accent-soft);
-      color: var(--cp-accent-strong);
+      color: var(--cp-accent);
       font-weight: 700;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
     }
 
-    .card h3,
-    .search-card h3,
-    .quick-link h3,
-    .viz-card h3 {
-      font-size: 1.2rem;
-    }
+    .card h3 { font-size: 1.1rem; }
+    .card p { color: var(--cp-text-muted); font-size: 0.92rem; }
 
-    .card p,
-    .search-card p,
-    .quick-link p,
-    .viz-card p,
-    .empty-state {
-      color: var(--cp-text-muted);
-    }
-
-    .card__footer,
-    .search-card__footer,
-    .quick-link__footer,
-    .viz-card__footer {
+    .card__footer {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 0.75rem;
       margin-top: auto;
-      color: var(--cp-accent-strong);
+      color: var(--cp-accent);
       font-weight: 700;
+      font-size: 0.9rem;
     }
 
-    .quick-link {
-      grid-column: span 3;
-    }
-
-    .viz-card {
-      text-decoration: none;
-    }
-
-    .muted-caption {
-      font-size: 0.92rem;
-      color: var(--cp-text-muted);
-    }
-
-    .empty-state {
-      padding: 1rem;
-      border-radius: var(--cp-radius-md);
-      border: 1px dashed var(--cp-border);
-      background: rgba(255, 255, 255, 0.03);
-    }
-
+    /* ---------- FOOTER ---------- */
     footer {
-      width: min(calc(100% - 2 * var(--page-gutter)), var(--cp-max-width));
+      width: min(calc(100% - 2 * var(--page-gutter)), 1100px);
       margin: 0 auto 2rem;
       color: var(--cp-text-muted);
       text-align: center;
+      font-size: 0.9rem;
     }
 
-    @media (max-width: 980px) {
-      .search-card,
-      .card,
-      .viz-card {
-        grid-column: span 6;
-      }
-
-      .quick-link {
-        grid-column: span 6;
-      }
-    }
-
-    @media (max-width: 720px) {
-      main {
-        padding-top: 1.25rem;
-      }
-
-      .hero {
-        min-height: 520px;
-        align-items: stretch;
-      }
-
-      .hero__actions,
-      .stats-row {
-        grid-template-columns: 1fr;
-      }
-
-      .search-card,
-      .card,
-      .quick-link,
-      .viz-card {
-        grid-column: span 12;
-      }
+    @media (max-width: 600px) {
+      .card-grid { grid-template-columns: 1fr; }
+      .hero { min-height: 400px; align-items: stretch; }
     }
   </style>
 </head>
 <body data-nav-root=".">
   <main>
+
+    <!-- Hero -->
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero__fallback" aria-hidden="true"></div>
       <canvas class="hero__canvas" aria-hidden="true"></canvas>
       <div class="hero__content">
         <div class="eyebrow">Film-room inspired · WebGL backed</div>
-        <div>
-          <h1 id="hero-title">🏈 CFB26 Playbook Library</h1>
-          <p class="hero__subtitle">Interactive Scheme Guides &amp; 3D Visualizations</p>
-        </div>
-        <div class="stats-row" aria-label="Site highlights">
-          <div class="stat-pill"><strong>7 Schemes</strong><span>Core offensive families</span></div>
-          <div class="stat-pill"><strong>80+ Teams</strong><span>Reference fits and identities</span></div>
-          <div class="stat-pill"><strong>6 WebGL Visualizations</strong><span>Explore structure in 3D</span></div>
-        </div>
+        <h1 id="hero-title">🏈 CFB26 Playbook Library</h1>
+        <p class="hero__subtitle">Interactive scheme guides, 3D visualizations, and team-fit tools for College Football 26.</p>
         <div class="hero__actions">
-          <a class="cta" href="#search">Explore library</a>
-          <a class="ghost-cta" href="visualizations/webgl-scheme-selector.html">Launch 3D selector</a>
+          <a class="cta" href="#schemes">Browse Schemes</a>
+          <a class="ghost-cta" href="visualizations/webgl-scheme-selector.html">Launch 3D Selector</a>
         </div>
       </div>
     </section>
 
-    <section class="section panel" id="search" aria-labelledby="search-title">
-      <div class="section__heading">
-        <div>
-          <h2 id="search-title">Search the library</h2>
-          <p>Find schemes, teams, route tools, and interactive visualizations from one place.</p>
-        </div>
-        <div class="muted-caption" id="search-count" aria-live="polite"></div>
-      </div>
-      <div class="search-shell">
-        <label class="search-label" for="site-search">
-          Find schemes, teams, routes...
-          <span>Matches title, description, and keyword tags.</span>
-          <input id="site-search" type="search" placeholder="Search Air Raid, route tree, team map, call sheet..." autocomplete="off">
-        </label>
-        <div class="search-grid" id="search-results"></div>
-      </div>
-    </section>
-
+    <!-- Scheme Guides -->
     <section class="section" id="schemes" aria-labelledby="schemes-title">
       <div class="section__heading">
-        <div>
-          <h2 id="schemes-title">Scheme families</h2>
-          <p>Quick-hit overviews for the major offensive structures you see across the CFB26 library.</p>
-        </div>
+        <h2 id="schemes-title">Scheme Guides</h2>
+        <p>Detailed breakdowns for each major offensive system — formations, personnel, play concepts, and team fits.</p>
       </div>
-      <div class="card-grid" id="scheme-grid"></div>
+      <div class="card-grid">
+        <a class="card" href="air-raid.html">
+          <div class="card__topline"><span class="card__emoji">🎯</span><span class="badge">10 / 11</span></div>
+          <h3>Air Raid</h3>
+          <p>Spacing + quick game + repeatable reads</p>
+          <div class="card__footer"><span>Open guide</span><span>→</span></div>
+        </a>
+        <a class="card" href="pro-style.html">
+          <div class="card__topline"><span class="card__emoji">🧱</span><span class="badge">12 / 21</span></div>
+          <h3>Pro Style</h3>
+          <p>Run game sets up play-action, win in the red zone</p>
+          <div class="card__footer"><span>Open guide</span><span>→</span></div>
+        </a>
+        <a class="card" href="spread.html">
+          <div class="card__topline"><span class="card__emoji">🏃</span><span class="badge">10 / 11</span></div>
+          <h3>Spread</h3>
+          <p>Box counts + RPOs + tempo</p>
+          <div class="card__footer"><span>Open guide</span><span>→</span></div>
+        </a>
+        <a class="card" href="west-coast.html">
+          <div class="card__topline"><span class="card__emoji">🌊</span><span class="badge">11 / 12 / 21</span></div>
+          <h3>West Coast</h3>
+          <p>Rhythm throws + YAC + layered concepts</p>
+          <div class="card__footer"><span>Open guide</span><span>→</span></div>
+        </a>
+        <a class="card" href="run-and-shoot.html">
+          <div class="card__topline"><span class="card__emoji">🎲</span><span class="badge">10 / 11</span></div>
+          <h3>Run &amp; Shoot</h3>
+          <p>Option routes + leverage reads</p>
+          <div class="card__footer"><span>Open guide</span><span>→</span></div>
+        </a>
+        <a class="card" href="veer-and-shoot.html">
+          <div class="card__topline"><span class="card__emoji">🚀</span><span class="badge">10 / 11</span></div>
+          <h3>Veer &amp; Shoot</h3>
+          <p>Wide splits + access throws + inside zone</p>
+          <div class="card__footer"><span>Open guide</span><span>→</span></div>
+        </a>
+        <a class="card" href="option.html">
+          <div class="card__topline"><span class="card__emoji">🦵</span><span class="badge">11 / 20 / 21</span></div>
+          <h3>Option</h3>
+          <p>Read/pitch creates +1 run advantage</p>
+          <div class="card__footer"><span>Open guide</span><span>→</span></div>
+        </a>
+      </div>
     </section>
 
-    <section class="section" aria-labelledby="quick-links-title">
+    <!-- Reference & Tools -->
+    <section class="section" aria-labelledby="reference-title">
       <div class="section__heading">
-        <div>
-          <h2 id="quick-links-title">Quick links</h2>
-          <p>Jump straight into team fit guides, route study, your call sheet, or the full 3D explorer.</p>
-        </div>
+        <h2 id="reference-title">Reference &amp; Tools</h2>
+        <p>Team-fit guides, route concept cheat sheets, and your game-day call sheet template.</p>
       </div>
-      <div class="quick-links">
-        <a class="quick-link panel" href="teams.html">
-          <div class="quick-link__topline"><span>🏟️ Teams Guide</span><span>Reference</span></div>
-          <h3>Find team-by-team scheme fits</h3>
-          <p>Browse team tendencies, roster fits, and where each offense lives on the spectrum.</p>
-          <div class="quick-link__footer"><span>Open guide</span><span>→</span></div>
+      <div class="card-grid">
+        <a class="card" href="teams.html">
+          <div class="card__topline"><span class="card__emoji">🏟️</span><span class="badge">Reference</span></div>
+          <h3>Teams Guide</h3>
+          <p>Browse team tendencies, roster fits, and scheme identities for 80+ programs.</p>
+          <div class="card__footer"><span>Open guide</span><span>→</span></div>
         </a>
-        <a class="quick-link panel" href="routes.html">
-          <div class="quick-link__topline"><span>🧠 Route Concepts</span><span>Study</span></div>
-          <h3>Break down stems, leverage, and combinations</h3>
-          <p>Use a concept-first lens for route families, spacing rules, and paired reads.</p>
-          <div class="quick-link__footer"><span>Study routes</span><span>→</span></div>
+        <a class="card" href="routes.html">
+          <div class="card__topline"><span class="card__emoji">🧠</span><span class="badge">Study</span></div>
+          <h3>Route Concepts</h3>
+          <p>Route families, spacing rules, coverage beaters, and concept pairing.</p>
+          <div class="card__footer"><span>Study routes</span><span>→</span></div>
         </a>
-        <a class="quick-link panel" href="call-sheet.html">
-          <div class="quick-link__topline"><span>📝 Call Sheet</span><span>Prep</span></div>
-          <h3>Build your Saturday script</h3>
-          <p>Turn favorite concepts into a structured call sheet with drive openers and answers.</p>
-          <div class="quick-link__footer"><span>Open template</span><span>→</span></div>
-        </a>
-        <a class="quick-link panel" href="visualizations/webgl-scheme-selector.html">
-          <div class="quick-link__topline"><span>🛰️ 3D Visualizations</span><span>Interactive</span></div>
-          <h3>Explore the library in motion</h3>
-          <p>Compare pillars, formations, coverage structures, and team fits inside the WebGL suite.</p>
-          <div class="quick-link__footer"><span>Launch viewer</span><span>→</span></div>
+        <a class="card" href="call-sheet.html">
+          <div class="card__topline"><span class="card__emoji">📝</span><span class="badge">Tool</span></div>
+          <h3>Call Sheet</h3>
+          <p>Organize your Saturday script — openers, counters, and situational calls.</p>
+          <div class="card__footer"><span>Open template</span><span>→</span></div>
         </a>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="visualizations-title">
+    <!-- 3D Visualizations -->
+    <section class="section" aria-labelledby="viz-title">
       <div class="section__heading">
-        <div>
-          <h2 id="visualizations-title">3D visualizations</h2>
-          <p>Interactive pages for scheme selection, concept relationships, formations, route geometry, coverage families, and team fit mapping.</p>
-        </div>
+        <h2 id="viz-title">3D Visualizations</h2>
+        <p>Interactive WebGL scenes for exploring schemes, formations, routes, and defensive coverage.</p>
       </div>
-      <div class="viz-grid">
-        <a class="viz-card panel" href="visualizations/webgl-scheme-selector.html">
-          <div class="card__topline"><span>🛰️ 3D Scheme Selector</span><span class="badge">Explore</span></div>
-          <h3>Compare offensive families in a single scene</h3>
-          <p>Navigate the high-level ecosystem and pivot into the scheme that best matches your identity.</p>
-          <div class="viz-card__footer"><span>Open scene</span><span>→</span></div>
+      <div class="card-grid">
+        <a class="card" href="visualizations/webgl-scheme-selector.html">
+          <div class="card__topline"><span class="card__emoji">🛰️</span><span class="badge">Explore</span></div>
+          <h3>Scheme Selector</h3>
+          <p>Navigate all 7 offensive families as an interactive 3D constellation.</p>
+          <div class="card__footer"><span>Open scene</span><span>→</span></div>
         </a>
-        <a class="viz-card panel" href="visualizations/webgl-scheme-pillars.html">
-          <div class="card__topline"><span>📊 3D Scheme Pillars</span><span class="badge">Framework</span></div>
-          <h3>See how tempo, spacing, and leverage connect</h3>
-          <p>Understand the foundational trade-offs that shape each offensive family.</p>
-          <div class="viz-card__footer"><span>Open scene</span><span>→</span></div>
+        <a class="card" href="visualizations/webgl-scheme-pillars.html">
+          <div class="card__topline"><span class="card__emoji">📊</span><span class="badge">Compare</span></div>
+          <h3>Scheme Pillars</h3>
+          <p>See how tempo, spacing, and leverage connect across scheme families.</p>
+          <div class="card__footer"><span>Open scene</span><span>→</span></div>
         </a>
-        <a class="viz-card panel" href="visualizations/webgl-formations.html">
-          <div class="card__topline"><span>⚔️ 3D Formations</span><span class="badge">Structure</span></div>
-          <h3>Inspect alignments and spacing rules</h3>
-          <p>Compare tight, balanced, empty, and exotic structures with depth and width context.</p>
-          <div class="viz-card__footer"><span>Open scene</span><span>→</span></div>
+        <a class="card" href="visualizations/webgl-formations.html">
+          <div class="card__topline"><span class="card__emoji">⚔️</span><span class="badge">Structure</span></div>
+          <h3>Formations</h3>
+          <p>Inspect alignments, spacing rules, and personnel groupings in 3D.</p>
+          <div class="card__footer"><span>Open scene</span><span>→</span></div>
         </a>
-        <a class="viz-card panel" href="visualizations/webgl-route-tree.html">
-          <div class="card__topline"><span>🌳 3D Route Tree</span><span class="badge">Timing</span></div>
-          <h3>Trace stems, breaks, and layered route families</h3>
-          <p>Understand how route geometry stacks together into complete concepts.</p>
-          <div class="viz-card__footer"><span>Open scene</span><span>→</span></div>
+        <a class="card" href="visualizations/webgl-route-tree.html">
+          <div class="card__topline"><span class="card__emoji">🌳</span><span class="badge">Timing</span></div>
+          <h3>Route Tree</h3>
+          <p>Trace stems, breaks, and layered route families as 3D geometry.</p>
+          <div class="card__footer"><span>Open scene</span><span>→</span></div>
         </a>
-        <a class="viz-card panel" href="visualizations/webgl-coverage.html">
-          <div class="card__topline"><span>🛡️ 3D Coverage</span><span class="badge">Defense</span></div>
-          <h3>Map shell structure against your route answers</h3>
-          <p>Use visual spacing to understand voids, leverage, and horizontal stretch points.</p>
-          <div class="viz-card__footer"><span>Open scene</span><span>→</span></div>
-        </a>
-        <a class="viz-card panel" href="visualizations/webgl-team-map.html">
-          <div class="card__topline"><span>🗺️ 3D Team Map</span><span class="badge">Fit</span></div>
-          <h3>Plot programs by style, roster, and identity</h3>
-          <p>See where schools cluster and how they connect back to the scheme families.</p>
-          <div class="viz-card__footer"><span>Open scene</span><span>→</span></div>
+        <a class="card" href="visualizations/webgl-coverage.html">
+          <div class="card__topline"><span class="card__emoji">🛡️</span><span class="badge">Defense</span></div>
+          <h3>Coverage Shells</h3>
+          <p>Map shell structures against your route answers — zones, leverage, voids.</p>
+          <div class="card__footer"><span>Open scene</span><span>→</span></div>
         </a>
       </div>
     </section>
+
   </main>
 
   <footer>
     Built for fast scheme study, team comparison, and interactive playbook exploration.
   </footer>
 
-  <script>
-    const schemes = [
-      { emoji: "🎯", name: "Air Raid", idea: "Spacing + quick game + repeatable reads", personnel: "10 / 11", href: "air-raid.html" },
-      { emoji: "🧱", name: "Pro Style", idea: "Run game sets up PA, win in red zone", personnel: "12 / 21", href: "pro-style.html" },
-      { emoji: "🏃", name: "Spread", idea: "Box counts + RPOs + tempo", personnel: "10 / 11", href: "spread.html" },
-      { emoji: "🚀", name: "Veer and Shoot", idea: "Wide splits + access throws + inside zone", personnel: "10 / 11", href: "veer-and-shoot.html" },
-      { emoji: "🌊", name: "West Coast", idea: "Rhythm throws + YAC + layered concepts", personnel: "11 / 12 / 21", href: "west-coast.html" },
-      { emoji: "🦵", name: "Option", idea: "Read/pitch creates +1 run advantage", personnel: "11 / 20 / 21", href: "option.html" },
-      { emoji: "🎲", name: "Run and Shoot", idea: "Option routes + leverage reads", personnel: "10 / 11", href: "run-and-shoot.html" }
-    ];
-
-    const libraryItems = [
-      ...schemes.map((scheme) => ({
-        title: `${scheme.emoji} ${scheme.name}`,
-        description: scheme.idea,
-        href: scheme.href,
-        type: 'Scheme guide',
-        keywords: `${scheme.name} offense playbook personnel ${scheme.personnel} ${scheme.idea}`
-      })),
-      { title: '🏟️ Teams Guide', description: 'Browse team fits, identities, and program-level tendencies.', href: 'teams.html', type: 'Reference', keywords: 'teams guide schools programs fit roster identity conference' },
-      { title: '🧠 Route Concepts', description: 'Study route families, spacing rules, and concept pairing.', href: 'routes.html', type: 'Reference', keywords: 'routes concepts spacing timing stems leverage combinations' },
-      { title: '📝 Call Sheet Template', description: 'Organize script openers, counters, and situational calls.', href: 'call-sheet.html', type: 'Tool', keywords: 'call sheet script openers counters red zone third down sheet template' },
-      { title: '🛰️ 3D Scheme Selector', description: 'Navigate the scheme ecosystem in a WebGL scene.', href: 'visualizations/webgl-scheme-selector.html', type: 'Visualization', keywords: '3d webgl scheme selector interactive overview' },
-      { title: '⚔️ 3D Formations', description: 'Compare formation structures, spacing, and alignments.', href: 'visualizations/webgl-formations.html', type: 'Visualization', keywords: '3d formations alignment spacing empty bunch condensed' },
-      { title: '🌳 3D Route Tree', description: 'Inspect route geometry and layered combinations.', href: 'visualizations/webgl-route-tree.html', type: 'Visualization', keywords: '3d route tree stems breaks concepts mesh flood scissors' },
-      { title: '🛡️ 3D Coverage', description: 'Visualize coverage shells and route answers.', href: 'visualizations/webgl-coverage.html', type: 'Visualization', keywords: '3d coverage cover 2 cover 3 quarters leverage voids' },
-      { title: '🗺️ 3D Team Map', description: 'Map teams by style, roster, and identity.', href: 'visualizations/webgl-team-map.html', type: 'Visualization', keywords: '3d team map schools fit identity roster tempo' },
-      { title: '📊 3D Scheme Pillars', description: 'Explore the pillars that separate scheme families.', href: 'visualizations/webgl-scheme-pillars.html', type: 'Visualization', keywords: '3d scheme pillars spacing tempo leverage efficiency' }
-    ];
-
-    const schemeGrid = document.querySelector('#scheme-grid');
-    const searchResults = document.querySelector('#search-results');
-    const searchInput = document.querySelector('#site-search');
-    const searchCount = document.querySelector('#search-count');
-
-    schemeGrid.innerHTML = schemes.map((scheme) => `
-      <a class="card panel" href="${scheme.href}">
-        <div class="card__topline"><span>${scheme.emoji} ${scheme.name}</span><span class="badge">${scheme.personnel}</span></div>
-        <h3>${scheme.name}</h3>
-        <p>${scheme.idea}</p>
-        <div class="card__footer"><span>Open guide</span><span>→</span></div>
-      </a>
-    `).join('');
-
-    const renderSearchResults = (items) => {
-      searchCount.textContent = `${items.length} result${items.length === 1 ? '' : 's'}`;
-      if (!items.length) {
-        searchResults.innerHTML = '<div class="empty-state" role="status">No matches yet — try another scheme, concept, or visualization keyword.</div>';
-        return;
-      }
-
-      searchResults.innerHTML = items.map((item) => `
-        <a class="search-card panel" href="${item.href}">
-          <div class="search-card__topline"><span>${item.type}</span><span class="badge">Open</span></div>
-          <h3>${item.title}</h3>
-          <p>${item.description}</p>
-          <div class="search-card__footer"><span>Go to page</span><span>→</span></div>
-        </a>
-      `).join('');
-    };
-
-    renderSearchResults(libraryItems);
-
-    searchInput.addEventListener('input', (event) => {
-      const query = event.target.value.trim().toLowerCase();
-      if (!query) {
-        renderSearchResults(libraryItems);
-        return;
-      }
-
-      const filtered = libraryItems.filter((item) => {
-        const haystack = `${item.title} ${item.description} ${item.keywords}`.toLowerCase();
-        return haystack.includes(query);
-      });
-
-      renderSearchResults(filtered);
-    });
-  </script>
-
+  <!-- WebGL particle hero -->
   <script type="module">
     import * as THREE from 'three';
 
@@ -646,85 +386,61 @@
         camera.position.set(0, 0, 22);
 
         const textures = ['X', 'O', '|'].map((symbol) => {
-          const textureCanvas = document.createElement('canvas');
-          textureCanvas.width = 96;
-          textureCanvas.height = 96;
-          const ctx = textureCanvas.getContext('2d');
+          const c = document.createElement('canvas');
+          c.width = 96; c.height = 96;
+          const ctx = c.getContext('2d');
           ctx.clearRect(0, 0, 96, 96);
           ctx.strokeStyle = 'rgba(143, 194, 255, 0.92)';
           ctx.lineWidth = symbol === '|' ? 9 : 7;
           ctx.lineCap = 'round';
 
           if (symbol === 'X') {
-            ctx.beginPath();
-            ctx.moveTo(24, 24);
-            ctx.lineTo(72, 72);
-            ctx.moveTo(72, 24);
-            ctx.lineTo(24, 72);
-            ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(24, 24); ctx.lineTo(72, 72);
+            ctx.moveTo(72, 24); ctx.lineTo(24, 72); ctx.stroke();
           } else if (symbol === 'O') {
-            ctx.beginPath();
-            ctx.arc(48, 48, 22, 0, Math.PI * 2);
-            ctx.stroke();
+            ctx.beginPath(); ctx.arc(48, 48, 22, 0, Math.PI * 2); ctx.stroke();
           } else {
-            ctx.beginPath();
-            ctx.moveTo(20, 48);
-            ctx.lineTo(76, 48);
-            ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(20, 48); ctx.lineTo(76, 48); ctx.stroke();
           }
 
-          return new THREE.CanvasTexture(textureCanvas);
+          return new THREE.CanvasTexture(c);
         });
 
-        const materials = textures.map((texture) => new THREE.SpriteMaterial({
-          map: texture,
-          transparent: true,
-          opacity: 0.72,
-          depthWrite: false,
+        const materials = textures.map((t) => new THREE.SpriteMaterial({
+          map: t, transparent: true, opacity: 0.72, depthWrite: false,
           color: new THREE.Color('#c7ddff')
         }));
 
-        const particleGroup = new THREE.Group();
+        const group = new THREE.Group();
         const particles = [];
-        const particleCount = 200;
 
-        for (let index = 0; index < particleCount; index += 1) {
-          const material = materials[index % materials.length];
-          const sprite = new THREE.Sprite(material);
-          const basePosition = new THREE.Vector3(
+        for (let i = 0; i < 200; i++) {
+          const mat = materials[i % materials.length];
+          const sprite = new THREE.Sprite(mat);
+          const base = new THREE.Vector3(
             (Math.random() - 0.5) * 22,
             (Math.random() - 0.5) * 13,
             (Math.random() - 0.5) * 10
           );
           const scale = 0.42 + Math.random() * 0.35;
-          sprite.position.copy(basePosition);
+          sprite.position.copy(base);
           sprite.scale.set(scale * 1.05, scale, 1);
           sprite.material.rotation = Math.random() * Math.PI;
-          particleGroup.add(sprite);
-          particles.push({
-            sprite,
-            basePosition,
-            drift: 0.15 + Math.random() * 0.35,
-            bob: 0.1 + Math.random() * 0.25,
-            phase: Math.random() * Math.PI * 2
-          });
+          group.add(sprite);
+          particles.push({ sprite, base, drift: 0.15 + Math.random() * 0.35,
+            bob: 0.1 + Math.random() * 0.25, phase: Math.random() * Math.PI * 2 });
         }
 
-        scene.add(particleGroup);
-
-        const ambient = new THREE.AmbientLight(0xffffff, 1.2);
-        scene.add(ambient);
+        scene.add(group);
+        scene.add(new THREE.AmbientLight(0xffffff, 1.2));
 
         const mouse = { x: 0, y: 0 };
-        hero.addEventListener('pointermove', (event) => {
-          const rect = hero.getBoundingClientRect();
-          mouse.x = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
-          mouse.y = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
+        hero.addEventListener('pointermove', (e) => {
+          const r = hero.getBoundingClientRect();
+          mouse.x = ((e.clientX - r.left) / r.width - 0.5) * 2;
+          mouse.y = ((e.clientY - r.top) / r.height - 0.5) * 2;
         });
-        hero.addEventListener('pointerleave', () => {
-          mouse.x = 0;
-          mouse.y = 0;
-        });
+        hero.addEventListener('pointerleave', () => { mouse.x = 0; mouse.y = 0; });
 
         const resize = () => {
           const { width, height } = hero.getBoundingClientRect();
@@ -732,31 +448,28 @@
           camera.updateProjectionMatrix();
           renderer.setSize(width, height, false);
         };
-
         resize();
         window.addEventListener('resize', resize);
 
         const clock = new THREE.Clock();
         const animate = () => {
-          const elapsed = clock.getElapsedTime();
-          particleGroup.rotation.y += (mouse.x * 0.08 - particleGroup.rotation.y) * 0.02;
-          particleGroup.rotation.x += (-mouse.y * 0.06 - particleGroup.rotation.x) * 0.02;
+          const t = clock.getElapsedTime();
+          group.rotation.y += (mouse.x * 0.08 - group.rotation.y) * 0.02;
+          group.rotation.x += (-mouse.y * 0.06 - group.rotation.x) * 0.02;
 
-          for (const particle of particles) {
-            const { sprite, basePosition, drift, bob, phase } = particle;
-            sprite.position.x = basePosition.x + Math.sin(elapsed * drift + phase) * 0.45 + mouse.x * 0.18;
-            sprite.position.y = basePosition.y + Math.cos(elapsed * bob + phase) * 0.55 - mouse.y * 0.15;
-            sprite.position.z = basePosition.z + Math.sin(elapsed * drift + phase) * 0.2;
-            sprite.material.opacity = 0.38 + ((Math.sin(elapsed + phase) + 1) / 2) * 0.38;
+          for (const p of particles) {
+            p.sprite.position.x = p.base.x + Math.sin(t * p.drift + p.phase) * 0.45 + mouse.x * 0.18;
+            p.sprite.position.y = p.base.y + Math.cos(t * p.bob + p.phase) * 0.55 - mouse.y * 0.15;
+            p.sprite.position.z = p.base.z + Math.sin(t * p.drift + p.phase) * 0.2;
+            p.sprite.material.opacity = 0.38 + ((Math.sin(t + p.phase) + 1) / 2) * 0.38;
           }
 
           renderer.render(scene, camera);
           requestAnimationFrame(animate);
         };
-
         animate();
-      } catch (error) {
-        console.warn('WebGL hero fallback enabled:', error);
+      } catch (err) {
+        console.warn('WebGL hero fallback:', err);
         hero.classList.add('hero--fallback');
       }
     }

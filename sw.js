@@ -19,7 +19,6 @@ const PRECACHE_PATHS = [
   "./visualizations/webgl-formations.html",
   "./visualizations/webgl-route-tree.html",
   "./visualizations/webgl-coverage.html",
-  "./visualizations/webgl-team-map.html",
   "./assets/icons/icon.svg",
   "./assets/scripts/site-nav.js",
   "./assets/scripts/theme.js",
