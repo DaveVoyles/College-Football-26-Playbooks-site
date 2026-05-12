@@ -1,0 +1,1229 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("clawpilotTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>West Coast — CFB26 Playbook</title>
+  <script src="assets/scripts/theme.js?v=1"></script>
+  <link rel="stylesheet" href="assets/styles/theme.css?v=1">
+  <link rel="stylesheet" href="assets/styles/site-nav.css?v=1">
+  <script defer src="assets/scripts/site-nav.js?v=1"></script>
+  <style>
+:root {
+  color-scheme: light;
+  --cp-bg: #f7f4ef;
+  --cp-bg-elevated: #fcfbf8;
+  --cp-surface: #ffffff;
+  --cp-surface-soft: #f5f5f5;
+  --cp-border: #dedede;
+  --cp-border-strong: #919191;
+  --cp-text: #242424;
+  --cp-text-muted: #5c5c5c;
+  --cp-text-soft: #6f6f6f;
+  --cp-accent: #b11f4b;
+  --cp-accent-hover: #9a1a41;
+  --cp-accent-soft: rgba(177, 31, 75, 0.08);
+  --cp-accent-fg: #ffffff;
+  --cp-success: #16a34a;
+  --cp-danger: #dc2626;
+  --cp-warning: #f59e0b;
+  --cp-link: #0078d4;
+  --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+  --cp-overlay: rgba(255, 255, 255, 0.8);
+  --cp-panel: rgba(255, 255, 255, 0.86);
+  --cp-panel-strong: rgba(255, 255, 255, 0.96);
+  --cp-sheen: rgba(255, 255, 255, 0.55);
+  --cp-highlight: rgba(177, 31, 75, 0.12);
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --cp-bg: #3d3b3a;
+  --cp-bg-elevated: #343231;
+  --cp-surface: #292929;
+  --cp-surface-soft: #2e2e2e;
+  --cp-border: #474747;
+  --cp-border-strong: #5f5f5f;
+  --cp-text: #dedede;
+  --cp-text-muted: #919191;
+  --cp-text-soft: #b0b0b0;
+  --cp-accent: #fd8ea1;
+  --cp-accent-hover: #fb7b91;
+  --cp-accent-soft: rgba(253, 142, 161, 0.14);
+  --cp-accent-fg: #1a1a1a;
+  --cp-success: #4ade80;
+  --cp-danger: #f87171;
+  --cp-warning: #fbbf24;
+  --cp-link: #4da6ff;
+  --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+  --cp-overlay: rgba(41, 41, 41, 0.88);
+  --cp-panel: rgba(41, 41, 41, 0.72);
+  --cp-panel-strong: rgba(41, 41, 41, 0.96);
+  --cp-sheen: rgba(255, 255, 255, 0.04);
+  --cp-highlight: rgba(253, 142, 161, 0.12);
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  margin: 0;
+  background: var(--cp-bg);
+  color: var(--cp-text);
+  font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.65;
+}
+a {
+  color: var(--cp-link);
+}
+a:hover {
+  color: var(--cp-accent-hover);
+}
+body.scheme-west-coast {
+  --scheme-tone: var(--cp-link);
+}
+.wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1rem 3rem;
+}
+.page-layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+.toc-panel,
+.guide-card {
+  background: var(--cp-surface);
+  border: 1px solid var(--cp-border);
+  border-radius: 16px;
+  box-shadow: 0 12px 28px var(--cp-highlight);
+}
+.toc-panel {
+  position: sticky;
+  top: 1rem;
+  padding: 1rem;
+  background: var(--cp-panel-strong);
+}
+.toc-panel h2 {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  color: var(--scheme-tone);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+.toc-item a {
+  display: block;
+  padding: 0.45rem 0.6rem;
+  border-radius: 0.625rem;
+  text-decoration: none;
+  color: var(--cp-text-muted);
+}
+.toc-item a:hover {
+  background: var(--cp-accent-soft);
+  color: var(--cp-text);
+}
+.toc-level-3 {
+  margin-inline-start: 0.8rem;
+  font-size: 0.96rem;
+}
+.guide-card {
+  padding: 1.5rem;
+  overflow: hidden;
+}
+.content > :first-child {
+  margin-top: 0;
+}
+.content h1,
+.content h2,
+.content h3 {
+  scroll-margin-top: 1rem;
+  line-height: 1.2;
+}
+.content h1 {
+  margin-bottom: 0.4rem;
+  color: var(--scheme-tone);
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+.content h2 {
+  margin-top: 2rem;
+  padding-top: 0.2rem;
+  border-top: 1px solid var(--cp-border);
+  color: var(--scheme-tone);
+  font-size: clamp(1.35rem, 2vw, 1.7rem);
+}
+.content h3 {
+  margin-top: 1.35rem;
+  color: var(--cp-text);
+  font-size: 1.1rem;
+}
+.content p,
+.content li {
+  color: var(--cp-text);
+}
+.content strong {
+  color: var(--cp-text);
+}
+.content em {
+  color: var(--cp-text-soft);
+}
+.content ul,
+.content ol {
+  padding-inline-start: 1.35rem;
+}
+.content hr {
+  border: 0;
+  border-top: 1px solid var(--cp-border);
+  margin: 2rem 0;
+}
+.content p > a[href="index.html"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid var(--cp-border);
+  border-radius: 999px;
+  text-decoration: none;
+  background: var(--cp-bg-elevated);
+}
+.table-scroll {
+  overflow-x: auto;
+  margin: 1rem 0 1.5rem;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.625rem;
+  background: var(--cp-surface);
+}
+.table-scroll table {
+  width: 100%;
+  min-width: 620px;
+  border-collapse: collapse;
+}
+.table-scroll th,
+.table-scroll td {
+  padding: 0.75rem 0.85rem;
+  border-bottom: 1px solid var(--cp-border);
+  text-align: left;
+  vertical-align: top;
+}
+.table-scroll th {
+  background: var(--cp-bg-elevated);
+  color: var(--scheme-tone);
+}
+.table-scroll tbody tr:nth-child(odd) {
+  background: var(--cp-surface-soft);
+}
+.callout {
+  position: relative;
+  margin: 1.25rem 0;
+  padding: 1rem 1rem 1rem 1.2rem;
+  border-inline-start: 0.35rem solid var(--callout-tone, var(--cp-accent));
+  border-radius: 0.625rem;
+  background: var(--cp-accent-soft);
+}
+.callout::before {
+  content: var(--callout-icon, "💡");
+  position: absolute;
+  inset-inline-end: 0.9rem;
+  inset-block-start: 0.85rem;
+  font-size: 1rem;
+}
+.callout.tip {
+  --callout-tone: var(--cp-success);
+  --callout-icon: "💡";
+}
+.callout.warning {
+  --callout-tone: var(--cp-warning);
+  --callout-icon: "⚠️";
+}
+.callout.note {
+  --callout-tone: var(--cp-link);
+  --callout-icon: "📝";
+}
+.callout > :first-child {
+  margin-top: 0;
+}
+.callout > :last-child {
+  margin-bottom: 0;
+}
+pre.code-block {
+  margin: 1rem 0 1.5rem;
+  padding: 1rem;
+  border-radius: 0.625rem;
+  border: 1px solid var(--cp-border-strong);
+  background: var(--cp-text);
+  color: var(--cp-bg);
+  overflow-x: auto;
+}
+pre.code-block code,
+code {
+  font-family: Consolas, "Courier New", Courier, monospace;
+}
+p code,
+li code,
+td code {
+  padding: 0.1rem 0.35rem;
+  border-radius: 0.35rem;
+  background: var(--cp-surface-soft);
+  color: var(--cp-text);
+}
+pre.diff code {
+  display: grid;
+  gap: 0.1rem;
+}
+.diff-line {
+  display: block;
+  white-space: pre;
+}
+.diff-add {
+  color: var(--cp-success);
+}
+.diff-del {
+  color: var(--cp-danger);
+}
+.diff-note {
+  color: var(--cp-warning);
+}
+.diff-context {
+  color: var(--cp-bg);
+}
+details {
+  margin: 1.25rem 0;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.625rem;
+  background: var(--cp-bg-elevated);
+  overflow: hidden;
+}
+summary {
+  cursor: pointer;
+  padding: 0.85rem 1rem;
+  font-weight: 600;
+  color: var(--scheme-tone);
+  background: var(--cp-accent-soft);
+}
+details > :not(summary) {
+  margin-inline: 1rem;
+}
+.scheme-nav {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--cp-border);
+}
+.scheme-link,
+.nav-spacer {
+  min-height: 100%;
+}
+.scheme-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.625rem;
+  text-decoration: none;
+  color: var(--cp-text);
+  background: var(--cp-bg-elevated);
+  text-align: center;
+}
+.scheme-link:hover {
+  border-color: var(--scheme-tone);
+  background: var(--cp-accent-soft);
+}
+.scheme-link.center {
+  font-weight: 600;
+}
+@media (max-width: 920px) {
+  .wrap {
+    padding-top: 1rem;
+  }
+  .page-layout {
+    grid-template-columns: 1fr;
+  }
+  .toc-panel {
+    position: static;
+    overflow-x: auto;
+  }
+  .toc-list {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+    width: max-content;
+    min-width: 100%;
+  }
+  .toc-level-3 {
+    margin-inline-start: 0;
+  }
+}
+@media (max-width: 640px) {
+  .guide-card {
+    padding: 1rem;
+  }
+  .scheme-nav {
+    grid-template-columns: 1fr;
+  }
+  .table-scroll table {
+    min-width: 520px;
+  }
+}
+  </style>
+</head>
+<body data-nav-root="." class="scheme-west-coast">
+  <main class="wrap">
+    <div class="page-layout">
+      <aside class="toc-panel" aria-label="Table of contents">
+        <h2>On this page</h2>
+        <ul class="toc-list">
+<li class="toc-item toc-level-2"><a href="#quick-definition-brain">Quick definition 🧠</a></li>
+<li class="toc-item toc-level-2"><a href="#the-identity-one-sentence-dart">The identity (one sentence) 🎯</a></li>
+<li class="toc-item toc-level-2"><a href="#pros-white_check_mark-and-cons-warning">Pros ✅ and cons ⚠️</a></li>
+<li class="toc-item toc-level-2"><a href="#typical-personnel-jigsaw">Typical personnel 🧩</a></li>
+<li class="toc-item toc-level-3"><a href="#personnel-cheat-table">Personnel cheat table</a></li>
+<li class="toc-item toc-level-3"><a href="#role-archetypes">Role archetypes</a></li>
+<li class="toc-item toc-level-2"><a href="#typical-formations-triangular_ruler">Typical formations 📐</a></li>
+<li class="toc-item toc-level-3"><a href="#formation-families-quick-pick-table">Formation families (quick pick table)</a></li>
+<li class="toc-item toc-level-2"><a href="#core-pass-game-families--concept-menu-gear">Core pass game families / concept menu ⚙️</a></li>
+<li class="toc-item toc-level-3"><a href="#1-slant--flat">1) Slant / Flat</a></li>
+<li class="toc-item toc-level-3"><a href="#2-stick">2) Stick</a></li>
+<li class="toc-item toc-level-3"><a href="#3-drive-shallow-cross--dig">3) Drive (shallow cross + dig)</a></li>
+<li class="toc-item toc-level-3"><a href="#4-levels">4) Levels</a></li>
+<li class="toc-item toc-level-3"><a href="#5-sail--flood-often-off-boot">5) Sail / Flood (often off boot)</a></li>
+<li class="toc-item toc-level-3"><a href="#6-spot--spacing-variants">6) Spot / Spacing variants</a></li>
+<li class="toc-item toc-level-3"><a href="#7-smash">7) Smash</a></li>
+<li class="toc-item toc-level-3"><a href="#8-screen--swing-game">8) Screen / swing game</a></li>
+<li class="toc-item toc-level-2"><a href="#building-your-west-coast-call-sheet-practical-cfb26-plan-card_index_dividers">Building your West Coast call sheet (practical CFB26 plan) 🗂️</a></li>
+<li class="toc-item toc-level-3"><a href="#scripted-opening-drive-1012-plays">Scripted opening drive (10–12 plays)</a></li>
+<li class="toc-item toc-level-3"><a href="#1st-and-10">1st and 10</a></li>
+<li class="toc-item toc-level-3"><a href="#2nd-and-short">2nd and short</a></li>
+<li class="toc-item toc-level-3"><a href="#2nd-and-long">2nd and long</a></li>
+<li class="toc-item toc-level-3"><a href="#3rd-down">3rd down</a></li>
+<li class="toc-item toc-level-3"><a href="#red-zone-mini-playbook">Red zone (mini playbook)</a></li>
+<li class="toc-item toc-level-2"><a href="#defensive-looks-and-your-counters-shield">Defensive looks and your counters 🛡️</a></li>
+<li class="toc-item toc-level-3"><a href="#they-play-zone-and-rally">They play zone and rally</a></li>
+<li class="toc-item toc-level-3"><a href="#they-press-man">They press man</a></li>
+<li class="toc-item toc-level-3"><a href="#they-blitz">They blitz</a></li>
+<li class="toc-item toc-level-2"><a href="#roster-building-priorities-dna">Roster building priorities 🧬</a></li>
+<li class="toc-item toc-level-2"><a href="#sequencing-how-west-coast-creates-explosives-repeat">Sequencing (how West Coast creates explosives) 🔁</a></li>
+<li class="toc-item toc-level-2"><a href="#pre-snap-plan-audibles--box-count--motion-video_game">Pre-snap plan (audibles + box count + motion) 🎮</a></li>
+<li class="toc-item toc-level-2"><a href="#qb-operation-timing--progressions-stopwatch">QB operation (timing + progressions) ⏱️</a></li>
+<li class="toc-item toc-level-3"><a href="#quick-game-instant--one-step">Quick game (instant / one-step)</a></li>
+<li class="toc-item toc-level-3"><a href="#rhythm-game-short-drop--normal-timing">Rhythm game (short drop / normal timing)</a></li>
+<li class="toc-item toc-level-3"><a href="#shot-game-play-action--longer-timing">Shot game (play-action / longer timing)</a></li>
+<li class="toc-item toc-level-3"><a href="#progression-rules-keep-it-simple-compass">Progression rules (keep it simple) 🧭</a></li>
+<li class="toc-item toc-level-3"><a href="#pattern-1-high-low-the-flat-defender">Pattern 1: high-low the flat defender</a></li>
+<li class="toc-item toc-level-3"><a href="#pattern-2-stretch-the-hookcurl-defenders">Pattern 2: stretch the hook/curl defenders</a></li>
+<li class="toc-item toc-level-3"><a href="#pattern-3-clear-out--intermediate-window">Pattern 3: clear-out + intermediate window</a></li>
+<li class="toc-item toc-level-3"><a href="#motion-and-shifts-your-best-free-information-arrows_counterclockwise">Motion and shifts (your best free information) 🔄</a></li>
+<li class="toc-item toc-level-3"><a href="#motion-rules-of-thumb">Motion rules of thumb</a></li>
+<li class="toc-item toc-level-3"><a href="#what-to-do-with-that-info">What to do with that info</a></li>
+<li class="toc-item toc-level-3"><a href="#easy-leverage-motion-uses">“Easy leverage” motion uses</a></li>
+<li class="toc-item toc-level-2"><a href="#protection--checkdowns--sack-avoidance-rules-shield">Protection + checkdowns + sack-avoidance rules 🛡️</a></li>
+<li class="toc-item toc-level-3"><a href="#how-to-think-about-protection">How to think about protection</a></li>
+<li class="toc-item toc-level-3"><a href="#checkdown-discipline">Checkdown discipline</a></li>
+<li class="toc-item toc-level-2"><a href="#situational-packages-what-to-favorite-star">Situational packages (what to “favorite”) ⭐</a></li>
+<li class="toc-item toc-level-2"><a href="#weekly-install-plan-books">Weekly install plan 📚</a></li>
+<li class="toc-item toc-level-3"><a href="#week-1-quick-game--one-run">Week 1: quick game + one run</a></li>
+<li class="toc-item toc-level-3"><a href="#week-2-add-a-crosser-concept">Week 2: add a crosser concept</a></li>
+<li class="toc-item toc-level-3"><a href="#week-3-add-a-boot-and-one-shot">Week 3: add a boot and one shot</a></li>
+<li class="toc-item toc-level-3"><a href="#week-4-add-a-blitz-punish">Week 4: add a blitz punish</a></li>
+<li class="toc-item toc-level-3"><a href="#3rd-and-medium-36">3rd-and-medium (3–6)</a></li>
+<li class="toc-item toc-level-3"><a href="#3rd-and-long-712">3rd-and-long (7–12)</a></li>
+<li class="toc-item toc-level-3"><a href="#short-yardage--goal-line">Short yardage / goal line</a></li>
+<li class="toc-item toc-level-2"><a href="#troubleshooting-fire_extinguisher">Troubleshooting 🧯</a></li>
+<li class="toc-item toc-level-3"><a href="#problem-my-routes-are-always-covered">Problem: “My routes are always covered.”</a></li>
+<li class="toc-item toc-level-3"><a href="#problem-i-throw-picks-on-slants">Problem: “I throw picks on slants.”</a></li>
+<li class="toc-item toc-level-3"><a href="#problem-boots-get-me-sacked">Problem: “Boots get me sacked.”</a></li>
+<li class="toc-item toc-level-2"><a href="#yac-coaching-points-how-west-coast-turns-6-into-18-running">YAC coaching points (how West Coast turns 6 into 18) 🏃</a></li>
+<li class="toc-item toc-level-2"><a href="#concept-menu-by-situation-a-west-coast-mini-playbook-card_index_dividers">Concept menu by situation (a West Coast “mini playbook”) 🗂️</a></li>
+<li class="toc-item toc-level-3"><a href="#early-downs">Early downs</a></li>
+<li class="toc-item toc-level-3"><a href="#2nd--5-to-2nd--2-attack-window">2nd &amp; 5 to 2nd &amp; 2 (attack window)</a></li>
+<li class="toc-item toc-level-3"><a href="#3rd--36">3rd &amp; 3–6</a></li>
+<li class="toc-item toc-level-3"><a href="#3rd--712">3rd &amp; 7–12</a></li>
+<li class="toc-item toc-level-3"><a href="#red-zone">Red zone</a></li>
+<li class="toc-item toc-level-2"><a href="#sample-15-play-opening-script-pencil">Sample 15-play opening script 📝</a></li>
+<li class="toc-item toc-level-2"><a href="#in-game-execution-notes-video_game">In-game execution notes 🎮</a></li>
+<li class="toc-item toc-level-3"><a href="#table-format">Table format</a></li>
+<li class="toc-item toc-level-2"><a href="#post-game-metrics-did-i-run-it-right-bar_chart">Post-Game Metrics (Did I run it right?) 📊</a></li>
+<li class="toc-item toc-level-2"><a href="#dynasty-recruiting-guide-mortar_board">Dynasty Recruiting Guide 🎓</a></li>
+<li class="toc-item toc-level-2"><a href="#teams-to-check-first-in-cfb26-real-world-scheme-fit-mag">Teams to check first in CFB26 (real-world scheme fit) 🔍</a></li>
+<li class="toc-item toc-level-2"><a href="#nfl-analogs-closest-cousins-football">NFL analogs (closest cousins) 🏈</a></li>
+<li class="toc-item toc-level-2"><a href="#teams-in-cfb26-that-use-a-west-coast-playbook-fill-this-in-stadium">Teams in CFB26 that use a West Coast playbook (fill this in) 🏟️</a></li>
+<li class="toc-item toc-level-2"><a href="#minimal-glossary-pushpin">Minimal glossary 📌</a></li>
+</ul>
+      </aside>
+      <article class="guide-card">
+        <div class="content">
+          <h1 id="west-coast-ocean-cfb26-playbook-style">West Coast 🌊 (CFB26 Playbook Style)</h1>
+<p>Author: Dave Voyles</p>
+<p><a href="index.html">← Back to Index</a></p>
+<div class="callout tip">
+<p><strong>How to use this guide in CFB26</strong></p>
+<ul>
+<li>Build a small “core menu”: 2 runs + 4 passes + 1 shot</li>
+<li>Set audibles: 1 light-box run, 1 blitz answer, 1 man beater, 1 zone beater, 1 shot</li>
+<li>Use the opening script to identify coverage + box counts early</li>
+</ul>
+</div>
+<h2 id="quick-definition-brain">Quick definition 🧠</h2>
+<p>The West Coast offense is a <strong>timing + rhythm passing system</strong> that treats:</p>
+<ul>
+<li>⏱️ short and intermediate passes as the primary way to move the ball</li>
+<li>🏃 run plays as complements that keep defenses honest</li>
+<li>💨 <strong>YAC (yards after catch)</strong> as a core metric</li>
+</ul>
+<pre class="code-block text"><code>      WR                  OL   TE
+                                     WR (Flanker)
+             RB    QB    RB
+              (Split Backs)</code></pre>
+<p>Compared to Air Raid, West Coast is often more:</p>
+<ul>
+<li>under-center / play-action oriented</li>
+<li>progression-based (1–2–3 reads)</li>
+<li>route-combo specific (concept names matter)</li>
+</ul>
+<h2 id="the-identity-one-sentence-dart">The identity (one sentence) 🎯</h2>
+<p><strong>Win with on-time throws into defined windows, then let your skill players create YAC.</strong></p>
+<hr />
+<h2 id="pros-white_check_mark-and-cons-warning">Pros ✅ and cons ⚠️</h2>
+<pre class="code-block diff"><code><span class="diff-line diff-add">+ PRO: High completion percentage (rhythm/timing).</span>
+<span class="diff-line diff-add">+ PRO: Elite vs Zone (layered concepts stress LBs).</span>
+<span class="diff-line diff-add">+ PRO: Natural Play-Action (boots/rolls create easy reads).</span>
+<span class="diff-line diff-add">+ PRO: YAC-Friendly (balls in space on the run).</span>
+<span class="diff-line diff-add">+ PRO: Red Zone Versatility (quick outs/TE routes).</span>
+<span class="diff-line diff-context"></span>
+<span class="diff-line diff-del">- CON: Requires perfect timing (late = INT).</span>
+<span class="diff-line diff-del">- CON: Requires receivers who separate (contested catches are bad).</span>
+<span class="diff-line diff-del">- CON: Vulnerable to Press Man (without stacks/bunch).</span>
+<span class="diff-line diff-del">- CON: Underneath windows tighten if you abandon the run.</span></code></pre>
+<hr />
+<h2 id="typical-personnel-jigsaw">Typical personnel 🧩</h2>
+<p>Common West Coast bases:</p>
+<ul>
+<li><strong>11 personnel</strong>: 1 RB, 1 TE, 3 WR
+<ul>
+<li>Best all-around grouping.</li>
+</ul></li>
+<li><strong>12 personnel</strong>: 1 RB, 2 TE, 2 WR
+<ul>
+<li>Adds formation diversity and stronger run looks.</li>
+</ul></li>
+<li><strong>21 personnel</strong>: 2 RB, 1 TE, 2 WR
+<ul>
+<li>Classic pro feel; good for boots and play-action.</li>
+</ul></li>
+</ul>
+<h3 id="personnel-cheat-table">Personnel cheat table</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>Personnel</strong></th>
+<th><strong>On-field</strong></th>
+<th><strong>Why you’d use it in West Coast</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>11</td>
+<td>1 RB / 1 TE / 3 WR</td>
+<td>Best all-around rhythm menu + spacing</td>
+</tr>
+<tr>
+<td>12</td>
+<td>1 RB / 2 TE / 2 WR</td>
+<td>Stronger run look; more boots; TE-centric progressions</td>
+</tr>
+<tr>
+<td>21</td>
+<td>2 RB / 1 TE / 2 WR</td>
+<td>Classic play-action structure; strong protection looks</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="role-archetypes">Role archetypes</h3>
+<ul>
+<li><strong>QB:</strong> accurate on short/intermediate, good anticipation.</li>
+<li><strong>RB:</strong> reliable hands (checkdowns are real), good pass protection.</li>
+<li><strong>TE:</strong> chain mover; must be able to sit in zones and win seams.</li>
+<li><strong>WRs:</strong> route running + hands; at least one RAC threat on crossers.</li>
+</ul>
+<hr />
+<h2 id="typical-formations-triangular_ruler">Typical formations 📐</h2>
+<p>West Coast playbooks often include:</p>
+<ul>
+<li>Singleback (ace, wing, bunch)</li>
+<li>I-Form (select packages)</li>
+<li>Gun (11 personnel for modern variants)</li>
+<li>Strong/Weak two-back sets (in some books)</li>
+</ul>
+<h3 id="formation-families-quick-pick-table">Formation families (quick pick table)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>Family</strong></th>
+<th><strong>What it’s great for</strong></th>
+<th><strong>When to lean on it</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Singleback (Ace/Wing)</td>
+<td>Core boots + play-action + balanced run game</td>
+<td>Base menu; early downs</td>
+</tr>
+<tr>
+<td>Gun 11 (packages)</td>
+<td>Modern rhythm throws; quick answers vs pressure</td>
+<td>2-minute; when behind; 3rd down</td>
+</tr>
+<tr>
+<td>I-Form (packages)</td>
+<td>Physicality and short yardage; tendency breakers</td>
+<td>Short yardage; red zone</td>
+</tr>
+<tr>
+<td>Strong/Weak (two-back)</td>
+<td>Defined fits; easy PA off downhill looks</td>
+<td>When you want FB/H-back involvement</td>
+</tr>
+</tbody>
+</table></div>
+<p>Suggested approach:</p>
+<ul>
+<li>Major: Singleback Ace/Wing + Gun 11</li>
+<li>Minor: I-Form for short yardage and tendency breakers</li>
+</ul>
+<hr />
+<h2 id="core-pass-game-families--concept-menu-gear">Core pass game families / concept menu ⚙️</h2>
+<p>Below are “concept families” you’ll often find across West Coast playbooks.</p>
+<h3 id="1-slant--flat">1) Slant / Flat</h3>
+<p><strong>What it is:</strong> a quick slant paired with a flat route.</p>
+<p><strong>Why it works:</strong> creates a simple high-low on the flat defender.</p>
+<p><strong>Usage:</strong></p>
+<ul>
+<li>vs soft zone or off man</li>
+<li>in the red zone</li>
+</ul>
+<p><strong>Coaching point:</strong> throw the slant on time; don’t wait for it to look open.</p>
+<h3 id="2-stick">2) Stick</h3>
+<p>Similar to Air Raid, but often used as a rhythm “get it out” call.</p>
+<h3 id="3-drive-shallow-cross--dig">3) Drive (shallow cross + dig)</h3>
+<p><strong>What it is:</strong> a shallow crosser underneath a deeper in-breaking route.</p>
+<p><strong>Why it works:</strong></p>
+<ul>
+<li>vs man: traffic and leverage</li>
+<li>vs zone: stretches hook defenders</li>
+</ul>
+<p><strong>QB rhythm:</strong> shallow first if it’s clean; dig if LBs widen.</p>
+<h3 id="4-levels">4) Levels</h3>
+<p><strong>What it is:</strong> two routes at different depths breaking to the same side.</p>
+<p><strong>Why it works:</strong> forces one defender to cover two windows.</p>
+<h3 id="5-sail--flood-often-off-boot">5) Sail / Flood (often off boot)</h3>
+<p><strong>What it is:</strong> three-level stretch (flat + intermediate out + deep corner).</p>
+<p><strong>Best when:</strong> you can run the ball enough that boot looks believable.</p>
+<h3 id="6-spot--spacing-variants">6) Spot / Spacing variants</h3>
+<p>West Coast loves spacing concepts that create a stationary “spot” target in a zone void.</p>
+<h3 id="7-smash">7) Smash</h3>
+<p>Corner + hitch. Great vs Cover 2 and in the red zone.</p>
+<h3 id="8-screen--swing-game">8) Screen / swing game</h3>
+<p>West Coast uses checkdowns intentionally:</p>
+<ul>
+<li>RB swing</li>
+<li>TE delay</li>
+<li>quick screens to punish blitz</li>
+</ul>
+<hr />
+<h2 id="building-your-west-coast-call-sheet-practical-cfb26-plan-card_index_dividers">Building your West Coast call sheet (practical CFB26 plan) 🗂️</h2>
+<h3 id="scripted-opening-drive-1012-plays">Scripted opening drive (10–12 plays)</h3>
+<p>The point of a West Coast script is to <strong>collect information</strong>.</p>
+<p>Example script goals:</p>
+<ul>
+<li>test if corners play press or off</li>
+<li>see if LBs widen with motion</li>
+<li>see if the defense rotates to single-high on early downs</li>
+</ul>
+<p>Example play mix:</p>
+<ul>
+<li>inside zone</li>
+<li>slant/flat</li>
+<li>stick</li>
+<li>boot sail</li>
+<li>drive</li>
+<li>screen</li>
+<li>play-action shot (once)</li>
+</ul>
+<h3 id="1st-and-10">1st and 10</h3>
+<ul>
+<li>run (inside zone / duo / power)</li>
+<li>slant/flat or stick</li>
+<li>boot flood if your QB throws well on the move</li>
+</ul>
+<h3 id="2nd-and-short">2nd and short</h3>
+<ul>
+<li>play-action corner/post</li>
+<li>deep cross</li>
+</ul>
+<h3 id="2nd-and-long">2nd and long</h3>
+<ul>
+<li>drive / levels</li>
+<li>RB screen</li>
+<li>checkdown-friendly concepts</li>
+</ul>
+<h3 id="3rd-down">3rd down</h3>
+<ul>
+<li>3rd &amp; 1–2: power, sneak, quick out</li>
+<li>3rd &amp; 3–6: slant/flat, stick, spacing</li>
+<li>3rd &amp; 7+: drive, dagger, flood with max protect</li>
+</ul>
+<h3 id="red-zone-mini-playbook">Red zone (mini playbook)</h3>
+<ul>
+<li>smash</li>
+<li>TE corner</li>
+<li>rub concepts from bunch/stack</li>
+<li>play-action leak</li>
+</ul>
+<hr />
+<h2 id="defensive-looks-and-your-counters-shield">Defensive looks and your counters 🛡️</h2>
+<h3 id="they-play-zone-and-rally">They play zone and rally</h3>
+<ul>
+<li>Stay patient: chain together 5–8 yard completions.</li>
+<li>Use motion and flood/levels to create clearer windows.</li>
+</ul>
+<h3 id="they-press-man">They press man</h3>
+<ul>
+<li>Use bunch/stack formations.</li>
+<li>Call crossers/drive.</li>
+<li>Hit quick fades only if your matchup is elite.</li>
+</ul>
+<h3 id="they-blitz">They blitz</h3>
+<ul>
+<li>Hot reads: slants, quick outs, RB swing.</li>
+<li>Screens to slow them down.</li>
+<li>Consider max protect for your “big” 3rd-down concept.</li>
+</ul>
+<hr />
+<h2 id="roster-building-priorities-dna">Roster building priorities 🧬</h2>
+<ol type="1">
+<li><strong>QB accuracy + anticipation</strong></li>
+<li><strong>WR route running + hands</strong></li>
+<li><strong>TE who can find zones</strong></li>
+<li><strong>RB pass pro + catching</strong></li>
+<li><strong>OL pass protection</strong></li>
+</ol>
+<hr />
+<h2 id="sequencing-how-west-coast-creates-explosives-repeat">Sequencing (how West Coast creates explosives) 🔁</h2>
+<p>West Coast “explosives” are usually created by sequencing:</p>
+<ul>
+<li>show quick game/checkdowns early</li>
+<li>run enough to make boots believable</li>
+<li>call your shot on purpose (usually 2nd &amp; short or after a run)</li>
+</ul>
+<hr />
+<h2 id="pre-snap-plan-audibles--box-count--motion-video_game">Pre-snap plan (audibles + box count + motion) 🎮</h2>
+<p>Suggested audible set (example):</p>
+<ol type="1">
+<li>Inside zone / duo (light box)</li>
+<li>Slant/flat (quick answer vs heavy box)</li>
+<li>Stick / spacing (fast completion)</li>
+<li>Boot flood / sail (zone beater + easy reads)</li>
+<li>Screen / RB swing (blitz punish)</li>
+</ol>
+<p>Box-count / leverage rules:</p>
+<ul>
+<li>If the box is light: run it.</li>
+<li>If corners are off: take quick game.</li>
+<li>If pressure is obvious: have a screen/swing ready.</li>
+</ul>
+<hr />
+<h2 id="qb-operation-timing--progressions-stopwatch">QB operation (timing + progressions) ⏱️</h2>
+<p>West Coast succeeds when you throw on time. A simple way to keep your rhythm consistent is to tie concepts to your QB’s drop.</p>
+<h3 id="quick-game-instant--one-step">Quick game (instant / one-step)</h3>
+<p>Examples:</p>
+<ul>
+<li>slant/flat</li>
+<li>stick</li>
+<li>quick out</li>
+<li>hitch</li>
+</ul>
+<p><strong>Coaching point:</strong> decide pre-snap where the easy throw is. If the defense shows it, take it immediately.</p>
+<h3 id="rhythm-game-short-drop--normal-timing">Rhythm game (short drop / normal timing)</h3>
+<p>Examples:</p>
+<ul>
+<li>drive (shallow first, dig second)</li>
+<li>levels</li>
+<li>spot/spacing</li>
+</ul>
+<p><strong>Coaching point:</strong> don’t wait for “perfect.” West Coast windows are often “NFL open”: throw when the receiver is about to enter the window.</p>
+<h3 id="shot-game-play-action--longer-timing">Shot game (play-action / longer timing)</h3>
+<p>Examples:</p>
+<ul>
+<li>deep cross</li>
+<li>post + over</li>
+<li>sail off boot with a deep corner</li>
+</ul>
+<p><strong>Coaching point:</strong> shot plays are called on purpose (2nd &amp; short, after runs, after you’ve hit flats). If you call them randomly on 3rd &amp; 11, you’ll feel like protection is “broken,” when it’s really sequencing.</p>
+<hr />
+<h3 id="progression-rules-keep-it-simple-compass">Progression rules (keep it simple) 🧭</h3>
+<p>Different playbooks label reads differently, but West Coast progressions usually follow a few repeatable patterns.</p>
+<h3 id="pattern-1-high-low-the-flat-defender">Pattern 1: high-low the flat defender</h3>
+<p>Used in slant/flat, smash, and many boot floods.</p>
+<pre class="code-block diff"><code><span class="diff-line diff-add">+ GREEN: Flat Defender Widens -&gt; THROW Inside (Slant/Hitch)</span>
+<span class="diff-line diff-del">- RED:   Flat Defender Sits   -&gt; THROW Outside (Flat/Out)</span></code></pre>
+<ul>
+<li>If the flat defender widens: throw inside (slant/hitch).</li>
+<li>If the flat defender sits inside: throw the flat/out.</li>
+</ul>
+<h3 id="pattern-2-stretch-the-hookcurl-defenders">Pattern 2: stretch the hook/curl defenders</h3>
+<p>Used in drive/levels/spot.</p>
+<ul>
+<li>If hook defenders widen with the shallow: hit the dig/spot behind them.</li>
+<li>If hook defenders sit: hit the shallow and run.</li>
+</ul>
+<h3 id="pattern-3-clear-out--intermediate-window">Pattern 3: clear-out + intermediate window</h3>
+<p>Used in dagger-style concepts.</p>
+<ul>
+<li>The vertical route clears space.</li>
+<li>The dig/in route is the actual target.</li>
+</ul>
+<p><strong>Tip:</strong> if you struggle with “seeing” the dig window, call dagger toward the wide side of the field. You’ll get cleaner spacing.</p>
+<hr />
+<h3 id="motion-and-shifts-your-best-free-information-arrows_counterclockwise">Motion and shifts (your best free information) 🔄</h3>
+<p>In CFB-style games, motion is the simplest way to identify coverage and steal leverage.</p>
+<h3 id="motion-rules-of-thumb">Motion rules of thumb</h3>
+<ul>
+<li>If a defender <strong>travels</strong> with the motion receiver: likely man.</li>
+<li>If the defense <strong>bumps</strong> zones and no one travels: likely zone.</li>
+</ul>
+<h3 id="what-to-do-with-that-info">What to do with that info</h3>
+<ul>
+<li>vs man: call drive/crossers or rubs from bunch/stack.</li>
+<li>vs zone: call spacing/spot/levels and be patient.</li>
+</ul>
+<h3 id="easy-leverage-motion-uses">“Easy leverage” motion uses</h3>
+<ul>
+<li>Motion a WR into a reduced split to help him beat press.</li>
+<li>Motion a WR across to create a trips side and force zone adjustments.</li>
+</ul>
+<hr />
+<h2 id="protection--checkdowns--sack-avoidance-rules-shield">Protection + checkdowns + sack-avoidance rules 🛡️</h2>
+<p>West Coast doesn’t require you to bomb it deep every snap, but it does require you to avoid negative plays.</p>
+<h3 id="how-to-think-about-protection">How to think about protection</h3>
+<ul>
+<li>If you’re calling a longer-developing concept, treat it like a <strong>shot</strong> and protect accordingly.</li>
+<li>If you’re calling quick game, don’t over-adjust protection; just get the ball out.</li>
+</ul>
+<h3 id="checkdown-discipline">Checkdown discipline</h3>
+<p>The checkdown isn’t a failure in West Coast—it’s part of the plan.</p>
+<ul>
+<li>If your first read is capped and your second is covered, take the RB/TE in the flat and live to play 2nd &amp; 4.</li>
+<li>After two or three checkdowns, defenses start jumping—then your sail/corner routes open up.</li>
+</ul>
+<hr />
+<h2 id="situational-packages-what-to-favorite-star">Situational packages (what to “favorite”) ⭐</h2>
+<hr />
+<h2 id="weekly-install-plan-books">Weekly install plan 📚</h2>
+<h3 id="week-1-quick-game--one-run">Week 1: quick game + one run</h3>
+<ul>
+<li>slant/flat</li>
+<li>stick/spacing</li>
+<li>inside zone / duo</li>
+</ul>
+<h3 id="week-2-add-a-crosser-concept">Week 2: add a crosser concept</h3>
+<ul>
+<li>drive</li>
+</ul>
+<h3 id="week-3-add-a-boot-and-one-shot">Week 3: add a boot and one shot</h3>
+<ul>
+<li>boot flood / sail</li>
+<li>play-action post/cross (or dagger)</li>
+</ul>
+<h3 id="week-4-add-a-blitz-punish">Week 4: add a blitz punish</h3>
+<ul>
+<li>screen or RB swing</li>
+</ul>
+<p>If you want the offense to be consistent, favorite a small set of plays per situation.</p>
+<h3 id="3rd-and-medium-36">3rd-and-medium (3–6)</h3>
+<ul>
+<li>slant/flat</li>
+<li>stick</li>
+<li>drive</li>
+</ul>
+<h3 id="3rd-and-long-712">3rd-and-long (7–12)</h3>
+<ul>
+<li>dagger (dig behind a clear-out)</li>
+<li>levels with a checkdown</li>
+<li>flood with max protect</li>
+</ul>
+<h3 id="short-yardage--goal-line">Short yardage / goal line</h3>
+<ul>
+<li>power run</li>
+<li>boot with a quick flat</li>
+<li>TE corner (if your playbook has it)</li>
+</ul>
+<hr />
+<h2 id="troubleshooting-fire_extinguisher">Troubleshooting 🧯</h2>
+<h3 id="problem-my-routes-are-always-covered">Problem: “My routes are always covered.”</h3>
+<p>Likely causes:</p>
+<ul>
+<li>You’re waiting too long and letting zones settle.</li>
+<li>You’re calling the same concept into the same shell repeatedly.</li>
+</ul>
+<p>Fix:</p>
+<ul>
+<li>Throw earlier.</li>
+<li>Alternate a spacing concept with a crosser concept.</li>
+</ul>
+<h3 id="problem-i-throw-picks-on-slants">Problem: “I throw picks on slants.”</h3>
+<p>Likely causes:</p>
+<ul>
+<li>You’re throwing late vs lurking linebackers.</li>
+</ul>
+<p>Fix:</p>
+<ul>
+<li>If you can’t throw it on time, don’t throw it. Take the flat or checkdown.</li>
+</ul>
+<h3 id="problem-boots-get-me-sacked">Problem: “Boots get me sacked.”</h3>
+<p>Likely causes:</p>
+<ul>
+<li>You’re rolling into an unblocked edge.</li>
+<li>You’re drifting too deep.</li>
+</ul>
+<p>Fix:</p>
+<ul>
+<li>Call boot away from the defense’s best edge rusher.</li>
+<li>Set the edge, then throw. Don’t keep backpedaling.</li>
+</ul>
+<hr />
+<h2 id="yac-coaching-points-how-west-coast-turns-6-into-18-running">YAC coaching points (how West Coast turns 6 into 18) 🏃</h2>
+<p>West Coast can feel “dinky” until you start designing catches that allow run-after-catch.</p>
+<p>Practical ways to increase YAC:</p>
+<ul>
+<li>Favor <strong>crossers</strong> and <strong>in-breaking routes</strong> on early downs.</li>
+<li>Throw to the receiver’s upfield shoulder so he doesn’t have to stop.</li>
+<li>Use <strong>motion</strong> to create a free release and get the receiver moving at the snap.</li>
+<li>Call <strong>play-action boots</strong> when you expect defenders to flow hard to the run.</li>
+</ul>
+<p>If you’re consistently completing passes but not breaking tackles, it often means you’re throwing stop routes all game. Mix in movement routes.</p>
+<hr />
+<h2 id="concept-menu-by-situation-a-west-coast-mini-playbook-card_index_dividers">Concept menu by situation (a West Coast “mini playbook”) 🗂️</h2>
+<h3 id="early-downs">Early downs</h3>
+<ul>
+<li>inside zone/duo</li>
+<li>slant/flat</li>
+<li>stick</li>
+<li>boot flood</li>
+</ul>
+<h3 id="2nd--5-to-2nd--2-attack-window">2nd &amp; 5 to 2nd &amp; 2 (attack window)</h3>
+<ul>
+<li>play-action cross</li>
+<li>sail with a deep corner</li>
+<li>dagger</li>
+</ul>
+<h3 id="3rd--36">3rd &amp; 3–6</h3>
+<ul>
+<li>drive</li>
+<li>spot/spacing</li>
+<li>slant/flat</li>
+</ul>
+<h3 id="3rd--712">3rd &amp; 7–12</h3>
+<ul>
+<li>dagger</li>
+<li>levels with a checkdown</li>
+<li>flood with max protect</li>
+</ul>
+<h3 id="red-zone">Red zone</h3>
+<ul>
+<li>smash</li>
+<li>TE corner</li>
+<li>rub concept</li>
+</ul>
+<p>The purpose: you always know what your best 3 calls are for the current down/distance.</p>
+<hr />
+<h2 id="sample-15-play-opening-script-pencil">Sample 15-play opening script 📝</h2>
+<p>This is an example of how a West Coast drive can probe the defense without being predictable.</p>
+<ol type="1">
+<li>Inside zone</li>
+<li>Slant/flat</li>
+<li>Stick</li>
+<li>Drive</li>
+<li>Boot flood</li>
+<li>Screen</li>
+<li>Inside zone</li>
+<li>Levels</li>
+<li>Play-action shot (post/cross)</li>
+<li>Inside zone</li>
+<li>Spot/spacing</li>
+<li>Boot flood (opposite direction)</li>
+<li>Smash (if near scoring range)</li>
+<li>Run (finish)</li>
+<li>Quick game (stay on schedule)</li>
+</ol>
+<p>Adjust on the fly:</p>
+<ul>
+<li>If you confirm man: lean more on drive/crossers and rubs.</li>
+<li>If you confirm zone: lean on spacing/spot and be patient.</li>
+</ul>
+<hr />
+<h2 id="in-game-execution-notes-video_game">In-game execution notes 🎮</h2>
+<ul>
+<li>Favor throws that keep receivers moving (crossers/drive) to maximize RAC.</li>
+<li>If you notice linebackers jumping underneath routes, call sail/flood or a deep cross to punish them.</li>
+<li>When you’re unsure, throw the checkdown; West Coast wins by stacking first downs.</li>
+</ul>
+<hr />
+<h3 id="table-format">Table format</h3>
+<p>The West Coast offense is about rhythm. The first drive must get the QB comfortable and the defense moving laterally.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th style="text-align: center;"><strong>Play #</strong></th>
+<th><strong>Situation / Note</strong></th>
+<th><strong>Concept / Call</strong></th>
+<th><strong>Why?</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td>Scripted Opener (Safe)</td>
+<td><strong>Slant / Flat</strong></td>
+<td>🟢 Easy read, gets the ball out fast</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td>Rhythm Throws</td>
+<td><strong>Stick / Spacing</strong></td>
+<td>🟢 Force LBs to widen or freeze</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td>Run: Base Zone</td>
+<td><strong>Inside Zone</strong></td>
+<td>🟡 Keep the DL honest</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td>Quick Game</td>
+<td><strong>Dragon (Slant/Window)</strong></td>
+<td>🟢 Attack the middle voids</td>
+</tr>
+<tr>
+<td style="text-align: center;">5</td>
+<td>Screen</td>
+<td><strong>HB Slip Screen</strong></td>
+<td>🟡 Punish aggressive pass rush</td>
+</tr>
+<tr>
+<td style="text-align: center;">6</td>
+<td>Base Concept</td>
+<td><strong>Mesh</strong></td>
+<td>🟢 Man-beater staple; easy yards</td>
+</tr>
+<tr>
+<td style="text-align: center;">7</td>
+<td>Run: Outside</td>
+<td><strong>Stretch / Toss</strong></td>
+<td>🟡 Test their perimeter discipline</td>
+</tr>
+<tr>
+<td style="text-align: center;">8</td>
+<td>Play-Action Shot</td>
+<td><strong>PA Post / Cross</strong></td>
+<td>🔴 Capitalize on LBs biting up on the run/short</td>
+</tr>
+<tr>
+<td style="text-align: center;">9</td>
+<td>Intermediate</td>
+<td><strong>Drive (Shallow + Dig)</strong></td>
+<td>🟢 High-low the LBs</td>
+</tr>
+<tr>
+<td style="text-align: center;">10</td>
+<td>Run: Cutback</td>
+<td><strong>Split Zone</strong></td>
+<td>🟡 Misdirection with the TE</td>
+</tr>
+<tr>
+<td style="text-align: center;">11</td>
+<td>Checkdown / Outlet</td>
+<td><strong>Texas (RB Angle)</strong></td>
+<td>🟢 Isolate the RB on a LB</td>
+</tr>
+<tr>
+<td style="text-align: center;">12</td>
+<td>Deep Shot</td>
+<td><strong>All Go / 4 Verts</strong></td>
+<td>🔴 Stretch the field vertically</td>
+</tr>
+<tr>
+<td style="text-align: center;">13</td>
+<td>Red Zone Prep</td>
+<td><strong>Smash (Hitch + Corner)</strong></td>
+<td>🟢 High-low the CB</td>
+</tr>
+<tr>
+<td style="text-align: center;">14</td>
+<td>3rd Down Call</td>
+<td><strong>Levels / Y-Sail</strong></td>
+<td>🟢 Flood a zone with 3 levels of routes</td>
+</tr>
+<tr>
+<td style="text-align: center;">15</td>
+<td>Goal Line</td>
+<td><strong>FB Dive / QB Sneak</strong></td>
+<td>🟢 Simple, physical finish</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="post-game-metrics-did-i-run-it-right-bar_chart">Post-Game Metrics (Did I run it right?) 📊</h2>
+<p>If you played a true West Coast game, your stats should look like this:</p>
+<ul>
+<li><strong>Completion Percentage:</strong> &gt; 75% (Short, high-percentage throws)</li>
+<li><strong>Yards Per Attempt:</strong> ~7-8 (Efficiency over explosion)</li>
+<li><strong>Time of Possession:</strong> &gt; 55% (Ball control passing)</li>
+<li><strong>3rd Down Conversions:</strong> &gt; 50% (Manageable distances)</li>
+</ul>
+<h2 id="dynasty-recruiting-guide-mortar_board">Dynasty Recruiting Guide 🎓</h2>
+<p>If you run the West Coast, prioritize these archetypes:</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th style="text-align: left;"><strong>Position</strong></th>
+<th><strong>Archetype / Key Stats</strong></th>
+<th><strong>Why?</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>QB</strong></td>
+<td><strong>Field General</strong> (SAC, MAC)</td>
+<td>🧠 Short/Medium accuracy is non-negotiable.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>HB</strong></td>
+<td><strong>Receiving Back</strong> (CTH, SRR)</td>
+<td>🏃 Your RB is your 5th receiver. They get 5+ catches.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>TE</strong></td>
+<td><strong>Possession</strong> (CTH, CIT)</td>
+<td>🧲 Safety valve over the middle. Hands &gt; Speed.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>WR</strong></td>
+<td><strong>Route Runner</strong> (SRR, MRR, CTH)</td>
+<td>🧤 Separation is created by cuts, not just speed.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>OL</strong></td>
+<td><strong>Pass Protector</strong> (PBP, PBF)</td>
+<td>🧱 Quick sets are key; don't need maulers, need walls.</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="teams-to-check-first-in-cfb26-real-world-scheme-fit-mag">Teams to check first in CFB26 (real-world scheme fit) 🔍</h2>
+<p>West Coast is also a broad label in college, but these programs are commonly associated with pro-style timing concepts, boots, and layered progressions.</p>
+<p>Start here and <strong>verify in-game</strong>:</p>
+<ul>
+<li>Stanford (historical)</li>
+<li>Utah</li>
+<li>Notre Dame</li>
+<li>BYU</li>
+</ul>
+<h2 id="nfl-analogs-closest-cousins-football">NFL analogs (closest cousins) 🏈</h2>
+<p>Modern NFL offenses are largely West Coast-derived. These teams are commonly associated with West Coast timing + YAC principles.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>NFL team (varies by year)</strong></th>
+<th><strong>What feels West Coast</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>San Francisco 49ers</td>
+<td>YAC, motion, layered concepts</td>
+</tr>
+<tr>
+<td>Green Bay Packers</td>
+<td>Timing throws, progression concepts</td>
+</tr>
+<tr>
+<td>Los Angeles Rams</td>
+<td>Play-action, layered routes</td>
+</tr>
+<tr>
+<td>Minnesota Vikings</td>
+<td>Timing/structure passing</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="teams-in-cfb26-that-use-a-west-coast-playbook-fill-this-in-stadium">Teams in CFB26 that use a West Coast playbook (fill this in) 🏟️</h2>
+<!-- markdownlint-disable MD033 -->
+
+<details>
+<summary>Show editable teams table</summary>
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>Team</strong></th>
+<th><strong>In-game offensive playbook name</strong></th>
+<th><strong>Notes (favorite concepts, boot frequency, base personnel)</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+</details>
+<!-- markdownlint-enable MD033 -->
+
+<hr />
+<h2 id="minimal-glossary-pushpin">Minimal glossary 📌</h2>
+<ul>
+<li><strong>Rhythm throw:</strong> ball out on the plant step; timing-based.</li>
+<li><strong>Drive:</strong> shallow + dig; classic West Coast man/zone beater.</li>
+<li><strong>Sail/Flood:</strong> three-level stretch to one sideline.</li>
+</ul>
+        </div>
+        <nav class="scheme-nav" aria-label="Scheme navigation">
+      <a class="scheme-link prev" href="veer-and-shoot.html">← Veer and Shoot</a>
+      <a class="scheme-link center" href="index.html">All Schemes</a>
+      <a class="scheme-link next" href="option.html">Option →</a>
+    </nav>
+      </article>
+    </div>
+  </main>
+</body>
+</html>

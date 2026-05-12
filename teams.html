@@ -1,0 +1,588 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🏟️ CFB26 Team Scheme Guide — CFB26 Playbook</title>
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("clawpilotTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <script src="assets/scripts/theme.js?v=1"></script>
+  <link rel="stylesheet" href="assets/styles/theme.css?v=1">
+  <link rel="stylesheet" href="assets/styles/site-nav.css?v=1">
+  <script defer src="assets/scripts/site-nav.js?v=1"></script>
+  <style>
+
+:root {
+  color-scheme: light;
+  --cp-bg: #f7f4ef;
+  --cp-bg-elevated: #fcfbf8;
+  --cp-surface: #ffffff;
+  --cp-surface-soft: #f5f5f5;
+  --cp-border: #dedede;
+  --cp-border-strong: #919191;
+  --cp-text: #242424;
+  --cp-text-muted: #5c5c5c;
+  --cp-text-soft: #6f6f6f;
+  --cp-accent: #b11f4b;
+  --cp-accent-hover: #9a1a41;
+  --cp-accent-soft: rgba(177, 31, 75, 0.08);
+  --cp-accent-fg: #ffffff;
+  --cp-success: #16a34a;
+  --cp-danger: #dc2626;
+  --cp-warning: #f59e0b;
+  --cp-link: #0078d4;
+  --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+  --cp-overlay: rgba(255, 255, 255, 0.8);
+  --cp-panel: rgba(255, 255, 255, 0.86);
+  --cp-panel-strong: rgba(255, 255, 255, 0.96);
+  --cp-sheen: rgba(255, 255, 255, 0.55);
+  --cp-highlight: rgba(177, 31, 75, 0.12);
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --cp-bg: #3d3b3a;
+  --cp-bg-elevated: #343231;
+  --cp-surface: #292929;
+  --cp-surface-soft: #2e2e2e;
+  --cp-border: #474747;
+  --cp-border-strong: #5f5f5f;
+  --cp-text: #dedede;
+  --cp-text-muted: #919191;
+  --cp-text-soft: #b0b0b0;
+  --cp-accent: #fd8ea1;
+  --cp-accent-hover: #fb7b91;
+  --cp-accent-soft: rgba(253, 142, 161, 0.14);
+  --cp-accent-fg: #1a1a1a;
+  --cp-success: #4ade80;
+  --cp-danger: #f87171;
+  --cp-warning: #fbbf24;
+  --cp-link: #4da6ff;
+  --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+  --cp-overlay: rgba(41, 41, 41, 0.88);
+  --cp-panel: rgba(41, 41, 41, 0.72);
+  --cp-panel-strong: rgba(41, 41, 41, 0.96);
+  --cp-sheen: rgba(255, 255, 255, 0.04);
+  --cp-highlight: rgba(253, 142, 161, 0.12);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--cp-bg);
+  color: var(--cp-text);
+  font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.5;
+}
+a {
+  color: var(--cp-link);
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+.wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 20px 56px;
+}
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+.hero,
+.card,
+.scheme-card,
+.purpose-card,
+.template-card {
+  background: var(--cp-surface);
+  border: 1px solid var(--cp-border);
+  border-radius: 16px;
+  box-shadow: 0 10px 24px var(--cp-accent-soft);
+}
+.hero {
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.eyebrow {
+  margin: 0 0 0.5rem;
+  color: var(--cp-text-muted);
+  font-size: 0.95rem;
+}
+h1, h2, h3 {
+  margin: 0;
+  line-height: 1.2;
+}
+.hero h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin-bottom: 0.75rem;
+}
+.lede {
+  margin: 0;
+  color: var(--cp-text-muted);
+  max-width: 70ch;
+}
+.meta-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  margin-top: 1rem;
+}
+.meta-item {
+  padding: 0.9rem 1rem;
+  background: var(--cp-bg-elevated);
+  border: 1px solid var(--cp-border);
+  border-radius: 0.625rem;
+}
+.meta-label {
+  display: block;
+  color: var(--cp-text-muted);
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+}
+.stack {
+  display: grid;
+  gap: 1rem;
+}
+.card,
+.scheme-card,
+.purpose-card,
+.template-card {
+  padding: 1.25rem;
+}
+.section-copy {
+  margin: 0.5rem 0 0;
+  color: var(--cp-text-muted);
+}
+.search-input {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border-radius: 0.625rem;
+  border: 1px solid var(--cp-border-strong);
+  background: var(--cp-surface);
+  color: var(--cp-text);
+  font: inherit;
+}
+.search-input:focus {
+  outline: 2px solid var(--cp-accent);
+  outline-offset: 2px;
+  border-color: var(--cp-accent);
+}
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.625rem;
+  margin-top: 1rem;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 680px;
+}
+th, td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--cp-border);
+  text-align: left;
+  vertical-align: top;
+}
+thead th {
+  background: var(--cp-surface-soft);
+  color: var(--cp-text);
+  font-size: 0.95rem;
+}
+tbody tr:nth-child(even) {
+  background: var(--cp-bg-elevated);
+}
+tbody tr:hover {
+  background: var(--cp-highlight);
+}
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+.pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid var(--cp-border);
+  background: var(--cp-bg-elevated);
+  color: var(--cp-text-muted);
+  font-size: 0.95rem;
+}
+.scheme-card {
+  border-top: 4px solid var(--scheme-accent, var(--cp-accent));
+}
+.scheme-header,
+.section-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: start;
+}
+.scheme-badge,
+.section-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--scheme-accent, var(--cp-accent));
+  color: var(--scheme-accent, var(--cp-accent));
+  font-size: 0.85rem;
+  font-weight: 700;
+  background: var(--cp-surface);
+}
+.section-badge {
+  border-color: var(--cp-accent);
+  color: var(--cp-accent);
+}
+.empty-state {
+  display: none;
+  padding: 1rem;
+  border: 1px dashed var(--cp-border-strong);
+  border-radius: 0.625rem;
+  color: var(--cp-text-muted);
+  text-align: center;
+  background: var(--cp-bg-elevated);
+}
+.empty-state.visible { display: block; }
+.coverage-table tbody tr {
+  transition: background 160ms ease, transform 160ms ease;
+}
+.coverage-table tbody tr:hover {
+  transform: translateY(-1px);
+}
+.purpose-grid,
+.template-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+.purpose-card,
+.template-card {
+  display: grid;
+  gap: 1rem;
+}
+.purpose-copy {
+  margin: 0;
+  color: var(--cp-text-muted);
+  font-style: italic;
+}
+.styled-list {
+  counter-reset: item;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+.styled-list li {
+  counter-increment: item;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.85rem;
+  align-items: start;
+  padding: 0.9rem;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.625rem;
+  background: var(--cp-bg-elevated);
+}
+.styled-list li::before {
+  content: counter(item);
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: var(--cp-accent);
+  color: var(--cp-accent-fg);
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  margin-top: 0.05rem;
+}
+.checklist,
+.detail-list {
+  margin: 0;
+  padding-left: 1.2rem;
+  display: grid;
+  gap: 0.5rem;
+}
+.detail-list strong {
+  color: var(--cp-text);
+}
+.subsection {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.625rem;
+  background: var(--cp-bg-elevated);
+}
+.muted {
+  color: var(--cp-text-muted);
+}
+.footer-note {
+  margin-top: 1.5rem;
+  color: var(--cp-text-soft);
+  font-size: 0.92rem;
+}
+@media (max-width: 700px) {
+  .wrap { padding: 20px 14px 40px; }
+  .hero, .card, .scheme-card, .purpose-card, .template-card { padding: 1rem; }
+  table { min-width: 620px; }
+}
+
+  </style>
+</head>
+<body data-nav-root=".">
+  <main class="wrap">
+<a class="back-link" href="index.html">← Back to Index</a>
+<section class="hero">
+  <p class="eyebrow">Author: Dave Voyles</p>
+  <h1>🏟️ CFB26 Team Scheme Guide</h1>
+  <p class="lede">Use this guide to find teams that match the playbooks in this repo.</p>
+  <p class="footer-note"><em>Note: Assignments are based on real-world coaching staffs as of 2025/2026. Verify within CFB26 dynasty mode.</em></p>
+  <div class="pill-row" aria-label="Filter tips">
+    <span class="pill">Search by team</span>
+    <span class="pill">Search by conference</span>
+    <span class="pill">Search by scheme</span>
+  </div>
+</section>
+
+<section class="card stack" aria-labelledby="team-filter-heading">
+  <div class="section-header">
+    <div>
+      <h2 id="team-filter-heading">Find Your Scheme Match</h2>
+      <p class="section-copy">Type to filter by team name, conference, or scheme family.</p>
+    </div>
+    <span class="section-badge">Live filter</span>
+  </div>
+  <label>
+    <span class="muted">Search teams</span>
+    <input id="team-search" class="search-input" type="search" placeholder="Try SEC, Air Raid, Utah, Option..." autocomplete="off">
+  </label>
+  <div id="team-empty" class="empty-state">No teams matched that search. Try a team, conference, or scheme keyword.</div>
+</section>
+
+<div class="stack" id="scheme-list">
+  <section class="scheme-card" data-scheme-card style="--scheme-accent: var(--cp-accent);">
+    <div class="scheme-header">
+      <div>
+        <h2>🎯 Air Raid Teams</h2>
+        <p class="section-copy"><em>Pass-first philosophy, wide splits, 4-WR sets.</em></p>
+      </div>
+      <span class="scheme-badge">Air Raid</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Team</th><th>Conference</th><th>Notes / Coach Tree</th></tr>
+        </thead>
+        <tbody>
+          <tr data-search="wisconsin big ten air raid phil longo dairy raid power air raid"><td><strong>Wisconsin</strong></td><td>Big Ten</td><td>Phil Longo's "Dairy Raid" (Power Air Raid)</td></tr>
+          <tr data-search="texas tech big 12 air raid birthplace still runs air raid concepts"><td><strong>Texas Tech</strong></td><td>Big 12</td><td>The birthplace. Still runs Air Raid concepts.</td></tr>
+          <tr data-search="north texas aac air raid morris harrell influence"><td><strong>North Texas</strong></td><td>AAC</td><td>Morris/Harrell influence.</td></tr>
+          <tr data-search="colorado big 12 air raid shedeur prime era leaned heavily on spread passing"><td><strong>Colorado</strong></td><td>Big 12</td><td>Shedeur/Prime era leaned heavily on spread passing.</td></tr>
+          <tr data-search="mississippi state sec air raid lebby veer and shoot dna"><td><strong>Mississippi State</strong></td><td>SEC</td><td>Lebby's Veer-and-Shoot has Air Raid DNA.</td></tr>
+          <tr data-search="washington state pac-12 air raid mike leach legacy"><td><strong>Washington State</strong></td><td>Pac-12</td><td>Historical Air Raid (Mike Leach legacy).</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="scheme-card" data-scheme-card style="--scheme-accent: var(--cp-link);">
+    <div class="scheme-header">
+      <div>
+        <h2>🧱 Pro Style / Multiple Teams</h2>
+        <p class="section-copy"><em>TE/FB usage, under-center runs, play-action.</em></p>
+      </div>
+      <span class="scheme-badge">Pro Style / Multiple</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Team</th><th>Conference</th><th>Notes / Coach Tree</th></tr>
+        </thead>
+        <tbody>
+          <tr data-search="michigan big ten pro style multiple power run heavy te usage physical identity"><td><strong>Michigan</strong></td><td>Big Ten</td><td>Power run, heavy TE usage, physical identity.</td></tr>
+          <tr data-search="georgia sec pro style multiple heavy 12 personnel usage"><td><strong>Georgia</strong></td><td>SEC</td><td>Multiple offense, heavy 12 personnel usage.</td></tr>
+          <tr data-search="utah big 12 pro style multiple physical te centric whittingham culture"><td><strong>Utah</strong></td><td>Big 12</td><td>Physical, TE-centric, Whittingham culture.</td></tr>
+          <tr data-search="iowa big ten pro style multiple conservative zone run"><td><strong>Iowa</strong></td><td>Big Ten</td><td>The definition of conservative Pro Style / Zone Run.</td></tr>
+          <tr data-search="notre dame indep pro style multiple freeman denbrock mix spread and pro concepts"><td><strong>Notre Dame</strong></td><td>Indep</td><td>Freeman/Denbrock mix spread &amp; pro concepts.</td></tr>
+          <tr data-search="alabama sec pro style multiple deboer spread bama dna physical multiple"><td><strong>Alabama</strong></td><td>SEC</td><td>DeBoer brings spread, but Bama DNA is physical/multiple.</td></tr>
+          <tr data-search="lsu sec pro style multiple passing concepts aggressive downfield"><td><strong>LSU</strong></td><td>SEC</td><td>Pro-style passing concepts, aggressive downfield.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="scheme-card" data-scheme-card style="--scheme-accent: var(--cp-success);">
+    <div class="scheme-header">
+      <div>
+        <h2>🏃 Spread Teams (RPO / Zone Read)</h2>
+        <p class="section-copy"><em>11 Personnel, Gun runs, Screen game.</em></p>
+      </div>
+      <span class="scheme-badge">Spread / RPO</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Team</th><th>Conference</th><th>Notes / Coach Tree</th></tr>
+        </thead>
+        <tbody>
+          <tr data-search="oregon big ten spread rpo zone read stein lanning tempo rpos spacing"><td><strong>Oregon</strong></td><td>Big Ten</td><td>Stein/Lanning. Tempo, RPOs, spacing.</td></tr>
+          <tr data-search="ohio state big ten spread rpo zone read kelly day zone run explosive passing"><td><strong>Ohio State</strong></td><td>Big Ten</td><td>Kelly/Day. Zone run meets explosive passing.</td></tr>
+          <tr data-search="ole miss sec spread rpo zone read kiffin tempo aggressive shots unique run schemes"><td><strong>Ole Miss</strong></td><td>SEC</td><td>Kiffin. Tempo, aggressive shots, unique run schemes.</td></tr>
+          <tr data-search="clemson acc spread rpo zone read riley garrett riley air raid spread"><td><strong>Clemson</strong></td><td>ACC</td><td>Riley. Garrett Riley's version of the Air Raid/Spread.</td></tr>
+          <tr data-search="tcu big 12 spread rpo zone read dykes air raid spread hybrid"><td><strong>TCU</strong></td><td>Big 12</td><td>Dykes. Air Raid/Spread hybrid.</td></tr>
+          <tr data-search="arizona big 12 spread rpo zone read brennan fisch established pro spread concepts"><td><strong>Arizona</strong></td><td>Big 12</td><td>Brennan/Fisch era established pro-spread concepts.</td></tr>
+          <tr data-search="liberty cusa spread rpo zone read chadwell spread option new triple option"><td><strong>Liberty</strong></td><td>CUSA</td><td>Chadwell. Spread option / "New" Triple Option.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="scheme-card" data-scheme-card style="--scheme-accent: var(--cp-warning);">
+    <div class="scheme-header">
+      <div>
+        <h2>🚀 Veer and Shoot Teams</h2>
+        <p class="section-copy"><em>Ultra-wide splits, extreme tempo, choice verticals.</em></p>
+      </div>
+      <span class="scheme-badge">Veer and Shoot</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Team</th><th>Conference</th><th>Notes / Coach Tree</th></tr>
+        </thead>
+        <tbody>
+          <tr data-search="tennessee sec veer and shoot heupel gold standard"><td><strong>Tennessee</strong></td><td>SEC</td><td>Heupel. The gold standard for Veer &amp; Shoot.</td></tr>
+          <tr data-search="usf aac veer and shoot golesh heupel tree fastest offense"><td><strong>USF</strong></td><td>AAC</td><td>Golesh (Heupel tree). Fastest offense in the game?</td></tr>
+          <tr data-search="ucf big 12 veer and shoot malzahn heupel dna still lingers"><td><strong>UCF</strong></td><td>Big 12</td><td>Malzahn/Heupel DNA still lingers.</td></tr>
+          <tr data-search="baylor big 12 veer and shoot historical playbook fits"><td><strong>Baylor</strong></td><td>Big 12</td><td>Aranda has moved away, but historical playbook fits.</td></tr>
+          <tr data-search="oklahoma sec veer and shoot venables littrell mix briles tree roots"><td><strong>Oklahoma</strong></td><td>SEC</td><td>Venables/Littrell mix, but has Briles-tree roots.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="scheme-card" data-scheme-card style="--scheme-accent: var(--cp-text-soft);">
+    <div class="scheme-header">
+      <div>
+        <h2>🌊 West Coast Teams</h2>
+        <p class="section-copy"><em>Horizontal passing, rhythm throws, YAC.</em></p>
+      </div>
+      <span class="scheme-badge">West Coast</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Team</th><th>Conference</th><th>Notes / Coach Tree</th></tr>
+        </thead>
+        <tbody>
+          <tr data-search="texas sec west coast sarkisian all gas no brakes deep west coast"><td><strong>Texas</strong></td><td>SEC</td><td>Sarkisian. "All Gas No Brakes" is actually deep West Coast.</td></tr>
+          <tr data-search="florida sec west coast napier shanahan tree influence stretch run boots"><td><strong>Florida</strong></td><td>SEC</td><td>Napier. Shanahan-tree influence (stretch run + boots).</td></tr>
+          <tr data-search="stanford acc west coast taylor troy taylor unique passing system"><td><strong>Stanford</strong></td><td>ACC</td><td>Taylor. Troy Taylor runs a unique passing system.</td></tr>
+          <tr data-search="boise state mwc west coast multiple pro heavily shift motion based"><td><strong>Boise State</strong></td><td>MWC</td><td>Multiple/Pro, but heavily shift/motion based.</td></tr>
+          <tr data-search="purdue big ten west coast harrell air raid walters transition"><td><strong>Purdue</strong></td><td>Big Ten</td><td>Harrell (Air Raid) -&gt; Walters transition.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="scheme-card" data-scheme-card style="--scheme-accent: var(--cp-danger);">
+    <div class="scheme-header">
+      <div>
+        <h2>🦵 Option Teams (Flexbone / Pistol Option)</h2>
+        <p class="section-copy"><em>Triple option, QB run primary.</em></p>
+      </div>
+      <span class="scheme-badge">Option</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Team</th><th>Conference</th><th>Notes / Coach Tree</th></tr>
+        </thead>
+        <tbody>
+          <tr data-search="army aac option flexbone pistol shotgun hard to stop"><td><strong>Army</strong></td><td>AAC</td><td>Shotgun/Flexbone hybrid. Hardest run game to stop.</td></tr>
+          <tr data-search="navy aac option wing t hybrid elements"><td><strong>Navy</strong></td><td>AAC</td><td>Wing-T / Option hybrid elements.</td></tr>
+          <tr data-search="air force mwc option true triple option roots"><td><strong>Air Force</strong></td><td>MWC</td><td>True triple option roots.</td></tr>
+          <tr data-search="kennesaw state cusa option pistol gnarly option"><td><strong>Kennesaw State</strong></td><td>CUSA</td><td>Pistol option / "Gnarly" option.</td></tr>
+          <tr data-search="unlv mwc option go go offense brennan marion 2 backs unique option"><td><strong>UNLV</strong></td><td>MWC</td><td>Go-Go Offense (Brennan Marion) - 2 Backs, unique option.</td></tr>
+          <tr data-search="coastal carolina sun belt option chadwell legacy spread option"><td><strong>Coastal Carolina</strong></td><td>Sun Belt</td><td>Chadwell legacy (Spread Option).</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="scheme-card" data-scheme-card style="--scheme-accent: var(--cp-border-strong);">
+    <div class="scheme-header">
+      <div>
+        <h2>🎲 Run and Shoot Teams</h2>
+        <p class="section-copy"><em>Option routes, 4-wide, adjusting on the fly.</em></p>
+      </div>
+      <span class="scheme-badge">Run and Shoot</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Team</th><th>Conference</th><th>Notes / Coach Tree</th></tr>
+        </thead>
+        <tbody>
+          <tr data-search="hawaii mwc run and shoot timmy chang soulful home"><td><strong>Hawaii</strong></td><td>MWC</td><td>The soulful home of the Run &amp; Shoot (Timmy Chang).</td></tr>
+          <tr data-search="san jose state mwc run and shoot spread n shred"><td><strong>San Jose State</strong></td><td>MWC</td><td>Often employs R&amp;S concepts or Spread-N-Shred.</td></tr>
+          <tr data-search="smu acc run and shoot lashlee spread choice influence"><td><strong>SMU</strong></td><td>ACC</td><td>Lashlee. Spread, but heavy R&amp;S "Choice" influence.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+  </main>
+<script>
+  (() => {
+    const input = document.getElementById('team-search');
+    const cards = [...document.querySelectorAll('[data-scheme-card]')];
+    const empty = document.getElementById('team-empty');
+
+    const filter = () => {
+      const term = input.value.trim().toLowerCase();
+      let visibleCards = 0;
+
+      cards.forEach((card) => {
+        const rows = [...card.querySelectorAll('tbody tr')];
+        let visibleRows = 0;
+
+        rows.forEach((row) => {
+          const text = row.dataset.search || row.textContent.toLowerCase();
+          const match = term === '' || text.includes(term);
+          row.hidden = !match;
+          if (match) visibleRows += 1;
+        });
+
+        card.hidden = visibleRows === 0;
+        if (visibleRows > 0) visibleCards += 1;
+      });
+
+      empty.classList.toggle('visible', visibleCards === 0);
+    };
+
+    input.addEventListener('input', filter);
+    filter();
+  })();
+</script>
+</body>
+</html>

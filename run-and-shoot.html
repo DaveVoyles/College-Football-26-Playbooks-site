@@ -1,0 +1,1163 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("clawpilotTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Run and Shoot — CFB26 Playbook</title>
+  <script src="assets/scripts/theme.js?v=1"></script>
+  <link rel="stylesheet" href="assets/styles/theme.css?v=1">
+  <link rel="stylesheet" href="assets/styles/site-nav.css?v=1">
+  <script defer src="assets/scripts/site-nav.js?v=1"></script>
+  <style>
+:root {
+  color-scheme: light;
+  --cp-bg: #f7f4ef;
+  --cp-bg-elevated: #fcfbf8;
+  --cp-surface: #ffffff;
+  --cp-surface-soft: #f5f5f5;
+  --cp-border: #dedede;
+  --cp-border-strong: #919191;
+  --cp-text: #242424;
+  --cp-text-muted: #5c5c5c;
+  --cp-text-soft: #6f6f6f;
+  --cp-accent: #b11f4b;
+  --cp-accent-hover: #9a1a41;
+  --cp-accent-soft: rgba(177, 31, 75, 0.08);
+  --cp-accent-fg: #ffffff;
+  --cp-success: #16a34a;
+  --cp-danger: #dc2626;
+  --cp-warning: #f59e0b;
+  --cp-link: #0078d4;
+  --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+  --cp-overlay: rgba(255, 255, 255, 0.8);
+  --cp-panel: rgba(255, 255, 255, 0.86);
+  --cp-panel-strong: rgba(255, 255, 255, 0.96);
+  --cp-sheen: rgba(255, 255, 255, 0.55);
+  --cp-highlight: rgba(177, 31, 75, 0.12);
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --cp-bg: #3d3b3a;
+  --cp-bg-elevated: #343231;
+  --cp-surface: #292929;
+  --cp-surface-soft: #2e2e2e;
+  --cp-border: #474747;
+  --cp-border-strong: #5f5f5f;
+  --cp-text: #dedede;
+  --cp-text-muted: #919191;
+  --cp-text-soft: #b0b0b0;
+  --cp-accent: #fd8ea1;
+  --cp-accent-hover: #fb7b91;
+  --cp-accent-soft: rgba(253, 142, 161, 0.14);
+  --cp-accent-fg: #1a1a1a;
+  --cp-success: #4ade80;
+  --cp-danger: #f87171;
+  --cp-warning: #fbbf24;
+  --cp-link: #4da6ff;
+  --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+  --cp-overlay: rgba(41, 41, 41, 0.88);
+  --cp-panel: rgba(41, 41, 41, 0.72);
+  --cp-panel-strong: rgba(41, 41, 41, 0.96);
+  --cp-sheen: rgba(255, 255, 255, 0.04);
+  --cp-highlight: rgba(253, 142, 161, 0.12);
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  margin: 0;
+  background: var(--cp-bg);
+  color: var(--cp-text);
+  font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.65;
+}
+a {
+  color: var(--cp-link);
+}
+a:hover {
+  color: var(--cp-accent-hover);
+}
+body.scheme-run-and-shoot {
+  --scheme-tone: var(--cp-danger);
+}
+.wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1rem 3rem;
+}
+.page-layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+.toc-panel,
+.guide-card {
+  background: var(--cp-surface);
+  border: 1px solid var(--cp-border);
+  border-radius: 16px;
+  box-shadow: 0 12px 28px var(--cp-highlight);
+}
+.toc-panel {
+  position: sticky;
+  top: 1rem;
+  padding: 1rem;
+  background: var(--cp-panel-strong);
+}
+.toc-panel h2 {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  color: var(--scheme-tone);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+.toc-item a {
+  display: block;
+  padding: 0.45rem 0.6rem;
+  border-radius: 0.625rem;
+  text-decoration: none;
+  color: var(--cp-text-muted);
+}
+.toc-item a:hover {
+  background: var(--cp-accent-soft);
+  color: var(--cp-text);
+}
+.toc-level-3 {
+  margin-inline-start: 0.8rem;
+  font-size: 0.96rem;
+}
+.guide-card {
+  padding: 1.5rem;
+  overflow: hidden;
+}
+.content > :first-child {
+  margin-top: 0;
+}
+.content h1,
+.content h2,
+.content h3 {
+  scroll-margin-top: 1rem;
+  line-height: 1.2;
+}
+.content h1 {
+  margin-bottom: 0.4rem;
+  color: var(--scheme-tone);
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+.content h2 {
+  margin-top: 2rem;
+  padding-top: 0.2rem;
+  border-top: 1px solid var(--cp-border);
+  color: var(--scheme-tone);
+  font-size: clamp(1.35rem, 2vw, 1.7rem);
+}
+.content h3 {
+  margin-top: 1.35rem;
+  color: var(--cp-text);
+  font-size: 1.1rem;
+}
+.content p,
+.content li {
+  color: var(--cp-text);
+}
+.content strong {
+  color: var(--cp-text);
+}
+.content em {
+  color: var(--cp-text-soft);
+}
+.content ul,
+.content ol {
+  padding-inline-start: 1.35rem;
+}
+.content hr {
+  border: 0;
+  border-top: 1px solid var(--cp-border);
+  margin: 2rem 0;
+}
+.content p > a[href="index.html"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid var(--cp-border);
+  border-radius: 999px;
+  text-decoration: none;
+  background: var(--cp-bg-elevated);
+}
+.table-scroll {
+  overflow-x: auto;
+  margin: 1rem 0 1.5rem;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.625rem;
+  background: var(--cp-surface);
+}
+.table-scroll table {
+  width: 100%;
+  min-width: 620px;
+  border-collapse: collapse;
+}
+.table-scroll th,
+.table-scroll td {
+  padding: 0.75rem 0.85rem;
+  border-bottom: 1px solid var(--cp-border);
+  text-align: left;
+  vertical-align: top;
+}
+.table-scroll th {
+  background: var(--cp-bg-elevated);
+  color: var(--scheme-tone);
+}
+.table-scroll tbody tr:nth-child(odd) {
+  background: var(--cp-surface-soft);
+}
+.callout {
+  position: relative;
+  margin: 1.25rem 0;
+  padding: 1rem 1rem 1rem 1.2rem;
+  border-inline-start: 0.35rem solid var(--callout-tone, var(--cp-accent));
+  border-radius: 0.625rem;
+  background: var(--cp-accent-soft);
+}
+.callout::before {
+  content: var(--callout-icon, "💡");
+  position: absolute;
+  inset-inline-end: 0.9rem;
+  inset-block-start: 0.85rem;
+  font-size: 1rem;
+}
+.callout.tip {
+  --callout-tone: var(--cp-success);
+  --callout-icon: "💡";
+}
+.callout.warning {
+  --callout-tone: var(--cp-warning);
+  --callout-icon: "⚠️";
+}
+.callout.note {
+  --callout-tone: var(--cp-link);
+  --callout-icon: "📝";
+}
+.callout > :first-child {
+  margin-top: 0;
+}
+.callout > :last-child {
+  margin-bottom: 0;
+}
+pre.code-block {
+  margin: 1rem 0 1.5rem;
+  padding: 1rem;
+  border-radius: 0.625rem;
+  border: 1px solid var(--cp-border-strong);
+  background: var(--cp-text);
+  color: var(--cp-bg);
+  overflow-x: auto;
+}
+pre.code-block code,
+code {
+  font-family: Consolas, "Courier New", Courier, monospace;
+}
+p code,
+li code,
+td code {
+  padding: 0.1rem 0.35rem;
+  border-radius: 0.35rem;
+  background: var(--cp-surface-soft);
+  color: var(--cp-text);
+}
+pre.diff code {
+  display: grid;
+  gap: 0.1rem;
+}
+.diff-line {
+  display: block;
+  white-space: pre;
+}
+.diff-add {
+  color: var(--cp-success);
+}
+.diff-del {
+  color: var(--cp-danger);
+}
+.diff-note {
+  color: var(--cp-warning);
+}
+.diff-context {
+  color: var(--cp-bg);
+}
+details {
+  margin: 1.25rem 0;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.625rem;
+  background: var(--cp-bg-elevated);
+  overflow: hidden;
+}
+summary {
+  cursor: pointer;
+  padding: 0.85rem 1rem;
+  font-weight: 600;
+  color: var(--scheme-tone);
+  background: var(--cp-accent-soft);
+}
+details > :not(summary) {
+  margin-inline: 1rem;
+}
+.scheme-nav {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--cp-border);
+}
+.scheme-link,
+.nav-spacer {
+  min-height: 100%;
+}
+.scheme-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.625rem;
+  text-decoration: none;
+  color: var(--cp-text);
+  background: var(--cp-bg-elevated);
+  text-align: center;
+}
+.scheme-link:hover {
+  border-color: var(--scheme-tone);
+  background: var(--cp-accent-soft);
+}
+.scheme-link.center {
+  font-weight: 600;
+}
+@media (max-width: 920px) {
+  .wrap {
+    padding-top: 1rem;
+  }
+  .page-layout {
+    grid-template-columns: 1fr;
+  }
+  .toc-panel {
+    position: static;
+    overflow-x: auto;
+  }
+  .toc-list {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+    width: max-content;
+    min-width: 100%;
+  }
+  .toc-level-3 {
+    margin-inline-start: 0;
+  }
+}
+@media (max-width: 640px) {
+  .guide-card {
+    padding: 1rem;
+  }
+  .scheme-nav {
+    grid-template-columns: 1fr;
+  }
+  .table-scroll table {
+    min-width: 520px;
+  }
+}
+  </style>
+</head>
+<body data-nav-root="." class="scheme-run-and-shoot">
+  <main class="wrap">
+    <div class="page-layout">
+      <aside class="toc-panel" aria-label="Table of contents">
+        <h2>On this page</h2>
+        <ul class="toc-list">
+<li class="toc-item toc-level-2"><a href="#quick-definition-brain">Quick definition 🧠</a></li>
+<li class="toc-item toc-level-2"><a href="#the-identity-one-sentence-dart">The identity (one sentence) 🎯</a></li>
+<li class="toc-item toc-level-2"><a href="#pros-white_check_mark-and-cons-warning">Pros ✅ and cons ⚠️</a></li>
+<li class="toc-item toc-level-2"><a href="#typical-personnel-jigsaw">Typical personnel 🧩</a></li>
+<li class="toc-item toc-level-3"><a href="#personnel-cheat-table">Personnel cheat table</a></li>
+<li class="toc-item toc-level-3"><a href="#role-archetypes">Role archetypes</a></li>
+<li class="toc-item toc-level-2"><a href="#typical-formations-triangular_ruler">Typical formations 📐</a></li>
+<li class="toc-item toc-level-3"><a href="#formation-families-quick-pick-table">Formation families (quick pick table)</a></li>
+<li class="toc-item toc-level-2"><a href="#core-concept-menu-run-and-shoot-staples-gear">Core concept menu (Run and Shoot staples) ⚙️</a></li>
+<li class="toc-item toc-level-3"><a href="#1-choice--option-routes-the-centerpiece">1) Choice / Option routes (the centerpiece)</a></li>
+<li class="toc-item toc-level-3"><a href="#2-seam-reads--four-verts-variants">2) Seam reads / Four verts variants</a></li>
+<li class="toc-item toc-level-3"><a href="#3-switch-releases">3) Switch releases</a></li>
+<li class="toc-item toc-level-3"><a href="#4-shallow--crossers-the-get-out-of-jail">4) Shallow / crossers (the “get out of jail”)</a></li>
+<li class="toc-item toc-level-3"><a href="#5-draw--inside-zone">5) Draw / inside zone</a></li>
+<li class="toc-item toc-level-2"><a href="#pre-snap-plan-audibles--box-count--motion-video_game">Pre-snap plan (audibles + box count + motion) 🎮</a></li>
+<li class="toc-item toc-level-2"><a href="#qb-operation-timing--progressions-stopwatch">QB operation (timing + progressions) ⏱️</a></li>
+<li class="toc-item toc-level-3"><a href="#step-1-identify-the-shell">Step 1: identify the shell</a></li>
+<li class="toc-item toc-level-3"><a href="#step-2-locate-the-conflict-defender">Step 2: locate the “conflict” defender</a></li>
+<li class="toc-item toc-level-3"><a href="#step-3-throw-to-the-first-clear-win">Step 3: throw to the first clear win</a></li>
+<li class="toc-item toc-level-2"><a href="#building-your-run-and-shoot-call-sheet-practical-cfb26-plan-card_index_dividers">Building your Run and Shoot call sheet (practical CFB26 plan) 🗂️</a></li>
+<li class="toc-item toc-level-3"><a href="#1st-and-10">1st and 10</a></li>
+<li class="toc-item toc-level-3"><a href="#2nd-and-short">2nd and short</a></li>
+<li class="toc-item toc-level-3"><a href="#2nd-and-long">2nd and long</a></li>
+<li class="toc-item toc-level-3"><a href="#3rd-down">3rd down</a></li>
+<li class="toc-item toc-level-3"><a href="#red-zone-packages">Red zone (packages)</a></li>
+<li class="toc-item toc-level-2"><a href="#defensive-looks-and-your-counters-shield">Defensive looks and your counters 🛡️</a></li>
+<li class="toc-item toc-level-3"><a href="#they-play-press-man">They play press man</a></li>
+<li class="toc-item toc-level-3"><a href="#they-sit-in-two-high-and-rally">They sit in two-high and rally</a></li>
+<li class="toc-item toc-level-3"><a href="#they-blitz">They blitz</a></li>
+<li class="toc-item toc-level-2"><a href="#roster-building-priorities-dna">Roster building priorities 🧬</a></li>
+<li class="toc-item toc-level-2"><a href="#option-routes-in-practice-how-to-stop-throwing-wrong-route-picks-test_tube">Option routes in practice (how to stop throwing “wrong-route” picks) 🧪</a></li>
+<li class="toc-item toc-level-3"><a href="#the-three-leverage-questions">The three leverage questions</a></li>
+<li class="toc-item toc-level-3"><a href="#practical-option-route-outcomes-common-conversions">Practical option-route outcomes (common conversions)</a></li>
+<li class="toc-item toc-level-2"><a href="#sequencing-how-run-and-shoot-stays-efficient-repeat">Sequencing (how Run and Shoot stays efficient) 🔁</a></li>
+<li class="toc-item toc-level-3"><a href="#a-simple-6-play-sequence-that-works">A simple 6-play sequence that works</a></li>
+<li class="toc-item toc-level-2"><a href="#protection--checkdowns--sack-avoidance-rules-shield">Protection + checkdowns + sack-avoidance rules 🛡️</a></li>
+<li class="toc-item toc-level-2"><a href="#pace-note-stopwatch">Pace note ⏱️</a></li>
+<li class="toc-item toc-level-3"><a href="#your-protection-toolbox">Your protection toolbox</a></li>
+<li class="toc-item toc-level-3"><a href="#when-to-take-the-sack-vs-force-the-ball">When to take the sack vs force the ball</a></li>
+<li class="toc-item toc-level-2"><a href="#situational-packages-what-to-favorite-star">Situational packages (what to favorite) ⭐</a></li>
+<li class="toc-item toc-level-3"><a href="#3rd-and-short-12">3rd-and-short (1–2)</a></li>
+<li class="toc-item toc-level-3"><a href="#3rd-and-medium-36">3rd-and-medium (3–6)</a></li>
+<li class="toc-item toc-level-3"><a href="#3rd-and-long-712">3rd-and-long (7–12)</a></li>
+<li class="toc-item toc-level-3"><a href="#red-zone">Red zone</a></li>
+<li class="toc-item toc-level-2"><a href="#weekly-install-plan-learn-it-without-getting-overwhelmed-books">Weekly install plan (learn it without getting overwhelmed) 📚</a></li>
+<li class="toc-item toc-level-3"><a href="#week-1-two-concepts-only">Week 1: two concepts only</a></li>
+<li class="toc-item toc-level-3"><a href="#week-2-add-one-shot">Week 2: add one shot</a></li>
+<li class="toc-item toc-level-3"><a href="#week-3-add-one-blitz-answer">Week 3: add one blitz answer</a></li>
+<li class="toc-item toc-level-3"><a href="#week-4-add-one-red-zone-plan">Week 4: add one red zone plan</a></li>
+<li class="toc-item toc-level-2"><a href="#troubleshooting-fire_extinguisher">Troubleshooting 🧯</a></li>
+<li class="toc-item toc-level-3"><a href="#problem-my-receiver-sits-but-i-threw-the-out-pick">Problem: “My receiver sits but I threw the out (pick).”</a></li>
+<li class="toc-item toc-level-3"><a href="#problem-im-getting-sacked-in-empty">Problem: “I’m getting sacked in empty.”</a></li>
+<li class="toc-item toc-level-3"><a href="#problem-i-complete-passes-but-never-get-explosives">Problem: “I complete passes but never get explosives.”</a></li>
+<li class="toc-item toc-level-2"><a href="#coverage-examples-what-to-look-for-in-real-time-eyes">Coverage examples (what to look for in real time) 👀</a></li>
+<li class="toc-item toc-level-3"><a href="#versus-two-high-zone-shells">Versus two-high zone shells</a></li>
+<li class="toc-item toc-level-3"><a href="#versus-single-high-zone-shells">Versus single-high zone shells</a></li>
+<li class="toc-item toc-level-3"><a href="#versus-man-coverage">Versus man coverage</a></li>
+<li class="toc-item toc-level-2"><a href="#situational-mini-playbook-copy-this-into-your-favorites-red_square">Situational mini-playbook (copy this into your favorites) 🟥</a></li>
+<li class="toc-item toc-level-3"><a href="#early-downs-1st2nd--medium">Early downs (1st/2nd &amp; medium)</a></li>
+<li class="toc-item toc-level-3"><a href="#must-have-blitz-answers">Must-have blitz answers</a></li>
+<li class="toc-item toc-level-3"><a href="#shot-calls-limit-to-23">Shot calls (limit to 2–3)</a></li>
+<li class="toc-item toc-level-3"><a href="#red-zone-inside-20">Red zone (inside 20)</a></li>
+<li class="toc-item toc-level-2"><a href="#qbwr-chemistry-drills-practice-mode-routine-handshake">QB/WR chemistry drills (practice-mode routine) 🤝</a></li>
+<li class="toc-item toc-level-2"><a href="#sample-15-play-opening-script-copypaste-idea-pencil">Sample 15-play opening script (copy/paste idea) 📝</a></li>
+<li class="toc-item toc-level-2"><a href="#post-game-metrics-did-i-run-it-right-bar_chart">Post-Game Metrics (Did I run it right?) 📊</a></li>
+<li class="toc-item toc-level-2"><a href="#dynasty-recruiting-guide-mortar_board">Dynasty Recruiting Guide 🎓</a></li>
+<li class="toc-item toc-level-2"><a href="#teams-to-check-first-in-cfb26-real-world-scheme-fit-mag">Teams to check first in CFB26 (real-world scheme fit) 🔍</a></li>
+<li class="toc-item toc-level-2"><a href="#nfl-analogs-closest-cousins-football">NFL analogs (closest cousins) 🏈</a></li>
+<li class="toc-item toc-level-2"><a href="#teams-in-cfb26-that-use-a-run-and-shoot-playbook-fill-this-in-stadium">Teams in CFB26 that use a Run and Shoot playbook (fill this in) 🏟️</a></li>
+<li class="toc-item toc-level-2"><a href="#minimal-glossary-pushpin">Minimal glossary 📌</a></li>
+</ul>
+      </aside>
+      <article class="guide-card">
+        <div class="content">
+          <h1 id="run-and-shoot-game_die-cfb26-playbook-style">Run and Shoot 🎲 (CFB26 Playbook Style)</h1>
+<p>Author: Dave Voyles</p>
+<p><a href="index.html">← Back to Index</a></p>
+<div class="callout tip">
+<p><strong>How to use this guide in CFB26</strong></p>
+<ul>
+<li>Build a small “core menu”: 2 runs + 4 passes + 1 shot</li>
+<li>Set audibles: 1 light-box run, 1 blitz answer, 1 man beater, 1 zone beater, 1 shot</li>
+<li>Use the opening script to identify coverage + box counts early</li>
+</ul>
+</div>
+<h2 id="quick-definition-brain">Quick definition 🧠</h2>
+<p>The Run and Shoot is a <strong>spread passing offense</strong> built around:</p>
+<ul>
+<li>📡 Four-receiver spacing (often 10 personnel)</li>
+<li>⚡ <strong>Option routes</strong> where receivers adjust based on coverage/leverage</li>
+<li>🎭 Attacking defenders who “miscommunicate”</li>
+</ul>
+<pre class="code-block text"><code>      WR           OL           WR
+           SB      QB      SB
+        (Slot)            (Slot)
+                   RB</code></pre>
+<p>Unlike many systems where routes are fixed, Run and Shoot asks:</p>
+<ul>
+<li>WRs to read coverage and convert routes</li>
+<li>QBs to throw to space, not to a pre-called spot</li>
+</ul>
+<h2 id="the-identity-one-sentence-dart">The identity (one sentence) 🎯</h2>
+<p><strong>Stress the defense with four vertical threats and option routes until someone is wrong—then throw it there immediately.</strong></p>
+<hr />
+<h2 id="pros-white_check_mark-and-cons-warning">Pros ✅ and cons ⚠️</h2>
+<pre class="code-block diff"><code><span class="diff-line diff-add">+ PRO: Infinite leverage (offense is always &#x27;right&#x27;).</span>
+<span class="diff-line diff-add">+ PRO: Man/Zone Busting (built-in route conversions).</span>
+<span class="diff-line diff-add">+ PRO: Stressful for Defense (one mistake = TD).</span>
+<span class="diff-line diff-add">+ PRO: Elite 2-Minute Offense (spacing + sideline).</span>
+<span class="diff-line diff-context"></span>
+<span class="diff-line diff-del">- CON: Requires QB/WR chemistry (must see same read).</span>
+<span class="diff-line diff-del">- CON: High INT risk (wrong read = easy pick).</span>
+<span class="diff-line diff-del">- CON: Protection issues (often 5-man pro).</span>
+<span class="diff-line diff-del">- CON: Light Run Game (unless you commit to Draw/Choice).</span></code></pre>
+<hr />
+<h2 id="typical-personnel-jigsaw">Typical personnel 🧩</h2>
+<p>Classic Run and Shoot lives in:</p>
+<ul>
+<li><strong>10 personnel</strong>: 1 RB, 0 TE, 4 WR</li>
+</ul>
+<p>Common modern variants also use:</p>
+<ul>
+<li><strong>11 personnel</strong>: 1 RB, 1 TE, 3 WR
+<ul>
+<li>Gives a seam/flat element and helps protection.</li>
+</ul></li>
+</ul>
+<h3 id="personnel-cheat-table">Personnel cheat table</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>Personnel</strong></th>
+<th><strong>On-field</strong></th>
+<th><strong>Why you’d use it in Run and Shoot</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>10</td>
+<td>1 RB / 4 WR</td>
+<td>Classic spacing; maximum option-route stress</td>
+</tr>
+<tr>
+<td>11</td>
+<td>1 RB / 1 TE / 3 WR</td>
+<td>Adds protection help + seam/flat answers</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="role-archetypes">Role archetypes</h3>
+<ul>
+<li><strong>QB:</strong> quick release, strong short/intermediate accuracy, calm under pressure.</li>
+<li><strong>WRs:</strong> route running + awareness; at least one speed threat.</li>
+<li><strong>Slot WR(s):</strong> option route specialists (change of direction + hands).</li>
+<li><strong>RB:</strong> pass pro + checkdown skills; draw runner.</li>
+</ul>
+<hr />
+<h2 id="typical-formations-triangular_ruler">Typical formations 📐</h2>
+<p>Run and Shoot is more about <strong>alignment rules</strong> than lots of formations.</p>
+<p>Common families:</p>
+<ul>
+<li>Gun Spread / Wide</li>
+<li>Gun Trips</li>
+<li>Gun Empty</li>
+<li>Stack/slot variations (if the playbook has them)</li>
+</ul>
+<p>Suggested “small menu”:</p>
+<h3 id="formation-families-quick-pick-table">Formation families (quick pick table)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>Family</strong></th>
+<th><strong>What it’s great for</strong></th>
+<th><strong>When to lean on it</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gun Spread / Wide</td>
+<td>Core spacing + option routes + vertical stress</td>
+<td>Base menu</td>
+</tr>
+<tr>
+<td>Gun Trips</td>
+<td>Matchup creation + switch releases</td>
+<td>When you want to isolate a defender</td>
+</tr>
+<tr>
+<td>Gun Empty</td>
+<td>Fast reads; 2-minute; pressure identification</td>
+<td>3rd-and-long; end-of-half</td>
+</tr>
+<tr>
+<td>Stacks/slots</td>
+<td>Helps vs press; stresses match coverage rules</td>
+<td>Red zone; vs man-heavy defenses</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>Major: 2x2 spread + trips</li>
+<li>Minor: empty for 3rd-and-long and 2-minute</li>
+</ul>
+<hr />
+<h2 id="core-concept-menu-run-and-shoot-staples-gear">Core concept menu (Run and Shoot staples) ⚙️</h2>
+<p>Naming varies by playbook, but these ideas show up a lot.</p>
+<h3 id="1-choice--option-routes-the-centerpiece">1) Choice / Option routes (the centerpiece)</h3>
+<p><strong>What it is:</strong> a receiver runs a route that converts based on leverage.</p>
+<p>Common conversions:</p>
+<pre class="code-block diff"><code><span class="diff-line diff-add">+ GREEN:  Off Coverage (Soft Zone)    -&gt; SIT in window</span>
+<span class="diff-line diff-add">+ GREEN:  Inside Leverage  (Man/Zone) -&gt; BREAK OUT</span>
+<span class="diff-line diff-del">- RED:    Outside Leverage (Man/Zone) -&gt; BREAK IN</span>
+<span class="diff-line diff-note">! ALERT:  Press / Squat               -&gt; GO UPFIELD</span></code></pre>
+<p><strong>QB coaching point:</strong> don’t predetermine the break—confirm leverage and throw to space.</p>
+<h3 id="2-seam-reads--four-verts-variants">2) Seam reads / Four verts variants</h3>
+<p>Run and Shoot often attacks with vertical stems and seam decisions.</p>
+<p><strong>When to call:</strong></p>
+<ul>
+<li>after defenses squat on option routes</li>
+<li>vs single-high when you can isolate an outside receiver</li>
+</ul>
+<h3 id="3-switch-releases">3) Switch releases</h3>
+<p><strong>What it is:</strong> receivers cross at the line (often slot and outside) to create rubs and confuse match coverage.</p>
+<p><strong>Why it works:</strong> forces communication; beats some pattern-match rules.</p>
+<h3 id="4-shallow--crossers-the-get-out-of-jail">4) Shallow / crossers (the “get out of jail”)</h3>
+<p>Even a vertical offense needs a fast answer vs pressure.</p>
+<ul>
+<li>shallow cross</li>
+<li>quick outs</li>
+<li>RB swing</li>
+</ul>
+<h3 id="5-draw--inside-zone">5) Draw / inside zone</h3>
+<p>Run and Shoot run game is often:</p>
+<ul>
+<li>draw</li>
+<li>inside zone (from gun)</li>
+</ul>
+<p>The goal is not 40 carries; it’s to punish light boxes and keep pass rush honest.</p>
+<hr />
+<h2 id="pre-snap-plan-audibles--box-count--motion-video_game">Pre-snap plan (audibles + box count + motion) 🎮</h2>
+<p>Suggested audibles (example):</p>
+<ol type="1">
+<li>Draw / inside zone (light box)</li>
+<li>Quick hitch / speed out (fast completion)</li>
+<li>Choice / option concept (base identity)</li>
+<li>Shallow / crossers (pressure answer)</li>
+<li>Four verts / seams (shot)</li>
+</ol>
+<p>Rules of thumb:</p>
+<ul>
+<li>If the box is light: run draw/inside zone.</li>
+<li>If corners are off: take quick game.</li>
+<li>If you see obvious pressure: throw shallow/quick outs immediately.</li>
+</ul>
+<hr />
+<h2 id="qb-operation-timing--progressions-stopwatch">QB operation (timing + progressions) ⏱️</h2>
+<h3 id="step-1-identify-the-shell">Step 1: identify the shell</h3>
+<ul>
+<li>1-high: expect more man and single-high zones; vertical shots become attractive.</li>
+<li>2-high: expect soft zones/match rules; option routes and seams become attractive.</li>
+</ul>
+<h3 id="step-2-locate-the-conflict-defender">Step 2: locate the “conflict” defender</h3>
+<p>Often it’s an apex/overhang who must cover:</p>
+<ul>
+<li>the slot option route</li>
+<li>the flat/screen</li>
+<li>the run fit</li>
+</ul>
+<p>Make him wrong.</p>
+<h3 id="step-3-throw-to-the-first-clear-win">Step 3: throw to the first clear win</h3>
+<p>Don’t hunt the perfect play. Take the first clean window to stay ahead of the sticks.</p>
+<hr />
+<h2 id="building-your-run-and-shoot-call-sheet-practical-cfb26-plan-card_index_dividers">Building your Run and Shoot call sheet (practical CFB26 plan) 🗂️</h2>
+<h3 id="1st-and-10">1st and 10</h3>
+<ul>
+<li>choice/option concept</li>
+<li>quick hitch/now screen (if cushion)</li>
+<li>inside zone / draw (if light box)</li>
+</ul>
+<h3 id="2nd-and-short">2nd and short</h3>
+<ul>
+<li>four verts / seams</li>
+<li>switch vertical concept</li>
+</ul>
+<h3 id="2nd-and-long">2nd and long</h3>
+<ul>
+<li>shallow cross / quick outs</li>
+<li>RB screen</li>
+<li>choice concept with built-in checkdown</li>
+</ul>
+<h3 id="3rd-down">3rd down</h3>
+<ul>
+<li>3rd &amp; 1–2: inside zone, quick out</li>
+<li>3rd &amp; 3–6: option routes (slots), spacing</li>
+<li>3rd &amp; 7+: seams/verts with max protect, or a “levels” concept if available</li>
+</ul>
+<h3 id="red-zone-packages">Red zone (packages)</h3>
+<p>Option routes still work but windows tighten.</p>
+<ul>
+<li>bunch/stack rubs (if in your book)</li>
+<li>smash (corner/hitch)</li>
+<li>quick slants with leverage</li>
+</ul>
+<hr />
+<h2 id="defensive-looks-and-your-counters-shield">Defensive looks and your counters 🛡️</h2>
+<h3 id="they-play-press-man">They play press man</h3>
+<ul>
+<li>Use stack/bunch alignments.</li>
+<li>Call switch releases and quick crossers.</li>
+<li>If your WR wins, take the fade; if not, don’t force it.</li>
+</ul>
+<h3 id="they-sit-in-two-high-and-rally">They sit in two-high and rally</h3>
+<ul>
+<li>Keep taking option routes underneath.</li>
+<li>Use draws/inside zone to punish light boxes.</li>
+<li>Mix in seam shots when safeties get nosy.</li>
+</ul>
+<h3 id="they-blitz">They blitz</h3>
+<ul>
+<li>Hot answers: shallow, RB swing, quick outs.</li>
+<li>Screens to slow down pressure.</li>
+<li>Consider keeping RB in and throwing a quick seam/option.</li>
+</ul>
+<hr />
+<h2 id="roster-building-priorities-dna">Roster building priorities 🧬</h2>
+<ol type="1">
+<li><strong>QB quick release + accuracy</strong></li>
+<li><strong>WR route running/awareness</strong> (option routes require “smart” receivers)</li>
+<li><strong>One speed threat</strong> (forces depth)</li>
+<li><strong>RB pass pro + hands</strong></li>
+<li><strong>OL pass pro</strong></li>
+</ol>
+<hr />
+<h2 id="option-routes-in-practice-how-to-stop-throwing-wrong-route-picks-test_tube">Option routes in practice (how to stop throwing “wrong-route” picks) 🧪</h2>
+<p>Run and Shoot lives or dies on QB/WR agreement. In-game, you don’t have full real-life route language, so you need simple, repeatable rules.</p>
+<h3 id="the-three-leverage-questions">The three leverage questions</h3>
+<p>Before you throw an option route, answer:</p>
+<ol type="1">
+<li><strong>Is it man or zone?</strong> (use motion to check)</li>
+<li><strong>Is the defender inside or outside leverage?</strong></li>
+<li><strong>Is there safety help over the top?</strong></li>
+</ol>
+<p>You don’t need perfection—just enough information to avoid the worst throws.</p>
+<h3 id="practical-option-route-outcomes-common-conversions">Practical option-route outcomes (common conversions)</h3>
+<p>You’ll see these most often:</p>
+<ul>
+<li><strong>Sit</strong> vs soft zone: receiver throttles in grass.</li>
+<li><strong>Break out</strong> vs inside leverage: receiver protects the throw.</li>
+<li><strong>Break in</strong> vs outside leverage: receiver uses the defender’s position against him.</li>
+<li><strong>Turn upfield</strong> vs squat/flat defenders: receiver converts to a seam.</li>
+</ul>
+<p><strong>QB rule of thumb:</strong> if you can’t tell which way the receiver will break, throw the checkdown. The Run and Shoot is allowed to take 5 yards.</p>
+<hr />
+<h2 id="sequencing-how-run-and-shoot-stays-efficient-repeat">Sequencing (how Run and Shoot stays efficient) 🔁</h2>
+<p>This style is most explosive when you alternate:</p>
+<ul>
+<li>option routes (to force defenders to hesitate)</li>
+<li>verticals/switch (to punish hesitation)</li>
+<li>draw/inside zone (to punish two-high/light boxes)</li>
+</ul>
+<h3 id="a-simple-6-play-sequence-that-works">A simple 6-play sequence that works</h3>
+<ol type="1">
+<li>Choice/option (get a completion)</li>
+<li>Draw/inside zone (punish light box)</li>
+<li>Choice/option to the other side (make them cover the whole field)</li>
+<li>Switch vertical (shot)</li>
+<li>Shallow/quick out (blitz answer)</li>
+<li>Four verts or seams (second shot)</li>
+</ol>
+<p>The point is to keep the defense from guessing “option routes all drive.”</p>
+<hr />
+<h2 id="protection--checkdowns--sack-avoidance-rules-shield">Protection + checkdowns + sack-avoidance rules 🛡️</h2>
+<hr />
+<h2 id="pace-note-stopwatch">Pace note ⏱️</h2>
+<p>Run and Shoot can go fast, but only if you keep your reads simple:</p>
+<ul>
+<li>go no-huddle after quick completions to keep the same shell on the field</li>
+<li>slow down after negative plays so the QB/WR reads reset cleanly</li>
+</ul>
+<p>Many Run and Shoot looks are pass-first and can invite pressure.</p>
+<h3 id="your-protection-toolbox">Your protection toolbox</h3>
+<ul>
+<li><strong>Quick game</strong> as protection: if you throw it fast, pressure doesn’t matter.</li>
+<li><strong>RB in protection</strong>: especially on 3rd-and-long.</li>
+<li><strong>Max protect</strong> for your favorite shot concept.</li>
+</ul>
+<h3 id="when-to-take-the-sack-vs-force-the-ball">When to take the sack vs force the ball</h3>
+<p>If your first two options are covered and the checkdown is guarded, a sack is sometimes better than a pick-six. Run and Shoot can win with volume—turnovers are the real killer.</p>
+<hr />
+<h2 id="situational-packages-what-to-favorite-star">Situational packages (what to favorite) ⭐</h2>
+<h3 id="3rd-and-short-12">3rd-and-short (1–2)</h3>
+<ul>
+<li>inside zone (if box is light)</li>
+<li>quick out to a slot</li>
+<li>quick hitch if corners are off</li>
+</ul>
+<h3 id="3rd-and-medium-36">3rd-and-medium (3–6)</h3>
+<ul>
+<li>slot option route concept</li>
+<li>spacing/stick if your playbook includes it</li>
+</ul>
+<h3 id="3rd-and-long-712">3rd-and-long (7–12)</h3>
+<ul>
+<li>seams/verts with a built-in checkdown</li>
+<li>switch vertical with max protect</li>
+</ul>
+<h3 id="red-zone">Red zone</h3>
+<ul>
+<li>smash</li>
+<li>quick slant with leverage</li>
+<li>bunch rubs (if available)</li>
+</ul>
+<hr />
+<h2 id="weekly-install-plan-learn-it-without-getting-overwhelmed-books">Weekly install plan (learn it without getting overwhelmed) 📚</h2>
+<h3 id="week-1-two-concepts-only">Week 1: two concepts only</h3>
+<ul>
+<li>one choice/option concept</li>
+<li>one draw/inside zone</li>
+</ul>
+<p>Goal: learn box counts and throw timing.</p>
+<h3 id="week-2-add-one-shot">Week 2: add one shot</h3>
+<ul>
+<li>switch vertical or four verts variant</li>
+</ul>
+<p>Goal: call it on schedule (2nd &amp; short, after completions), not randomly.</p>
+<h3 id="week-3-add-one-blitz-answer">Week 3: add one blitz answer</h3>
+<ul>
+<li>shallow cross or RB screen</li>
+</ul>
+<p>Goal: stop “panic picks” vs pressure.</p>
+<h3 id="week-4-add-one-red-zone-plan">Week 4: add one red zone plan</h3>
+<ul>
+<li>smash + rub concept</li>
+</ul>
+<p>Goal: touchdowns, not field goals.</p>
+<hr />
+<h2 id="troubleshooting-fire_extinguisher">Troubleshooting 🧯</h2>
+<h3 id="problem-my-receiver-sits-but-i-threw-the-out-pick">Problem: “My receiver sits but I threw the out (pick).”</h3>
+<p>Fix:</p>
+<ul>
+<li>use motion more to identify man/zone</li>
+<li>be willing to throw the checkdown instead of guessing the conversion</li>
+</ul>
+<h3 id="problem-im-getting-sacked-in-empty">Problem: “I’m getting sacked in empty.”</h3>
+<p>Fix:</p>
+<ul>
+<li>don’t live in empty on early downs</li>
+<li>keep RB in on your shot plays</li>
+<li>call a screen/quick out when you feel pressure coming</li>
+</ul>
+<h3 id="problem-i-complete-passes-but-never-get-explosives">Problem: “I complete passes but never get explosives.”</h3>
+<p>Fix:</p>
+<ul>
+<li>call switch vertical after you’ve hit two option completions</li>
+<li>call seams when safeties start squatting</li>
+</ul>
+<hr />
+<h2 id="coverage-examples-what-to-look-for-in-real-time-eyes">Coverage examples (what to look for in real time) 👀</h2>
+<p>This section is intentionally “pattern based,” since in-game labels can be imperfect.</p>
+<h3 id="versus-two-high-zone-shells">Versus two-high zone shells</h3>
+<p>What you’ll usually get:</p>
+<ul>
+<li>space underneath if the defense is patient</li>
+<li>safeties sitting on verticals</li>
+</ul>
+<p>What to do:</p>
+<ul>
+<li>take option routes that settle in the hook/curl voids</li>
+<li>call draw/inside zone to punish light boxes</li>
+<li>take seam shots only when safeties start triggering downhill</li>
+</ul>
+<h3 id="versus-single-high-zone-shells">Versus single-high zone shells</h3>
+<p>What you’ll usually get:</p>
+<ul>
+<li>a middle safety who can erase one vertical</li>
+<li>outside corners protecting deep thirds</li>
+</ul>
+<p>What to do:</p>
+<ul>
+<li>attack the seams if you can hold the middle safety</li>
+<li>call flood/levels variants (if in your book) to overload a side</li>
+<li>take the checkdown if the middle is capped</li>
+</ul>
+<h3 id="versus-man-coverage">Versus man coverage</h3>
+<p>What you’ll usually get:</p>
+<ul>
+<li>defenders playing leverage and trying to undercut option breaks</li>
+</ul>
+<p>What to do:</p>
+<ul>
+<li>use motion to create stacks and free releases</li>
+<li>call switch concepts (natural rubs)</li>
+<li>throw away from leverage (outside vs inside leverage, inside vs outside leverage)</li>
+</ul>
+<hr />
+<h2 id="situational-mini-playbook-copy-this-into-your-favorites-red_square">Situational mini-playbook (copy this into your favorites) 🟥</h2>
+<p>If you only favorite 12–15 plays, pick them by situation.</p>
+<h3 id="early-downs-1st2nd--medium">Early downs (1st/2nd &amp; medium)</h3>
+<ul>
+<li>choice/option concept (base)</li>
+<li>quick hitch/now (if cushion)</li>
+<li>inside zone/draw</li>
+<li>tunnel screen</li>
+</ul>
+<h3 id="must-have-blitz-answers">Must-have blitz answers</h3>
+<ul>
+<li>shallow cross</li>
+<li>RB swing/flat</li>
+<li>quick out to a slot</li>
+</ul>
+<h3 id="shot-calls-limit-to-23">Shot calls (limit to 2–3)</h3>
+<ul>
+<li>switch vertical</li>
+<li>four verts/seams</li>
+<li>play-action seam/post (if your book includes it)</li>
+</ul>
+<h3 id="red-zone-inside-20">Red zone (inside 20)</h3>
+<ul>
+<li>smash</li>
+<li>rub concept (bunch/stack)</li>
+<li>quick slant with leverage</li>
+</ul>
+<p>The point is to remove decision fatigue: you already know your best calls for each area of the field.</p>
+<hr />
+<h2 id="qbwr-chemistry-drills-practice-mode-routine-handshake">QB/WR chemistry drills (practice-mode routine) 🤝</h2>
+<p>Because option routes convert, your best “training” is repetition with intent.</p>
+<p>Suggested routine (10–15 minutes):</p>
+<ol type="1">
+<li>Call your main choice/option concept vs a zone look. Repeat until you can consistently identify the settle window.</li>
+<li>Call the same concept vs man. Focus on leverage: inside vs outside.</li>
+<li>Add a switch vertical shot after two completions to simulate game sequencing.</li>
+<li>Finish with your blitz answer (shallow/swing) so your brain doesn’t panic when pressure shows up.</li>
+</ol>
+<p>Goal: you should be able to say “I’m throwing the slot option unless the defender’s leverage says otherwise” and execute without hesitation.</p>
+<hr />
+<h2 id="sample-15-play-opening-script-copypaste-idea-pencil">Sample 15-play opening script (copy/paste idea) 📝</h2>
+<p>The Run and Shoot is about reading leverage on the fly. The script is less about "calling plays" and more about "calling reads."</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th style="text-align: center;"><strong>Play #</strong></th>
+<th><strong>Situation / Note</strong></th>
+<th><strong>Concept / Call</strong></th>
+<th><strong>Why?</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td>The Base</td>
+<td><strong>Choice / Option</strong></td>
+<td>🟢 See how they cover the slot</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td>Field Stretch</td>
+<td><strong>Go / Streaks</strong></td>
+<td>🔴 Run off the coverage</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td>Run: Draw</td>
+<td><strong>HB Draw</strong></td>
+<td>🟡 If ends are upfield, gash them inside</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td>Quick Out</td>
+<td><strong>Slide / 60 Slide</strong></td>
+<td>🟢 Flat control vs zone</td>
+</tr>
+<tr>
+<td style="text-align: center;">5</td>
+<td>Deep Shot</td>
+<td><strong>Switch</strong></td>
+<td>🔴 Confusion on the perimeter</td>
+</tr>
+<tr>
+<td style="text-align: center;">6</td>
+<td>Checkdown</td>
+<td><strong>RB Swing / Flat</strong></td>
+<td>🟢 Easy release valve</td>
+</tr>
+<tr>
+<td style="text-align: center;">7</td>
+<td>Man-Beater</td>
+<td><strong>Mesh / Drag</strong></td>
+<td>🟢 Rubs and picks</td>
+</tr>
+<tr>
+<td style="text-align: center;">8</td>
+<td>Run: Trap</td>
+<td><strong>0/1 Trap</strong></td>
+<td>🟡 Quick hitting inside run</td>
+</tr>
+<tr>
+<td style="text-align: center;">9</td>
+<td>Vertical Choice</td>
+<td><strong>Seam Read</strong></td>
+<td>🔴 Attack the deep middle</td>
+</tr>
+<tr>
+<td style="text-align: center;">10</td>
+<td>Red Zone: High</td>
+<td><strong>Fade / Back Shoulder</strong></td>
+<td>🔴 Isolation near the goal line</td>
+</tr>
+<tr>
+<td style="text-align: center;">11</td>
+<td>Counter</td>
+<td><strong>Shovel Pass / Option</strong></td>
+<td>🟡 Misdirection</td>
+</tr>
+<tr>
+<td style="text-align: center;">12</td>
+<td>3rd &amp; Short</td>
+<td><strong>QB Sneak / Quick Slant</strong></td>
+<td>🟢 High percentage</td>
+</tr>
+<tr>
+<td style="text-align: center;">13</td>
+<td>3rd &amp; Long</td>
+<td><strong>4 Verts / Choice</strong></td>
+<td>🔴 Find the void in deep coverage</td>
+</tr>
+<tr>
+<td style="text-align: center;">14</td>
+<td>Screen: Slow</td>
+<td><strong>Middle Screen</strong></td>
+<td>🟡 Slow down aggressive rush</td>
+</tr>
+<tr>
+<td style="text-align: center;">15</td>
+<td>Finisher</td>
+<td><strong>Zone Read</strong></td>
+<td>🟢 If they ignore the QB</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="post-game-metrics-did-i-run-it-right-bar_chart">Post-Game Metrics (Did I run it right?) 📊</h2>
+<p>If you played a true Run and Shoot game, your stats should look like this:</p>
+<ul>
+<li><strong>Passing Yards:</strong> &gt; 300 (Air it out)</li>
+<li><strong>WR Receptions:</strong> Distributed (Open man gets the ball)</li>
+<li><strong>Sacks:</strong> Low (Ball comes out quick or QB scrambles)</li>
+<li><strong>Yards Per Catch:</strong> High (YAC + deep shots)</li>
+</ul>
+<h2 id="dynasty-recruiting-guide-mortar_board">Dynasty Recruiting Guide 🎓</h2>
+<p>If you run the Run and Shoot, prioritize these archetypes:</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th style="text-align: left;"><strong>Position</strong></th>
+<th><strong>Archetype / Key Stats</strong></th>
+<th><strong>Why?</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>QB</strong></td>
+<td><strong>Improviser</strong> (AWR, RUN, TUP)</td>
+<td>🧠 Needs to buy time and make smart reads.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>HB</strong></td>
+<td><strong>Receiving Back</strong> (CTH, COD)</td>
+<td>🏃 Involved heavily in the passing game.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>SB</strong></td>
+<td><strong>Slot</strong> (AWR, SRR, CIT)</td>
+<td>👀 "Super Backs" (Slots) must read coverages perfectly.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>WR</strong></td>
+<td><strong>Deep Threat</strong> (SPD, DRR)</td>
+<td>🧤 Must stretch the field to open up underneath.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>OL</strong></td>
+<td><strong>Pass Protector</strong> (PBP, PBF)</td>
+<td>🧱 Slide protection requires agile blockers.</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="teams-to-check-first-in-cfb26-real-world-scheme-fit-mag">Teams to check first in CFB26 (real-world scheme fit) 🔍</h2>
+<p>Run and Shoot is less common today as a “pure” identity, but these programs are famously associated with it historically.</p>
+<p>Start here and <strong>verify in-game</strong>:</p>
+<ul>
+<li>Hawaii (June Jones-era)</li>
+<li>SMU (historical)</li>
+<li>Houston (run-and-shoot influence)</li>
+</ul>
+<h2 id="nfl-analogs-closest-cousins-football">NFL analogs (closest cousins) 🏈</h2>
+<p>The NFL doesn’t typically label teams “Run and Shoot” anymore, but option/choice routes are everywhere.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>NFL team (varies by year)</strong></th>
+<th><strong>What feels Run-and-Shoot-ish</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>New England Patriots</td>
+<td>Choice routes / option routes as core tools</td>
+</tr>
+<tr>
+<td>Kansas City Chiefs</td>
+<td>Option routes + spacing answers</td>
+</tr>
+<tr>
+<td>Green Bay Packers</td>
+<td>Option-route packages + timing</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="teams-in-cfb26-that-use-a-run-and-shoot-playbook-fill-this-in-stadium">Teams in CFB26 that use a Run and Shoot playbook (fill this in) 🏟️</h2>
+<!-- markdownlint-disable MD033 -->
+
+<details>
+<summary>Show editable teams table</summary>
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>Team</strong></th>
+<th><strong>In-game offensive playbook name</strong></th>
+<th><strong>Notes (base personnel, option-route frequency, favorite shots)</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+</details>
+<!-- markdownlint-enable MD033 -->
+
+<hr />
+<h2 id="minimal-glossary-pushpin">Minimal glossary 📌</h2>
+<ul>
+<li><strong>Option route:</strong> receiver adjusts route based on leverage/coverage.</li>
+<li><strong>Switch release:</strong> two receivers exchange lanes/releases to create rub/confusion.</li>
+<li><strong>Match coverage:</strong> zone-man hybrid where defenders carry routes based on rules.</li>
+</ul>
+        </div>
+        <nav class="scheme-nav" aria-label="Scheme navigation">
+      <a class="scheme-link prev" href="option.html">← Option</a>
+      <a class="scheme-link center" href="index.html">All Schemes</a>
+      <a class="scheme-link next" href="index.html">Back to Index →</a>
+    </nav>
+      </article>
+    </div>
+  </main>
+</body>
+</html>

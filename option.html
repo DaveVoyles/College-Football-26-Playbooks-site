@@ -1,0 +1,1283 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("clawpilotTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Option — CFB26 Playbook</title>
+  <script src="assets/scripts/theme.js?v=1"></script>
+  <link rel="stylesheet" href="assets/styles/theme.css?v=1">
+  <link rel="stylesheet" href="assets/styles/site-nav.css?v=1">
+  <script defer src="assets/scripts/site-nav.js?v=1"></script>
+  <style>
+:root {
+  color-scheme: light;
+  --cp-bg: #f7f4ef;
+  --cp-bg-elevated: #fcfbf8;
+  --cp-surface: #ffffff;
+  --cp-surface-soft: #f5f5f5;
+  --cp-border: #dedede;
+  --cp-border-strong: #919191;
+  --cp-text: #242424;
+  --cp-text-muted: #5c5c5c;
+  --cp-text-soft: #6f6f6f;
+  --cp-accent: #b11f4b;
+  --cp-accent-hover: #9a1a41;
+  --cp-accent-soft: rgba(177, 31, 75, 0.08);
+  --cp-accent-fg: #ffffff;
+  --cp-success: #16a34a;
+  --cp-danger: #dc2626;
+  --cp-warning: #f59e0b;
+  --cp-link: #0078d4;
+  --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+  --cp-overlay: rgba(255, 255, 255, 0.8);
+  --cp-panel: rgba(255, 255, 255, 0.86);
+  --cp-panel-strong: rgba(255, 255, 255, 0.96);
+  --cp-sheen: rgba(255, 255, 255, 0.55);
+  --cp-highlight: rgba(177, 31, 75, 0.12);
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --cp-bg: #3d3b3a;
+  --cp-bg-elevated: #343231;
+  --cp-surface: #292929;
+  --cp-surface-soft: #2e2e2e;
+  --cp-border: #474747;
+  --cp-border-strong: #5f5f5f;
+  --cp-text: #dedede;
+  --cp-text-muted: #919191;
+  --cp-text-soft: #b0b0b0;
+  --cp-accent: #fd8ea1;
+  --cp-accent-hover: #fb7b91;
+  --cp-accent-soft: rgba(253, 142, 161, 0.14);
+  --cp-accent-fg: #1a1a1a;
+  --cp-success: #4ade80;
+  --cp-danger: #f87171;
+  --cp-warning: #fbbf24;
+  --cp-link: #4da6ff;
+  --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+  --cp-overlay: rgba(41, 41, 41, 0.88);
+  --cp-panel: rgba(41, 41, 41, 0.72);
+  --cp-panel-strong: rgba(41, 41, 41, 0.96);
+  --cp-sheen: rgba(255, 255, 255, 0.04);
+  --cp-highlight: rgba(253, 142, 161, 0.12);
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  margin: 0;
+  background: var(--cp-bg);
+  color: var(--cp-text);
+  font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.65;
+}
+a {
+  color: var(--cp-link);
+}
+a:hover {
+  color: var(--cp-accent-hover);
+}
+body.scheme-option {
+  --scheme-tone: var(--cp-warning);
+}
+.wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1rem 3rem;
+}
+.page-layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+.toc-panel,
+.guide-card {
+  background: var(--cp-surface);
+  border: 1px solid var(--cp-border);
+  border-radius: 16px;
+  box-shadow: 0 12px 28px var(--cp-highlight);
+}
+.toc-panel {
+  position: sticky;
+  top: 1rem;
+  padding: 1rem;
+  background: var(--cp-panel-strong);
+}
+.toc-panel h2 {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  color: var(--scheme-tone);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+.toc-item a {
+  display: block;
+  padding: 0.45rem 0.6rem;
+  border-radius: 0.625rem;
+  text-decoration: none;
+  color: var(--cp-text-muted);
+}
+.toc-item a:hover {
+  background: var(--cp-accent-soft);
+  color: var(--cp-text);
+}
+.toc-level-3 {
+  margin-inline-start: 0.8rem;
+  font-size: 0.96rem;
+}
+.guide-card {
+  padding: 1.5rem;
+  overflow: hidden;
+}
+.content > :first-child {
+  margin-top: 0;
+}
+.content h1,
+.content h2,
+.content h3 {
+  scroll-margin-top: 1rem;
+  line-height: 1.2;
+}
+.content h1 {
+  margin-bottom: 0.4rem;
+  color: var(--scheme-tone);
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+.content h2 {
+  margin-top: 2rem;
+  padding-top: 0.2rem;
+  border-top: 1px solid var(--cp-border);
+  color: var(--scheme-tone);
+  font-size: clamp(1.35rem, 2vw, 1.7rem);
+}
+.content h3 {
+  margin-top: 1.35rem;
+  color: var(--cp-text);
+  font-size: 1.1rem;
+}
+.content p,
+.content li {
+  color: var(--cp-text);
+}
+.content strong {
+  color: var(--cp-text);
+}
+.content em {
+  color: var(--cp-text-soft);
+}
+.content ul,
+.content ol {
+  padding-inline-start: 1.35rem;
+}
+.content hr {
+  border: 0;
+  border-top: 1px solid var(--cp-border);
+  margin: 2rem 0;
+}
+.content p > a[href="index.html"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid var(--cp-border);
+  border-radius: 999px;
+  text-decoration: none;
+  background: var(--cp-bg-elevated);
+}
+.table-scroll {
+  overflow-x: auto;
+  margin: 1rem 0 1.5rem;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.625rem;
+  background: var(--cp-surface);
+}
+.table-scroll table {
+  width: 100%;
+  min-width: 620px;
+  border-collapse: collapse;
+}
+.table-scroll th,
+.table-scroll td {
+  padding: 0.75rem 0.85rem;
+  border-bottom: 1px solid var(--cp-border);
+  text-align: left;
+  vertical-align: top;
+}
+.table-scroll th {
+  background: var(--cp-bg-elevated);
+  color: var(--scheme-tone);
+}
+.table-scroll tbody tr:nth-child(odd) {
+  background: var(--cp-surface-soft);
+}
+.callout {
+  position: relative;
+  margin: 1.25rem 0;
+  padding: 1rem 1rem 1rem 1.2rem;
+  border-inline-start: 0.35rem solid var(--callout-tone, var(--cp-accent));
+  border-radius: 0.625rem;
+  background: var(--cp-accent-soft);
+}
+.callout::before {
+  content: var(--callout-icon, "💡");
+  position: absolute;
+  inset-inline-end: 0.9rem;
+  inset-block-start: 0.85rem;
+  font-size: 1rem;
+}
+.callout.tip {
+  --callout-tone: var(--cp-success);
+  --callout-icon: "💡";
+}
+.callout.warning {
+  --callout-tone: var(--cp-warning);
+  --callout-icon: "⚠️";
+}
+.callout.note {
+  --callout-tone: var(--cp-link);
+  --callout-icon: "📝";
+}
+.callout > :first-child {
+  margin-top: 0;
+}
+.callout > :last-child {
+  margin-bottom: 0;
+}
+pre.code-block {
+  margin: 1rem 0 1.5rem;
+  padding: 1rem;
+  border-radius: 0.625rem;
+  border: 1px solid var(--cp-border-strong);
+  background: var(--cp-text);
+  color: var(--cp-bg);
+  overflow-x: auto;
+}
+pre.code-block code,
+code {
+  font-family: Consolas, "Courier New", Courier, monospace;
+}
+p code,
+li code,
+td code {
+  padding: 0.1rem 0.35rem;
+  border-radius: 0.35rem;
+  background: var(--cp-surface-soft);
+  color: var(--cp-text);
+}
+pre.diff code {
+  display: grid;
+  gap: 0.1rem;
+}
+.diff-line {
+  display: block;
+  white-space: pre;
+}
+.diff-add {
+  color: var(--cp-success);
+}
+.diff-del {
+  color: var(--cp-danger);
+}
+.diff-note {
+  color: var(--cp-warning);
+}
+.diff-context {
+  color: var(--cp-bg);
+}
+details {
+  margin: 1.25rem 0;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.625rem;
+  background: var(--cp-bg-elevated);
+  overflow: hidden;
+}
+summary {
+  cursor: pointer;
+  padding: 0.85rem 1rem;
+  font-weight: 600;
+  color: var(--scheme-tone);
+  background: var(--cp-accent-soft);
+}
+details > :not(summary) {
+  margin-inline: 1rem;
+}
+.scheme-nav {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--cp-border);
+}
+.scheme-link,
+.nav-spacer {
+  min-height: 100%;
+}
+.scheme-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.625rem;
+  text-decoration: none;
+  color: var(--cp-text);
+  background: var(--cp-bg-elevated);
+  text-align: center;
+}
+.scheme-link:hover {
+  border-color: var(--scheme-tone);
+  background: var(--cp-accent-soft);
+}
+.scheme-link.center {
+  font-weight: 600;
+}
+@media (max-width: 920px) {
+  .wrap {
+    padding-top: 1rem;
+  }
+  .page-layout {
+    grid-template-columns: 1fr;
+  }
+  .toc-panel {
+    position: static;
+    overflow-x: auto;
+  }
+  .toc-list {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+    width: max-content;
+    min-width: 100%;
+  }
+  .toc-level-3 {
+    margin-inline-start: 0;
+  }
+}
+@media (max-width: 640px) {
+  .guide-card {
+    padding: 1rem;
+  }
+  .scheme-nav {
+    grid-template-columns: 1fr;
+  }
+  .table-scroll table {
+    min-width: 520px;
+  }
+}
+  </style>
+</head>
+<body data-nav-root="." class="scheme-option">
+  <main class="wrap">
+    <div class="page-layout">
+      <aside class="toc-panel" aria-label="Table of contents">
+        <h2>On this page</h2>
+        <ul class="toc-list">
+<li class="toc-item toc-level-2"><a href="#quick-definition-brain">Quick definition 🧠</a></li>
+<li class="toc-item toc-level-2"><a href="#the-identity-one-sentence-dart">The identity (one sentence) 🎯</a></li>
+<li class="toc-item toc-level-2"><a href="#pros-white_check_mark-and-cons-warning">Pros ✅ and cons ⚠️</a></li>
+<li class="toc-item toc-level-2"><a href="#typical-personnel-jigsaw">Typical personnel 🧩</a></li>
+<li class="toc-item toc-level-3"><a href="#personnel-cheat-table">Personnel cheat table</a></li>
+<li class="toc-item toc-level-3"><a href="#role-archetypes">Role archetypes</a></li>
+<li class="toc-item toc-level-2"><a href="#qb-operation-timing--progressions-stopwatch">QB operation (timing + progressions) ⏱️</a></li>
+<li class="toc-item toc-level-3"><a href="#option-fundamentals-the-rules-that-make-it-work-brain">Option fundamentals (the rules that make it work) 🧠</a></li>
+<li class="toc-item toc-level-3"><a href="#rule-1-know-who-youre-reading">Rule #1: know who you’re reading</a></li>
+<li class="toc-item toc-level-3"><a href="#read-key-cheat-table">Read-key cheat table</a></li>
+<li class="toc-item toc-level-3"><a href="#rule-2-dont-hope--decide">Rule #2: don’t “hope” — decide</a></li>
+<li class="toc-item toc-level-3"><a href="#rule-3-use-constraint-plays">Rule #3: use constraint plays</a></li>
+<li class="toc-item toc-level-2"><a href="#core-run-game-families-running">Core run game families 🏃</a></li>
+<li class="toc-item toc-level-3"><a href="#1-inside-zone-read">1) Inside zone read</a></li>
+<li class="toc-item toc-level-3"><a href="#2-speed-option">2) Speed option</a></li>
+<li class="toc-item toc-level-3"><a href="#3-triple-option-if-in-your-book">3) Triple option (if in your book)</a></li>
+<li class="toc-item toc-level-3"><a href="#4-qb-power--qb-counter">4) QB power / QB counter</a></li>
+<li class="toc-item toc-level-3"><a href="#5-midline--inside-veer-variants">5) Midline / inside veer variants</a></li>
+<li class="toc-item toc-level-2"><a href="#core-pass-game-families--concept-menu-gear">Core pass game families / concept menu ⚙️</a></li>
+<li class="toc-item toc-level-3"><a href="#1-play-action-shot-post--seam">1) Play-action shot (post / seam)</a></li>
+<li class="toc-item toc-level-3"><a href="#2-quick-game">2) Quick game</a></li>
+<li class="toc-item toc-level-3"><a href="#3-rpo-tags-for-spread-option-variants">3) RPO tags (for spread option variants)</a></li>
+<li class="toc-item toc-level-2"><a href="#building-your-option-call-sheet-practical-cfb26-plan-card_index_dividers">Building your Option call sheet (practical CFB26 plan) 🗂️</a></li>
+<li class="toc-item toc-level-3"><a href="#1st-and-10">1st and 10</a></li>
+<li class="toc-item toc-level-3"><a href="#2nd-and-short">2nd and short</a></li>
+<li class="toc-item toc-level-3"><a href="#2nd-and-long">2nd and long</a></li>
+<li class="toc-item toc-level-3"><a href="#3rd-down">3rd down</a></li>
+<li class="toc-item toc-level-3"><a href="#red-zone-situational-notes">Red zone (situational notes)</a></li>
+<li class="toc-item toc-level-2"><a href="#defensive-looks-and-your-counters-shield">Defensive looks and your counters 🛡️</a></li>
+<li class="toc-item toc-level-3"><a href="#they-scrape-exchange-the-read">They “scrape exchange” the read</a></li>
+<li class="toc-item toc-level-3"><a href="#they-set-hard-edges">They set hard edges</a></li>
+<li class="toc-item toc-level-3"><a href="#they-spy-the-qb">They spy the QB</a></li>
+<li class="toc-item toc-level-2"><a href="#roster-building-priorities-dna">Roster building priorities 🧬</a></li>
+<li class="toc-item toc-level-2"><a href="#formation-packages-how-to-pick-what-type-of-option-you-are-triangular_ruler">Formation packages (how to pick what “type” of option you are) 📐</a></li>
+<li class="toc-item toc-level-3"><a href="#package-a-spread-option-gun-based">Package A: Spread option (gun-based)</a></li>
+<li class="toc-item toc-level-3"><a href="#package-b-traditional-option-tight-surface">Package B: Traditional option (tight surface)</a></li>
+<li class="toc-item toc-level-2"><a href="#pitch-mechanics-how-to-avoid-the-two-worst-outcomes-baseball">Pitch mechanics (how to avoid the two worst outcomes) ⚾</a></li>
+<li class="toc-item toc-level-3"><a href="#a-simple-pitch-rule">A simple pitch rule</a></li>
+<li class="toc-item toc-level-3"><a href="#spacing-rule-pitch-relationship">Spacing rule (pitch relationship)</a></li>
+<li class="toc-item toc-level-2"><a href="#constraint-play-menu-your-answers-when-they-sell-out-toolbox">Constraint play menu (your “answers” when they sell out) 🧰</a></li>
+<li class="toc-item toc-level-3"><a href="#if-they-crash-the-dive-to-stop-the-handoff">If they crash the dive (to stop the handoff)</a></li>
+<li class="toc-item toc-level-3"><a href="#if-they-sit-on-the-qb-keep">If they sit on the QB keep</a></li>
+<li class="toc-item toc-level-3"><a href="#if-they-fly-to-the-pitch">If they fly to the pitch</a></li>
+<li class="toc-item toc-level-3"><a href="#if-they-widen-hard-to-stop-the-perimeter">If they widen hard to stop the perimeter</a></li>
+<li class="toc-item toc-level-2"><a href="#pre-snap-plan-audibles--box-count--motion-video_game">Pre-snap plan (audibles + box count + motion) 🎮</a></li>
+<li class="toc-item toc-level-2"><a href="#weekly-install-plan-dynasty-friendly-books">Weekly install plan (Dynasty-friendly) 📚</a></li>
+<li class="toc-item toc-level-3"><a href="#week-1-inside-zone-read--one-quick-throw">Week 1: inside zone read + one quick throw</a></li>
+<li class="toc-item toc-level-3"><a href="#week-2-add-speed-option">Week 2: add speed option</a></li>
+<li class="toc-item toc-level-3"><a href="#week-3-add-one-shot-play">Week 3: add one shot play</a></li>
+<li class="toc-item toc-level-3"><a href="#week-4-add-one-counter--misdirection">Week 4: add one counter / misdirection</a></li>
+<li class="toc-item toc-level-2"><a href="#troubleshooting-why-option-runs-get-blown-up-fire_extinguisher">Troubleshooting (why option runs get blown up) 🧯</a></li>
+<li class="toc-item toc-level-3"><a href="#problem-my-qb-keep-gets-tackled-by-someone-unblocked">Problem: “My QB keep gets tackled by someone unblocked.”</a></li>
+<li class="toc-item toc-level-3"><a href="#problem-speed-option-always-loses-yards">Problem: “Speed option always loses yards.”</a></li>
+<li class="toc-item toc-level-3"><a href="#problem-i-cant-pass-out-of-this">Problem: “I can’t pass out of this.”</a></li>
+<li class="toc-item toc-level-2"><a href="#defensive-front-cheat-sheet-what-options-usually-fit-best-receipt">Defensive-front cheat sheet (what options usually fit best) 🧾</a></li>
+<li class="toc-item toc-level-3"><a href="#if-the-edges-are-wide-and-patient">If the edges are wide and patient</a></li>
+<li class="toc-item toc-level-3"><a href="#if-the-edges-are-crashing-hard">If the edges are crashing hard</a></li>
+<li class="toc-item toc-level-3"><a href="#if-linebackers-are-scraping-over-the-top">If linebackers are scraping over the top</a></li>
+<li class="toc-item toc-level-2"><a href="#situational-notes-option-can-still-win-passing-situations-brain">Situational notes (option can still win “passing situations”) 🧠</a></li>
+<li class="toc-item toc-level-3"><a href="#2-minute-offense">2-minute offense</a></li>
+<li class="toc-item toc-level-3"><a href="#4-minute-offense-protecting-a-lead">4-minute offense (protecting a lead)</a></li>
+<li class="toc-item toc-level-3"><a href="#red-zone">Red zone</a></li>
+<li class="toc-item toc-level-2"><a href="#sample-15-play-opening-script-pencil">Sample 15-play opening script 📝</a></li>
+<li class="toc-item toc-level-3"><a href="#quick-list">Quick list</a></li>
+<li class="toc-item toc-level-3"><a href="#table-format-copypaste-idea">Table format (copy/paste idea)</a></li>
+<li class="toc-item toc-level-3"><a href="#mini-opening-script-option-grind">Mini opening script (Option grind)</a></li>
+<li class="toc-item toc-level-2"><a href="#post-game-metrics-did-i-run-it-right-bar_chart">Post-Game Metrics (Did I run it right?) 📊</a></li>
+<li class="toc-item toc-level-2"><a href="#dynasty-recruiting-guide-mortar_board">Dynasty Recruiting Guide 🎓</a></li>
+<li class="toc-item toc-level-3"><a href="#quick-targets">Quick targets</a></li>
+<li class="toc-item toc-level-2"><a href="#teams-to-check-first-in-cfb26-real-world-scheme-fit-mag">Teams to check first in CFB26 (real-world scheme fit) 🔍</a></li>
+<li class="toc-item toc-level-2"><a href="#nfl-analogs-closest-cousins-football">NFL analogs (closest cousins) 🏈</a></li>
+<li class="toc-item toc-level-2"><a href="#teams-in-cfb26-that-use-an-option-playbook-fill-this-in-stadium">Teams in CFB26 that use an Option playbook (fill this in) 🏟️</a></li>
+<li class="toc-item toc-level-2"><a href="#minimal-glossary-pushpin">Minimal glossary 📌</a></li>
+</ul>
+      </aside>
+      <article class="guide-card">
+        <div class="content">
+          <h1 id="option-running_manbrain-spread--triple-option--cfb26-playbook-style">Option 🏃‍♂️🧠 (Spread / Triple Option) — CFB26 Playbook Style</h1>
+<p>Author: Dave Voyles</p>
+<p><a href="index.html">← Back to Index</a></p>
+<div class="callout tip">
+<p><strong>How to use this guide in CFB26</strong></p>
+<ul>
+<li>Build a small “core menu”: 2 runs + 4 passes + 1 shot</li>
+<li>Set audibles: 1 light-box run, 1 blitz answer, 1 man beater, 1 zone beater, 1 shot</li>
+<li>Use the opening script to identify coverage + box counts early</li>
+</ul>
+</div>
+<h2 id="quick-definition-brain">Quick definition 🧠</h2>
+<p>“Option” isn’t one formation—it’s a <strong>decision-based run game</strong>.</p>
+<p>Instead of blocking every defender, you <strong>leave one unblocked</strong> and make him wrong by:</p>
+<ul>
+<li>🏈 Giving the ball (Dive)</li>
+<li>🏃 Keeping the ball (Keeper)</li>
+<li>⚾ Pitching (Pitch/Option)</li>
+</ul>
+<pre class="code-block text"><code>       WR            OL            WR
+              SB     QB     SB
+           (Slot)          (Slot)
+                     FB</code></pre>
+<p>In games, option playbooks typically blend:</p>
+<ul>
+<li><strong>spread option</strong> (gun reads, QB keepers, RPO tags)</li>
+<li><strong>traditional option</strong> (speed option, triple option, flexbone variants)</li>
+</ul>
+<h2 id="the-identity-one-sentence-dart">The identity (one sentence) 🎯</h2>
+<p><strong>Create a numbers advantage in the run game every snap, then hit constraint passes when the defense overreacts.</strong></p>
+<hr />
+<h2 id="pros-white_check_mark-and-cons-warning">Pros ✅ and cons ⚠️</h2>
+<pre class="code-block diff"><code><span class="diff-line diff-add">+ PRO: Portable Run Game (reads replace blocks).</span>
+<span class="diff-line diff-add">+ PRO: Forces Discipline (punishes aggressive defense).</span>
+<span class="diff-line diff-add">+ PRO: Controls Pace (shorten games, limit possessions).</span>
+<span class="diff-line diff-add">+ PRO: +1 Numbers Advantage (QB creates the extra man).</span>
+<span class="diff-line diff-add">+ PRO: Beats Light Boxes (two-high shells get gashed).</span>
+<span class="diff-line diff-context"></span>
+<span class="diff-line diff-del">- CON: QB Durability (taking hits is part of the job).</span>
+<span class="diff-line diff-del">- CON: Hard to Chase Points (clock + predictability).</span>
+<span class="diff-line diff-del">- CON: Vulnerable to &quot;Scrape Exchange&quot; (requires passing answers).</span>
+<span class="diff-line diff-del">- CON: Turnover Risk (pitch timing must be perfect).</span></code></pre>
+<h2 id="typical-personnel-jigsaw">Typical personnel 🧩</h2>
+<p>Option systems vary more than other styles. Common groupings:</p>
+<ul>
+<li><strong>11 personnel</strong>: 1 RB, 1 TE, 3 WR
+<ul>
+<li>Spread option base (zone read, RPO, QB keep).</li>
+</ul></li>
+<li><strong>20 personnel</strong>: 2 RB, 0 TE, 3 WR
+<ul>
+<li>Great for speed option and misdirection.</li>
+</ul></li>
+<li><strong>21 personnel</strong>: 2 RB, 1 TE, 2 WR
+<ul>
+<li>More downhill QB run + lead concepts.</li>
+</ul></li>
+</ul>
+<h3 id="personnel-cheat-table">Personnel cheat table</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>Personnel</strong></th>
+<th><strong>On-field</strong></th>
+<th><strong>Why you’d use it in Option</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>11</td>
+<td>1 RB / 1 TE / 3 WR</td>
+<td>Spread option base: zone read, RPO, QB keep</td>
+</tr>
+<tr>
+<td>20</td>
+<td>2 RB / 3 WR</td>
+<td>Speed option/misdirection; pitch relationships in space</td>
+</tr>
+<tr>
+<td>21</td>
+<td>2 RB / 1 TE / 2 WR</td>
+<td>More downhill; lead blockers; short yardage QB run menu</td>
+</tr>
+</tbody>
+</table></div>
+<p>Traditional option variants sometimes use heavier looks (not always labeled cleanly in-game), but the “idea” is:</p>
+<ul>
+<li>multiple backfield threats</li>
+<li>a tight surface for blocking angles</li>
+</ul>
+<h3 id="role-archetypes">Role archetypes</h3>
+<ul>
+<li><strong>QB:</strong> speed/acceleration, ball carrier moves, durability; plus “good enough” short accuracy.</li>
+<li><strong>RB1 (dive back):</strong> tough, inside runner.</li>
+<li><strong>RB2 (pitch back / slot back):</strong> speed in space.</li>
+<li><strong>WRs:</strong> blockers first, then vertical threats on play-action.</li>
+<li><strong>TE/H-back (if used):</strong> edge setter.</li>
+</ul>
+<hr />
+<h2 id="qb-operation-timing--progressions-stopwatch">QB operation (timing + progressions) ⏱️</h2>
+<h3 id="option-fundamentals-the-rules-that-make-it-work-brain">Option fundamentals (the rules that make it work) 🧠</h3>
+<h3 id="rule-1-know-who-youre-reading">Rule #1: know who you’re reading</h3>
+<p>Every option has a read key.</p>
+<p>Common read keys:</p>
+<ul>
+<li>backside defensive end (zone read)</li>
+<li>play-side end/outside linebacker (speed option)</li>
+<li>first man outside the tackle (triple option)</li>
+</ul>
+<h3 id="read-key-cheat-table">Read-key cheat table</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>Play family</strong></th>
+<th><strong>Typical read key</strong></th>
+<th><strong>Your decision</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Zone read</td>
+<td>Backside DE</td>
+<td>Give vs squeeze/crash • Keep vs slow/play wide</td>
+</tr>
+<tr>
+<td>Speed option</td>
+<td>Play-side edge (DE/OLB)</td>
+<td>Pitch if he takes QB • Keep if he takes pitch</td>
+</tr>
+<tr>
+<td>Triple option</td>
+<td>Dive key + pitch key</td>
+<td>Give/keep/pitch based on first commitment</td>
+</tr>
+</tbody>
+</table></div>
+<p>If you can’t identify the key pre-snap, don’t call the play.</p>
+<h3 id="rule-2-dont-hope--decide">Rule #2: don’t “hope” — decide</h3>
+<p>Option runs fail when you hesitate.</p>
+<pre class="code-block diff"><code><span class="diff-line diff-add">+ GREEN: Key sits or widens -&gt; GIVE the Dive</span>
+<span class="diff-line diff-del">- RED:   Key crashes down   -&gt; PULL and Keep</span></code></pre>
+<p>Commit to give/keep/pitch based on the key’s first step.</p>
+<h3 id="rule-3-use-constraint-plays">Rule #3: use constraint plays</h3>
+<p>Option is a conversation with the defense.</p>
+<p>If they overplay the QB, give it. If they overplay the dive, keep it. If they overplay the pitch, turn it into a play-action shot.</p>
+<hr />
+<h2 id="core-run-game-families-running">Core run game families 🏃</h2>
+<h3 id="1-inside-zone-read">1) Inside zone read</h3>
+<p><strong>What it is:</strong> inside zone with a backside read.</p>
+<p><strong>When it’s great:</strong></p>
+<ul>
+<li>vs aggressive ends</li>
+<li>when defenses chase your RB hard</li>
+</ul>
+<p><strong>Coaching point:</strong> don’t drift backwards on the keep—get vertical.</p>
+<h3 id="2-speed-option">2) Speed option</h3>
+<p><strong>What it is:</strong> QB attacks edge with a pitch relationship.</p>
+<p><strong>When to call:</strong></p>
+<ul>
+<li>vs wide fronts</li>
+<li>after inside reads make defenders squeeze</li>
+</ul>
+<pre class="code-block diff"><code><span class="diff-line diff-add">+ GREEN: Edge Defender crashes QB -&gt; PITCH immediately</span>
+<span class="diff-line diff-del">- RED:   Edge Defender widens     -&gt; KEEP and turn upfield</span></code></pre>
+<p><strong>Pitch habit:</strong> pitch early enough to avoid hit-sticks, late enough to force the defender to commit.</p>
+<h3 id="3-triple-option-if-in-your-book">3) Triple option (if in your book)</h3>
+<p>Classic triple option typically creates:</p>
+<ul>
+<li>dive</li>
+<li>QB keep</li>
+<li>pitch</li>
+</ul>
+<p>It’s deadly if you can keep your spacing and make clean decisions.</p>
+<pre class="code-block diff"><code><span class="diff-line diff-note">! 1ST READ (Dive Key)</span>
+<span class="diff-line diff-add">+ key sits -&gt; GIVE dive</span>
+<span class="diff-line diff-context"></span>
+<span class="diff-line diff-note">! 2ND READ (Pitch Key)</span>
+<span class="diff-line diff-add">+ key takes QB    -&gt; PITCH</span>
+<span class="diff-line diff-del">- key takes Pitch -&gt; KEEP</span></code></pre>
+<h3 id="4-qb-power--qb-counter">4) QB power / QB counter</h3>
+<p>These aren’t “option” by definition, but they complement option identities perfectly.</p>
+<p>Use them when defenses start playing assignment football and you need a straight-up numbers run.</p>
+<h3 id="5-midline--inside-veer-variants">5) Midline / inside veer variants</h3>
+<p>If your playbook includes these, they punish certain fronts by reading interior defenders.</p>
+<hr />
+<h2 id="core-pass-game-families--concept-menu-gear">Core pass game families / concept menu ⚙️</h2>
+<p>Option offenses need a <strong>small, brutal passing menu</strong>:</p>
+<h3 id="1-play-action-shot-post--seam">1) Play-action shot (post / seam)</h3>
+<p>Call it after 2–3 successful option runs.</p>
+<p>Targets:</p>
+<ul>
+<li>seam behind linebackers</li>
+<li>post behind single-high</li>
+</ul>
+<h3 id="2-quick-game">2) Quick game</h3>
+<ul>
+<li>slants</li>
+<li>hitches</li>
+<li>quick outs</li>
+</ul>
+<p>Use quick game when corners give free access.</p>
+<h3 id="3-rpo-tags-for-spread-option-variants">3) RPO tags (for spread option variants)</h3>
+<ul>
+<li>bubble/now</li>
+<li>glance</li>
+</ul>
+<p>These punish overhang defenders who are trying to fit the run.</p>
+<hr />
+<h2 id="building-your-option-call-sheet-practical-cfb26-plan-card_index_dividers">Building your Option call sheet (practical CFB26 plan) 🗂️</h2>
+<h3 id="1st-and-10">1st and 10</h3>
+<ul>
+<li>inside zone read</li>
+<li>speed option</li>
+<li>QB power (sprinkle)</li>
+<li>RPO bubble (if in your book)</li>
+</ul>
+<h3 id="2nd-and-short">2nd and short</h3>
+<ul>
+<li>play-action shot</li>
+<li>triple option</li>
+</ul>
+<h3 id="2nd-and-long">2nd and long</h3>
+<ul>
+<li>screen / quick game</li>
+<li>draw / inside zone</li>
+</ul>
+<h3 id="3rd-down">3rd down</h3>
+<ul>
+<li>3rd &amp; 1–2: QB power, inside zone, sneak</li>
+<li>3rd &amp; 3–6: speed option or RPO quick throw</li>
+<li>3rd &amp; 7+: quick concepts + one shot with max protect</li>
+</ul>
+<h3 id="red-zone-situational-notes">Red zone (situational notes)</h3>
+<ul>
+<li>QB run is a cheat code when the field compresses.</li>
+<li>use stack/bunch (if available) for quick rub routes.</li>
+<li>keep a safe throw (flat) built into your PA calls.</li>
+</ul>
+<hr />
+<h2 id="defensive-looks-and-your-counters-shield">Defensive looks and your counters 🛡️</h2>
+<h3 id="they-scrape-exchange-the-read">They “scrape exchange” the read</h3>
+<p>What it means: a defender replaces the read player to take away the keep.</p>
+<p>Your answers:</p>
+<ul>
+<li>call a different read (change the key)</li>
+<li>use QB power/counter (no read)</li>
+<li>hit quick pass/RPO behind the exchange</li>
+</ul>
+<h3 id="they-set-hard-edges">They set hard edges</h3>
+<ul>
+<li>run inside (dive, inside zone)</li>
+<li>call misdirection (counter)</li>
+<li>use play-action to punish safeties triggering</li>
+</ul>
+<h3 id="they-spy-the-qb">They spy the QB</h3>
+<ul>
+<li>throw to the vacated area</li>
+<li>run your RB at the lighter box</li>
+</ul>
+<hr />
+<h2 id="roster-building-priorities-dna">Roster building priorities 🧬</h2>
+<ol type="1">
+<li><strong>QB durability + speed</strong></li>
+<li><strong>RB1 physical runner</strong></li>
+<li><strong>RB2 space player (pitch back)</strong></li>
+<li><strong>OL with agility</strong> (reach blocks, second level)</li>
+<li><strong>WR blocking + one vertical threat</strong></li>
+</ol>
+<hr />
+<h2 id="formation-packages-how-to-pick-what-type-of-option-you-are-triangular_ruler">Formation packages (how to pick what “type” of option you are) 📐</h2>
+<p>Most option playbooks can be played in two broad ways. Pick one as your base so your calls feel coherent.</p>
+<h3 id="package-a-spread-option-gun-based">Package A: Spread option (gun-based)</h3>
+<p><strong>What it looks like:</strong> 11/10 personnel, lots of gun sets.</p>
+<p><strong>What it majors in:</strong></p>
+<ul>
+<li>inside zone read</li>
+<li>RPO bubble/glance</li>
+<li>QB keepers (speed option, QB draw)</li>
+</ul>
+<p><strong>Why it’s popular in-game:</strong></p>
+<ul>
+<li>easier passing on obvious downs</li>
+<li>easier to mix tempo</li>
+<li>simpler to identify the read key</li>
+</ul>
+<h3 id="package-b-traditional-option-tight-surface">Package B: Traditional option (tight surface)</h3>
+<p><strong>What it looks like:</strong> condensed formations, more backs, stronger angles.</p>
+<p><strong>What it majors in:</strong></p>
+<ul>
+<li>triple option</li>
+<li>speed option</li>
+<li>veer/midline variants</li>
+</ul>
+<p><strong>Why it’s scary:</strong></p>
+<ul>
+<li>angles are cleaner</li>
+<li>the pitch phase can stress defenses that “overplay” the QB</li>
+</ul>
+<p>If you’re not sure which one your roster supports, start with spread option. It’s the easiest to keep functional when you’re down on the scoreboard.</p>
+<hr />
+<h2 id="pitch-mechanics-how-to-avoid-the-two-worst-outcomes-baseball">Pitch mechanics (how to avoid the two worst outcomes) ⚾</h2>
+<p>The two worst outcomes on option plays are:</p>
+<ol type="1">
+<li><strong>A huge loss</strong> because you pitched too late into a hit.</li>
+<li><strong>A turnover</strong> because the pitch was rushed or thrown into traffic.</li>
+</ol>
+<h3 id="a-simple-pitch-rule">A simple pitch rule</h3>
+<ul>
+<li>If the force defender commits to the QB: pitch.</li>
+<li>If the force defender stays wide and slow-plays: keep and get vertical.</li>
+</ul>
+<h3 id="spacing-rule-pitch-relationship">Spacing rule (pitch relationship)</h3>
+<p>Try to maintain a spacing where your pitch back is:</p>
+<ul>
+<li>not so close that one defender can tackle both of you</li>
+<li>not so far that the pitch becomes a slow, floating throw</li>
+</ul>
+<p>If you feel like pitches are always late, it usually means you’re letting the QB drift sideways too long. Turn upfield sooner.</p>
+<hr />
+<h2 id="constraint-play-menu-your-answers-when-they-sell-out-toolbox">Constraint play menu (your “answers” when they sell out) 🧰</h2>
+<p>Option is only unstoppable when you punish overreactions.</p>
+<p>Here’s a practical constraint menu to keep in your favorites.</p>
+<h3 id="if-they-crash-the-dive-to-stop-the-handoff">If they crash the dive (to stop the handoff)</h3>
+<ul>
+<li>keep the read (QB keep)</li>
+<li>call QB power/counter (no read)</li>
+</ul>
+<h3 id="if-they-sit-on-the-qb-keep">If they sit on the QB keep</h3>
+<ul>
+<li>give the dive repeatedly</li>
+<li>call speed option toward the overplay</li>
+</ul>
+<h3 id="if-they-fly-to-the-pitch">If they fly to the pitch</h3>
+<ul>
+<li>keep it and cut upfield</li>
+<li>hit play-action behind them (seam/post)</li>
+</ul>
+<h3 id="if-they-widen-hard-to-stop-the-perimeter">If they widen hard to stop the perimeter</h3>
+<ul>
+<li>run inside (dive, inside zone)</li>
+<li>call counter back inside</li>
+</ul>
+<hr />
+<h2 id="pre-snap-plan-audibles--box-count--motion-video_game">Pre-snap plan (audibles + box count + motion) 🎮</h2>
+<p>Option offenses get wrecked when you call a read into a look that defeats it. Audibles prevent that.</p>
+<p>Suggested audible set (example):</p>
+<ol type="1">
+<li>Inside zone read (base)</li>
+<li>QB power (no read, downhill)</li>
+<li>Speed option (perimeter)</li>
+<li>RPO bubble / quick screen (if apex is tight)</li>
+<li>Play-action shot (post/seam) (if safeties are nosy)</li>
+</ol>
+<p>Pre-snap checklist:</p>
+<ul>
+<li>If the edge is already outside and waiting: don’t call speed option into it.</li>
+<li>If the box is light: don’t outsmart yourself—hand it off.</li>
+<li>If corners are off and safeties are deep: quick game is free yards.</li>
+</ul>
+<hr />
+<h2 id="weekly-install-plan-dynasty-friendly-books">Weekly install plan (Dynasty-friendly) 📚</h2>
+<p>If you want the option game to feel automatic, practice in a simple progression.</p>
+<h3 id="week-1-inside-zone-read--one-quick-throw">Week 1: inside zone read + one quick throw</h3>
+<ul>
+<li>Learn to identify the backside end as the key.</li>
+<li>Pair it with one free-access throw (hitch or bubble).</li>
+</ul>
+<h3 id="week-2-add-speed-option">Week 2: add speed option</h3>
+<ul>
+<li>Focus on pitch spacing and “turn upfield” timing.</li>
+</ul>
+<h3 id="week-3-add-one-shot-play">Week 3: add one shot play</h3>
+<ul>
+<li>Use it only after you have forced the defense to trigger downhill.</li>
+</ul>
+<h3 id="week-4-add-one-counter--misdirection">Week 4: add one counter / misdirection</h3>
+<ul>
+<li>This is your answer to scrape exchange and hard edges.</li>
+</ul>
+<hr />
+<h2 id="troubleshooting-why-option-runs-get-blown-up-fire_extinguisher">Troubleshooting (why option runs get blown up) 🧯</h2>
+<h3 id="problem-my-qb-keep-gets-tackled-by-someone-unblocked">Problem: “My QB keep gets tackled by someone unblocked.”</h3>
+<p>Likely cause:</p>
+<ul>
+<li>defense is scraping/exchanging or you’re reading the wrong key.</li>
+</ul>
+<p>Fix:</p>
+<ul>
+<li>change which option play you’re calling (change the key)</li>
+<li>sprinkle QB power/counter</li>
+</ul>
+<h3 id="problem-speed-option-always-loses-yards">Problem: “Speed option always loses yards.”</h3>
+<p>Likely cause:</p>
+<ul>
+<li>you’re running it into a wide, patient force defender.</li>
+</ul>
+<p>Fix:</p>
+<ul>
+<li>call it after inside runs have squeezed the edge</li>
+<li>audible to inside zone if the edge is already set</li>
+</ul>
+<h3 id="problem-i-cant-pass-out-of-this">Problem: “I can’t pass out of this.”</h3>
+<p>Fix:</p>
+<ul>
+<li>simplify to one quick concept and one shot concept</li>
+<li>don’t call long progressions; use max protect or half-field reads</li>
+</ul>
+<hr />
+<h2 id="defensive-front-cheat-sheet-what-options-usually-fit-best-receipt">Defensive-front cheat sheet (what options usually fit best) 🧾</h2>
+<p>This is a simplified way to choose calls without memorizing every defensive front name.</p>
+<h3 id="if-the-edges-are-wide-and-patient">If the edges are wide and patient</h3>
+<p>You’ll feel like speed option has no corner.</p>
+<p>Better calls:</p>
+<ul>
+<li>inside zone/dive</li>
+<li>QB power (downhill)</li>
+<li>counter back inside</li>
+</ul>
+<h3 id="if-the-edges-are-crashing-hard">If the edges are crashing hard</h3>
+<p>Better calls:</p>
+<ul>
+<li>zone read keep</li>
+<li>speed option (force them to play the pitch)</li>
+<li>play-action behind the crash</li>
+</ul>
+<h3 id="if-linebackers-are-scraping-over-the-top">If linebackers are scraping over the top</h3>
+<p>Better calls:</p>
+<ul>
+<li>change the read key (different option play)</li>
+<li>misdirection/counter</li>
+<li>quick RPO glance behind the scrape</li>
+</ul>
+<hr />
+<h2 id="situational-notes-option-can-still-win-passing-situations-brain">Situational notes (option can still win “passing situations”) 🧠</h2>
+<h3 id="2-minute-offense">2-minute offense</h3>
+<p>Pure option can chew clock, so in 2-minute you typically shift toward:</p>
+<ul>
+<li>quick outs / hitches</li>
+<li>seams off play-action</li>
+<li>a screen to punish blitz</li>
+</ul>
+<p>Keep one QB draw available as a surprise if the defense drops deep and vacates the middle.</p>
+<h3 id="4-minute-offense-protecting-a-lead">4-minute offense (protecting a lead)</h3>
+<p>Option is excellent here:</p>
+<ul>
+<li>run inside reads to stay in bounds</li>
+<li>take safe constraint passes only when the defense overcommits</li>
+</ul>
+<h3 id="red-zone">Red zone</h3>
+<p>The QB run threat becomes stronger.</p>
+<ul>
+<li>QB power/keep</li>
+<li>quick rub pass</li>
+<li>play-action leak (if defense sells out)</li>
+</ul>
+<hr />
+<h2 id="sample-15-play-opening-script-pencil">Sample 15-play opening script 📝</h2>
+<p>The Option isn't just about reading the dive key; it's about forcing the defense to play disciplined football for 4 quarters.</p>
+<h3 id="quick-list">Quick list</h3>
+<ol type="1">
+<li>Triple Option (Flexbone)</li>
+<li>Rocket Toss</li>
+<li>FB Dive</li>
+<li>Pop Pass</li>
+<li>Counter Option</li>
+<li>Curl / Out</li>
+<li>Midline Option</li>
+<li>Wheel Route</li>
+<li>QB Sneak / Iso</li>
+<li>Speed Option</li>
+<li>FB Trap</li>
+<li>Post / Corner</li>
+<li>FB Dive</li>
+<li>Triple Option</li>
+<li>Wishbone / Power</li>
+</ol>
+<h3 id="table-format-copypaste-idea">Table format (copy/paste idea)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th style="text-align: center;"><strong>Play #</strong></th>
+<th><strong>Situation / Note</strong></th>
+<th><strong>Concept / Call</strong></th>
+<th><strong>Why?</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td>Scripted Opener (Tone)</td>
+<td><strong>Triple Option (Flexbone)</strong></td>
+<td>Establish the read immediately.</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td>Counter Punch</td>
+<td><strong>Rocket Toss</strong></td>
+<td>If they crash inside, sprint outside.</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td>Run: Dive</td>
+<td><strong>FB Dive</strong></td>
+<td>3 yards and a cloud of dust.</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td>Play-Action Shot</td>
+<td><strong>Pop Pass</strong></td>
+<td>LBs bite on the dive? Throw over their heads.</td>
+</tr>
+<tr>
+<td style="text-align: center;">5</td>
+<td>Misdirection</td>
+<td><strong>Counter Option</strong></td>
+<td>Fake one way, pitch the other.</td>
+</tr>
+<tr>
+<td style="text-align: center;">6</td>
+<td>Base Pass</td>
+<td><strong>Curl / Out</strong></td>
+<td>Keep the secondary honest.</td>
+</tr>
+<tr>
+<td style="text-align: center;">7</td>
+<td>Red Zone Setup</td>
+<td><strong>Midline Option</strong></td>
+<td>Isolate the DT.</td>
+</tr>
+<tr>
+<td style="text-align: center;">8</td>
+<td>Shot Play</td>
+<td><strong>Wheel Route</strong></td>
+<td>RB out of the backfield is unattended.</td>
+</tr>
+<tr>
+<td style="text-align: center;">9</td>
+<td>Run: QB Keep</td>
+<td><strong>QB Sneak / Iso</strong></td>
+<td>Sometimes, just run the QB.</td>
+</tr>
+<tr>
+<td style="text-align: center;">10</td>
+<td>Perimeter Check</td>
+<td><strong>Speed Option</strong></td>
+<td>Get the ball to your fastest player.</td>
+</tr>
+<tr>
+<td style="text-align: center;">11</td>
+<td>Tempo / Clock</td>
+<td><strong>FB Trap</strong></td>
+<td>Quick hitter against aggressive DTs.</td>
+</tr>
+<tr>
+<td style="text-align: center;">12</td>
+<td>Deep Shot</td>
+<td><strong>Post / Corner</strong></td>
+<td>Safety comes down? Touchdown.</td>
+</tr>
+<tr>
+<td style="text-align: center;">13</td>
+<td>3rd &amp; Short</td>
+<td><strong>FB Dive</strong></td>
+<td>Always.</td>
+</tr>
+<tr>
+<td style="text-align: center;">14</td>
+<td>4-Minute Drill</td>
+<td><strong>Triple Option</strong></td>
+<td>Grind the clock.</td>
+</tr>
+<tr>
+<td style="text-align: center;">15</td>
+<td>Goal Line</td>
+<td><strong>Wishbone / Power</strong></td>
+<td>Put everyone in the box and push.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="mini-opening-script-option-grind">Mini opening script (Option grind)</h3>
+<p>The goal is to physically exhaust the DL and frustrate the LBs.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th style="text-align: center;"><strong>Play #</strong></th>
+<th><strong>Situation / Note</strong></th>
+<th><strong>Concept / Call</strong></th>
+<th><strong>Why?</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td>Opener</td>
+<td><strong>Triple Option / Veer</strong></td>
+<td>Establish the read immediately</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td>Constraint</td>
+<td><strong>Rocket Toss</strong></td>
+<td>Beat them to the edge fast</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td>Counter</td>
+<td><strong>F-Counter / Trap</strong></td>
+<td>Catch LBs flowing to the motion</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td>Pass (Surprise)</td>
+<td><strong>Veer Pass / Pop</strong></td>
+<td>TE slips behind aggressive LBs</td>
+</tr>
+<tr>
+<td style="text-align: center;">5</td>
+<td>Run</td>
+<td><strong>Midline Option</strong></td>
+<td>Read the DT instead of the DE</td>
+</tr>
+<tr>
+<td style="text-align: center;">6</td>
+<td>Run</td>
+<td><strong>Triple Option</strong></td>
+<td>Repetition breaks the defense</td>
+</tr>
+<tr>
+<td style="text-align: center;">7</td>
+<td>Short Yardage</td>
+<td><strong>FB Dive</strong></td>
+<td>4 yards and a cloud of dust</td>
+</tr>
+<tr>
+<td style="text-align: center;">8</td>
+<td>Shot Play</td>
+<td><strong>Switch Verticals</strong></td>
+<td>Wheel routes usually wide open</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="post-game-metrics-did-i-run-it-right-bar_chart">Post-Game Metrics (Did I run it right?) 📊</h2>
+<p>If you played a true Option game, your stats should look like this:</p>
+<ul>
+<li><strong>Rushing Attempts:</strong> &gt; 50 (Dominate the ground)</li>
+<li><strong>Passing Attempts:</strong> &lt; 15 (Only pass when necessary)</li>
+<li><strong>Time of Possession:</strong> &gt; 60% (Keep their offense off the field)</li>
+<li><strong>Yards Per Carry:</strong> &gt; 4.5 (Move the chains)</li>
+</ul>
+<h2 id="dynasty-recruiting-guide-mortar_board">Dynasty Recruiting Guide 🎓</h2>
+<h3 id="quick-targets">Quick targets</h3>
+<p>Option recruiting is weird. You don't want "stars"; you want <strong>specific traits</strong>.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th style="text-align: left;"><strong>Position</strong></th>
+<th><strong>Archetype / Key Stats</strong></th>
+<th><strong>Why?</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>QB</strong></td>
+<td><strong>Scrambler</strong> (SPD, ACC, CAR)</td>
+<td>Carrying (CAR) is critical. Fumbles kill this.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>HB/SB</strong></td>
+<td><strong>All-Purpose</strong> (SPD, ACC, CTH)</td>
+<td>Speed kills on the pitch. Needs to catch occasionally.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>FB</strong></td>
+<td><strong>Power Back</strong> (TRK, STR, CAR)</td>
+<td>The engine. 20 carries/game inside.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>OL</strong></td>
+<td><strong>Agile</strong> (ACC, IBL, RBS)</td>
+<td>Need speed to down-block LBs. Size doesn't matter.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>WR</strong></td>
+<td><strong>Blocking</strong> (RBK, IBL, STR)</td>
+<td>If they can't block, they don't play.</td>
+</tr>
+</tbody>
+</table></div>
+<p>If you run the Option, prioritize these archetypes:</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th style="text-align: left;"><strong>Position</strong></th>
+<th><strong>Archetype / Key Stats</strong></th>
+<th><strong>Why?</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>QB</strong></td>
+<td><strong>Scrambler / Athlete</strong> (SPD, ACC)</td>
+<td>Must be the best athlete on the field.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>HB</strong></td>
+<td><strong>Speed Back</strong> (SPD, ACC)</td>
+<td>For pitches and toss plays.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>FB</strong></td>
+<td><strong>Power Back</strong> (TRK, STR, BTK)</td>
+<td>The engine. Needs to consistently gain 3 yards.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>WR</strong></td>
+<td><strong>Deep Threat</strong> (SPD, RBK)</td>
+<td><strong>BLOCKING IS #1.</strong> Secondary skill: Speed for PA.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>OL</strong></td>
+<td><strong>Run Blocker</strong> (RBK, RBP, STR)</td>
+<td>They dictate the game.</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="teams-to-check-first-in-cfb26-real-world-scheme-fit-mag">Teams to check first in CFB26 (real-world scheme fit) 🔍</h2>
+<p>If you want a true option feel, start with service academies and classic option programs.</p>
+<p>Start here and <strong>verify in-game</strong>:</p>
+<ul>
+<li>Army</li>
+<li>Navy</li>
+<li>Air Force</li>
+<li>Georgia Tech (historical)</li>
+<li>New Mexico (option elements)</li>
+</ul>
+<h2 id="nfl-analogs-closest-cousins-football">NFL analogs (closest cousins) 🏈</h2>
+<p>The NFL doesn’t run true triple option as a base offense, but several teams feature meaningful QB-run/option packages.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>NFL team (varies by year)</strong></th>
+<th><strong>What matches Option principles</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Baltimore Ravens</td>
+<td>QB run game, read-option elements</td>
+</tr>
+<tr>
+<td>Philadelphia Eagles</td>
+<td>QB run/option packages</td>
+</tr>
+<tr>
+<td>Buffalo Bills</td>
+<td>QB run threat + numbers advantage</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="teams-in-cfb26-that-use-an-option-playbook-fill-this-in-stadium">Teams in CFB26 that use an Option playbook (fill this in) 🏟️</h2>
+<!-- markdownlint-disable MD033 -->
+
+<details>
+<summary>Show editable teams table</summary>
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>Team</strong></th>
+<th><strong>In-game offensive playbook name</strong></th>
+<th><strong>Notes (QB run %, option types, favorite constraint plays)</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+</details>
+<!-- markdownlint-enable MD033 -->
+
+<hr />
+<h2 id="minimal-glossary-pushpin">Minimal glossary 📌</h2>
+<ul>
+<li><strong>Dive:</strong> the inside handoff part of triple option.</li>
+<li><strong>Pitch relationship:</strong> spacing between QB and pitch back.</li>
+<li><strong>Constraint play:</strong> call that punishes a specific defensive adjustment.</li>
+<li><strong>Scrape exchange:</strong> defensive technique to defeat read option.</li>
+</ul>
+        </div>
+        <nav class="scheme-nav" aria-label="Scheme navigation">
+      <a class="scheme-link prev" href="west-coast.html">← West Coast</a>
+      <a class="scheme-link center" href="index.html">All Schemes</a>
+      <a class="scheme-link next" href="run-and-shoot.html">Run and Shoot →</a>
+    </nav>
+      </article>
+    </div>
+  </main>
+</body>
+</html>

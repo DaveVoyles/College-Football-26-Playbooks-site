@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3D Formation Viewer</title>
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("clawpilotTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <link rel="stylesheet" href="../assets/styles/site-nav.css" />
+  <style>
+    :root {
+      color-scheme: light;
+      --cp-bg: #f7f4ef;
+      --cp-bg-elevated: #fcfbf8;
+      --cp-surface: #ffffff;
+      --cp-surface-soft: #f5f5f5;
+      --cp-border: #dedede;
+      --cp-border-strong: #919191;
+      --cp-text: #242424;
+      --cp-text-muted: #5c5c5c;
+      --cp-text-soft: #6f6f6f;
+      --cp-accent: #b11f4b;
+      --cp-accent-hover: #9a1a41;
+      --cp-accent-soft: rgba(177, 31, 75, 0.08);
+      --cp-accent-fg: #ffffff;
+      --cp-success: #16a34a;
+      --cp-danger: #dc2626;
+      --cp-warning: #f59e0b;
+      --cp-link: #0078d4;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+      --cp-overlay: rgba(255, 255, 255, 0.8);
+      --cp-panel: rgba(255, 255, 255, 0.86);
+      --cp-panel-strong: rgba(255, 255, 255, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.55);
+      --cp-highlight: rgba(177, 31, 75, 0.12);
+    }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --cp-bg: #3d3b3a;
+      --cp-bg-elevated: #343231;
+      --cp-surface: #292929;
+      --cp-surface-soft: #2e2e2e;
+      --cp-border: #474747;
+      --cp-border-strong: #5f5f5f;
+      --cp-text: #dedede;
+      --cp-text-muted: #919191;
+      --cp-text-soft: #b0b0b0;
+      --cp-accent: #fd8ea1;
+      --cp-accent-hover: #fb7b91;
+      --cp-accent-soft: rgba(253, 142, 161, 0.14);
+      --cp-accent-fg: #1a1a1a;
+      --cp-success: #4ade80;
+      --cp-danger: #f87171;
+      --cp-warning: #fbbf24;
+      --cp-link: #4da6ff;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+      --cp-overlay: rgba(41, 41, 41, 0.88);
+      --cp-panel: rgba(41, 41, 41, 0.72);
+      --cp-panel-strong: rgba(41, 41, 41, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.04);
+      --cp-highlight: rgba(253, 142, 161, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+    }
+
+    body {
+      background: var(--cp-bg);
+      color: var(--cp-text);
+      font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow: hidden;
+    }
+
+    button,
+    select {
+      font: inherit;
+    }
+
+    .page-shell {
+      position: relative;
+      height: 100vh;
+      padding-top: calc(var(--site-nav-height, 3.5rem) + 0.5rem);
+    }
+
+    .scene-shell,
+    .scene-canvas,
+    .label-layer {
+      position: absolute;
+      inset: 0;
+    }
+
+    .scene-shell {
+      inset: calc(var(--site-nav-height, 3.5rem) + 0.5rem) 0 0;
+      background:
+        radial-gradient(circle at top, var(--cp-sheen), transparent 40%),
+        linear-gradient(180deg, var(--cp-bg-elevated), var(--cp-bg));
+    }
+
+    .scene-canvas canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .label-layer {
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .player-label {
+      position: absolute;
+      left: 0;
+      top: 0;
+      padding: 0.2rem 0.45rem;
+      border-radius: 999px;
+      border: 1px solid var(--cp-border);
+      background: var(--cp-panel-strong);
+      color: var(--cp-text);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      box-shadow: 0 0 2px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.14);
+      transform: translate(-50%, -130%);
+    }
+
+    .overlay {
+      position: absolute;
+      z-index: 5;
+      display: grid;
+      gap: 1rem;
+      pointer-events: none;
+      inset: calc(var(--site-nav-height, 3.5rem) + 1rem) 1rem 1rem 1rem;
+      grid-template-columns: minmax(16rem, 22rem) minmax(16rem, 24rem);
+      align-content: start;
+      justify-content: space-between;
+    }
+
+    .panel {
+      pointer-events: auto;
+      padding: 1rem;
+      border-radius: 16px;
+      border: 1px solid var(--cp-border);
+      background: var(--cp-panel);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 0 2px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.14);
+    }
+
+    .panel h1,
+    .panel h2,
+    .panel p {
+      margin: 0;
+    }
+
+    .eyebrow {
+      margin-bottom: 0.45rem;
+      color: var(--cp-text-muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .controls {
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .controls select {
+      width: 100%;
+      padding: 0.85rem 0.95rem;
+      border-radius: 0.625rem;
+      border: 1px solid var(--cp-border);
+      background: var(--cp-surface);
+      color: var(--cp-text);
+    }
+
+    .helper {
+      color: var(--cp-text-soft);
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    .title-row {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.8rem;
+    }
+
+    .formation-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.35rem 0.65rem;
+      border-radius: 999px;
+      background: var(--cp-accent-soft);
+      color: var(--cp-accent);
+      font-weight: 700;
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+
+    .meta-grid {
+      margin-top: 1rem;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+
+    .meta-card {
+      padding: 0.75rem;
+      border-radius: 0.625rem;
+      border: 1px solid var(--cp-border);
+      background: var(--cp-surface);
+    }
+
+    .meta-card span {
+      display: block;
+      color: var(--cp-text-muted);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.35rem;
+    }
+
+    .meta-card strong {
+      font-size: 1rem;
+    }
+
+    .legend-list {
+      display: grid;
+      gap: 0.55rem;
+      margin-top: 1rem;
+      padding: 0;
+      list-style: none;
+    }
+
+    .legend-list li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.55rem 0.7rem;
+      border-radius: 0.625rem;
+      border: 1px solid var(--cp-border);
+      background: var(--cp-surface);
+      color: var(--cp-text-muted);
+      font-size: 0.88rem;
+    }
+
+    .legend-list b {
+      color: var(--cp-text);
+    }
+
+    @media (max-width: 900px) {
+      .overlay {
+        grid-template-columns: 1fr;
+        justify-content: stretch;
+        inset-inline: 0.75rem;
+      }
+
+      .panel {
+        max-width: min(100%, 28rem);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .meta-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .panel {
+        padding: 0.85rem;
+      }
+    }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.167.1/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.167.1/examples/jsm/"
+      }
+    }
+  </script>
+  <script defer src="../assets/scripts/site-nav.js"></script>
+</head>
+<body data-nav-root="..">
+  <div class="page-shell">
+    <div class="scene-shell">
+      <div id="scene" class="scene-canvas" aria-label="3D football formation viewer"></div>
+      <div id="labels" class="label-layer" aria-hidden="true"></div>
+    </div>
+
+    <div class="overlay">
+      <section class="panel controls">
+        <div>
+          <div class="eyebrow">Formation selector</div>
+          <h1>3D Formation Viewer</h1>
+        </div>
+        <label>
+          <span class="helper">Choose a formation to animate the offense into its alignment.</span>
+          <select id="formationSelect" aria-label="Choose a formation"></select>
+        </label>
+        <p class="helper">Drag to orbit, scroll to zoom, and compare spacing, backfield depth, and receiver distribution from the same field view.</p>
+      </section>
+
+      <aside class="panel">
+        <div class="title-row">
+          <div>
+            <div class="eyebrow">Formation profile</div>
+            <h2 id="formationTitle">Gun Trips Right</h2>
+          </div>
+          <span class="formation-chip" id="formationChip">Spread</span>
+        </div>
+        <p class="helper" id="formationDesc"></p>
+        <div class="meta-grid" id="formationMeta"></div>
+        <ul class="legend-list">
+          <li><b>Gray</b><span>Offensive line</span></li>
+          <li><b>Gold</b><span>Quarterback</span></li>
+          <li><b>Blue</b><span>Running backs / fullbacks</span></li>
+          <li><b>Rose</b><span>Wide receivers</span></li>
+          <li><b>Orange</b><span>Tight ends</span></li>
+        </ul>
+      </aside>
+    </div>
+  </div>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    const formations = {
+      "Gun Trips Right": {
+        desc: "3 WR to the right, 1 WR left. Great for spacing and quick game.",
+        family: "Spread",
+        positions: [
+          { role: "LT", x: -2, z: 0, color: 0x888888 },
+          { role: "LG", x: -1, z: 0, color: 0x888888 },
+          { role: "C", x: 0, z: 0, color: 0x888888 },
+          { role: "RG", x: 1, z: 0, color: 0x888888 },
+          { role: "RT", x: 2, z: 0, color: 0x888888 },
+          { role: "QB", x: 0, z: -2, color: 0xffd700 },
+          { role: "RB", x: -1, z: -3, color: 0x4dabf7 },
+          { role: "X", x: -5, z: 0.3, color: 0xef476f },
+          { role: "H", x: 3.5, z: 0.3, color: 0xff7f9a },
+          { role: "Y", x: 4.5, z: 0.3, color: 0xef476f },
+          { role: "Z", x: 6, z: 0.3, color: 0xef476f },
+        ]
+      },
+      "Gun Doubles": {
+        desc: "2x2 alignment. Balanced access to both sides. Base Air Raid set.",
+        family: "Spread",
+        positions: [
+          { role: "LT", x: -2, z: 0, color: 0x888888 },
+          { role: "LG", x: -1, z: 0, color: 0x888888 },
+          { role: "C", x: 0, z: 0, color: 0x888888 },
+          { role: "RG", x: 1, z: 0, color: 0x888888 },
+          { role: "RT", x: 2, z: 0, color: 0x888888 },
+          { role: "QB", x: 0, z: -2, color: 0xffd700 },
+          { role: "RB", x: 1, z: -3, color: 0x4dabf7 },
+          { role: "X", x: -5.5, z: 0.3, color: 0xef476f },
+          { role: "H", x: -3.5, z: 0.3, color: 0xff7f9a },
+          { role: "Y", x: 3.5, z: 0.3, color: 0xef476f },
+          { role: "Z", x: 5.5, z: 0.3, color: 0xef476f },
+        ]
+      },
+      "Gun Empty": {
+        desc: "No RB. 5 WR spread. Maximum spacing for quick game.",
+        family: "Spread",
+        positions: [
+          { role: "LT", x: -2, z: 0, color: 0x888888 },
+          { role: "LG", x: -1, z: 0, color: 0x888888 },
+          { role: "C", x: 0, z: 0, color: 0x888888 },
+          { role: "RG", x: 1, z: 0, color: 0x888888 },
+          { role: "RT", x: 2, z: 0, color: 0x888888 },
+          { role: "QB", x: 0, z: -2, color: 0xffd700 },
+          { role: "X", x: -6, z: 0.3, color: 0xef476f },
+          { role: "H", x: -3.5, z: 0.3, color: 0xff7f9a },
+          { role: "Slot", x: 3, z: 0.3, color: 0xff8fab },
+          { role: "Y", x: 4.5, z: 0.3, color: 0xef476f },
+          { role: "Z", x: 6, z: 0.3, color: 0xef476f },
+        ]
+      },
+      "Gun Bunch Right": {
+        desc: "3 WR bunched tight to the right. Great for rubs/picks and red zone.",
+        family: "Spread",
+        positions: [
+          { role: "LT", x: -2, z: 0, color: 0x888888 },
+          { role: "LG", x: -1, z: 0, color: 0x888888 },
+          { role: "C", x: 0, z: 0, color: 0x888888 },
+          { role: "RG", x: 1, z: 0, color: 0x888888 },
+          { role: "RT", x: 2, z: 0, color: 0x888888 },
+          { role: "QB", x: 0, z: -2, color: 0xffd700 },
+          { role: "RB", x: -1, z: -3, color: 0x4dabf7 },
+          { role: "X", x: -5.5, z: 0.3, color: 0xef476f },
+          { role: "H", x: 3.5, z: 0.3, color: 0xff7f9a },
+          { role: "Y", x: 4, z: 1, color: 0xef476f },
+          { role: "Z", x: 4.5, z: 0.3, color: 0xef476f },
+        ]
+      },
+      "I-Form": {
+        desc: "Classic Pro Style. FB leads, power run game. Under center.",
+        family: "Pro style",
+        positions: [
+          { role: "LT", x: -2, z: 0, color: 0x888888 },
+          { role: "LG", x: -1, z: 0, color: 0x888888 },
+          { role: "C", x: 0, z: 0, color: 0x888888 },
+          { role: "RG", x: 1, z: 0, color: 0x888888 },
+          { role: "RT", x: 2, z: 0, color: 0x888888 },
+          { role: "QB", x: 0, z: -1, color: 0xffd700 },
+          { role: "FB", x: 0, z: -2.5, color: 0x4dabf7 },
+          { role: "RB", x: 0, z: -4, color: 0x4dabf7 },
+          { role: "TE", x: 3, z: 0, color: 0xff6b35 },
+          { role: "X", x: -5.5, z: 0.3, color: 0xef476f },
+          { role: "Z", x: 5.5, z: 0.3, color: 0xef476f },
+        ]
+      },
+      "Singleback Twins": {
+        desc: "1 RB, TE on one side, 2 WR stacked on one side. Versatile West Coast set.",
+        family: "West Coast",
+        positions: [
+          { role: "LT", x: -2, z: 0, color: 0x888888 },
+          { role: "LG", x: -1, z: 0, color: 0x888888 },
+          { role: "C", x: 0, z: 0, color: 0x888888 },
+          { role: "RG", x: 1, z: 0, color: 0x888888 },
+          { role: "RT", x: 2, z: 0, color: 0x888888 },
+          { role: "QB", x: 0, z: -1.5, color: 0xffd700 },
+          { role: "RB", x: 0, z: -3, color: 0x4dabf7 },
+          { role: "TE", x: -3, z: 0, color: 0xff6b35 },
+          { role: "X", x: -5.5, z: 0.3, color: 0xef476f },
+          { role: "Y", x: 4, z: 0.3, color: 0xef476f },
+          { role: "Z", x: 5.5, z: 0.3, color: 0xef476f },
+        ]
+      },
+      "Flexbone (Triple Option)": {
+        desc: "Option offense base. QB under center, 2 slot backs for pitch/dive.",
+        family: "Option",
+        positions: [
+          { role: "LT", x: -2, z: 0, color: 0x888888 },
+          { role: "LG", x: -1, z: 0, color: 0x888888 },
+          { role: "C", x: 0, z: 0, color: 0x888888 },
+          { role: "RG", x: 1, z: 0, color: 0x888888 },
+          { role: "RT", x: 2, z: 0, color: 0x888888 },
+          { role: "QB", x: 0, z: -1, color: 0xffd700 },
+          { role: "FB", x: 0, z: -2.5, color: 0x4dabf7 },
+          { role: "A", x: -2.5, z: -1.5, color: 0x4dabf7 },
+          { role: "B", x: 2.5, z: -1.5, color: 0x4dabf7 },
+          { role: "X", x: -5.5, z: 0.3, color: 0xef476f },
+          { role: "Z", x: 5.5, z: 0.3, color: 0xef476f },
+        ]
+      }
+    };
+
+    const formationNames = Object.keys(formations);
+    const sceneHost = document.getElementById('scene');
+    const labelLayer = document.getElementById('labels');
+    const formationSelect = document.getElementById('formationSelect');
+    const formationTitle = document.getElementById('formationTitle');
+    const formationChip = document.getElementById('formationChip');
+    const formationDesc = document.getElementById('formationDesc');
+    const formationMeta = document.getElementById('formationMeta');
+
+    formationNames.forEach((name) => {
+      const option = document.createElement('option');
+      option.value = name;
+      option.textContent = name;
+      formationSelect.append(option);
+    });
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    sceneHost.append(renderer.domElement);
+
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.Fog(0x0f2f14, 16, 32);
+
+    const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+    camera.position.set(0, 8, 5);
+    camera.lookAt(0, 0, 0);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.target.set(0, 0, -0.3);
+    controls.enableDamping = true;
+    controls.minDistance = 6;
+    controls.maxDistance = 16;
+    controls.maxPolarAngle = Math.PI / 2.05;
+    controls.minPolarAngle = 0.15;
+
+    scene.add(new THREE.AmbientLight(0xffffff, 1.1));
+    const sun = new THREE.DirectionalLight(0xffffff, 1.6);
+    sun.position.set(7, 10, 5);
+    scene.add(sun);
+
+    const createFieldTexture = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 1024;
+      canvas.height = 1536;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#2f7d32';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.strokeStyle = 'rgba(255,255,255,0.28)';
+      ctx.lineWidth = 8;
+      ctx.strokeRect(60, 60, canvas.width - 120, canvas.height - 120);
+
+      for (let i = 0; i < 11; i += 1) {
+        const y = 100 + ((canvas.height - 200) / 10) * i;
+        ctx.strokeStyle = i === 5 ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.18)';
+        ctx.lineWidth = i === 5 ? 10 : 4;
+        ctx.beginPath();
+        ctx.moveTo(90, y);
+        ctx.lineTo(canvas.width - 90, y);
+        ctx.stroke();
+      }
+
+      for (let i = 0; i < 18; i += 1) {
+        const x = 90 + ((canvas.width - 180) / 17) * i;
+        ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(x, 100);
+        ctx.lineTo(x, canvas.height - 100);
+        ctx.stroke();
+      }
+
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.colorSpace = THREE.SRGBColorSpace;
+      return texture;
+    };
+
+    const field = new THREE.Mesh(
+      new THREE.PlaneGeometry(18, 24),
+      new THREE.MeshStandardMaterial({ map: createFieldTexture(), roughness: 0.95, metalness: 0.02 })
+    );
+    field.rotation.x = -Math.PI / 2;
+    scene.add(field);
+
+    const fieldBorder = new THREE.LineSegments(
+      new THREE.EdgesGeometry(new THREE.PlaneGeometry(18, 24)),
+      new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.2 })
+    );
+    fieldBorder.rotation.x = -Math.PI / 2;
+    fieldBorder.position.y = 0.01;
+    scene.add(fieldBorder);
+
+    const playerGeometry = new THREE.SphereGeometry(0.28, 32, 32);
+    const players = [];
+    const labels = [];
+
+    const createLabel = () => {
+      const label = document.createElement('div');
+      label.className = 'player-label';
+      labelLayer.append(label);
+      return label;
+    };
+
+    for (let index = 0; index < 11; index += 1) {
+      const material = new THREE.MeshStandardMaterial({ color: 0x888888, roughness: 0.45, metalness: 0.15 });
+      const mesh = new THREE.Mesh(playerGeometry, material);
+      mesh.position.set(0, 0.28, 0);
+      scene.add(mesh);
+      players.push(mesh);
+      labels.push(createLabel());
+    }
+
+    let animationState = null;
+    let currentFormation = formationNames[0];
+
+    const roleGroups = {
+      line: ['LT', 'LG', 'C', 'RG', 'RT'],
+      backfield: ['QB', 'RB', 'FB', 'A', 'B'],
+      perimeter: ['X', 'Y', 'Z', 'H', 'Slot', 'TE']
+    };
+
+    const summarizeFormation = (positions) => {
+      const line = positions.filter((player) => roleGroups.line.includes(player.role)).length;
+      const backs = positions.filter((player) => roleGroups.backfield.includes(player.role)).length;
+      const eligibles = positions.filter((player) => roleGroups.perimeter.includes(player.role)).length;
+      return [
+        { label: 'Line', value: `${line} blockers` },
+        { label: 'Backfield', value: `${backs} backs` },
+        { label: 'Eligibles', value: `${eligibles} targets` },
+      ];
+    };
+
+    const refreshInfo = (name) => {
+      const formation = formations[name];
+      formationTitle.textContent = name;
+      formationChip.textContent = formation.family;
+      formationDesc.textContent = formation.desc;
+      formationMeta.innerHTML = '';
+      summarizeFormation(formation.positions).forEach((item) => {
+        const card = document.createElement('div');
+        card.className = 'meta-card';
+        card.innerHTML = `<span>${item.label}</span><strong>${item.value}</strong>`;
+        formationMeta.append(card);
+      });
+    };
+
+    const applyPose = (positions) => {
+      positions.forEach((player, index) => {
+        const mesh = players[index];
+        mesh.position.set(player.x, 0.28, player.z);
+        mesh.material.color.setHex(player.color);
+        labels[index].textContent = player.role;
+      });
+    };
+
+    const setFormation = (name, animate = true) => {
+      const next = formations[name].positions;
+      refreshInfo(name);
+      formationSelect.value = name;
+
+      if (!animate) {
+        applyPose(next);
+        currentFormation = name;
+        animationState = null;
+        return;
+      }
+
+      animationState = {
+        start: performance.now(),
+        duration: 500,
+        from: players.map((mesh, index) => ({
+          x: mesh.position.x,
+          z: mesh.position.z,
+          color: mesh.material.color.clone(),
+          role: labels[index].textContent,
+        })),
+        to: next.map((player) => ({
+          x: player.x,
+          z: player.z,
+          color: new THREE.Color(player.color),
+          role: player.role,
+        })),
+      };
+
+      currentFormation = name;
+    };
+
+    formationSelect.addEventListener('change', (event) => {
+      setFormation(event.target.value, true);
+    });
+
+    const resize = () => {
+      const width = sceneHost.clientWidth;
+      const height = sceneHost.clientHeight;
+      renderer.setSize(width, height, false);
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+    };
+
+    const vector = new THREE.Vector3();
+    const updateLabels = () => {
+      const width = sceneHost.clientWidth;
+      const height = sceneHost.clientHeight;
+      players.forEach((mesh, index) => {
+        vector.copy(mesh.position);
+        vector.y += 0.48;
+        vector.project(camera);
+        const visible = vector.z > -1 && vector.z < 1;
+        labels[index].style.display = visible ? 'block' : 'none';
+        labels[index].style.transform = `translate(-50%, -130%) translate(${(vector.x * 0.5 + 0.5) * width}px, ${(-vector.y * 0.5 + 0.5) * height}px)`;
+      });
+    };
+
+    const tick = () => {
+      requestAnimationFrame(tick);
+
+      if (animationState) {
+        const elapsed = performance.now() - animationState.start;
+        const progress = Math.min(elapsed / animationState.duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+
+        players.forEach((mesh, index) => {
+          const from = animationState.from[index];
+          const to = animationState.to[index];
+          mesh.position.x = THREE.MathUtils.lerp(from.x, to.x, eased);
+          mesh.position.z = THREE.MathUtils.lerp(from.z, to.z, eased);
+          mesh.material.color.copy(from.color).lerp(to.color, eased);
+          labels[index].textContent = progress > 0.5 ? to.role : from.role;
+        });
+
+        if (progress >= 1) {
+          animationState = null;
+        }
+      }
+
+      controls.update();
+      updateLabels();
+      renderer.render(scene, camera);
+    };
+
+    window.addEventListener('resize', resize);
+
+    resize();
+    refreshInfo(currentFormation);
+    applyPose(formations[currentFormation].positions);
+    tick();
+  </script>
+</body>
+</html>

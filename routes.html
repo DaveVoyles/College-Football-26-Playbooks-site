@@ -1,0 +1,499 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🧠 Route Concepts & Coverage Beaters — CFB26 Playbook</title>
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("clawpilotTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <script src="assets/scripts/theme.js?v=1"></script>
+  <link rel="stylesheet" href="assets/styles/theme.css?v=1">
+  <link rel="stylesheet" href="assets/styles/site-nav.css?v=1">
+  <script defer src="assets/scripts/site-nav.js?v=1"></script>
+  <style>
+
+:root {
+  color-scheme: light;
+  --cp-bg: #f7f4ef;
+  --cp-bg-elevated: #fcfbf8;
+  --cp-surface: #ffffff;
+  --cp-surface-soft: #f5f5f5;
+  --cp-border: #dedede;
+  --cp-border-strong: #919191;
+  --cp-text: #242424;
+  --cp-text-muted: #5c5c5c;
+  --cp-text-soft: #6f6f6f;
+  --cp-accent: #b11f4b;
+  --cp-accent-hover: #9a1a41;
+  --cp-accent-soft: rgba(177, 31, 75, 0.08);
+  --cp-accent-fg: #ffffff;
+  --cp-success: #16a34a;
+  --cp-danger: #dc2626;
+  --cp-warning: #f59e0b;
+  --cp-link: #0078d4;
+  --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+  --cp-overlay: rgba(255, 255, 255, 0.8);
+  --cp-panel: rgba(255, 255, 255, 0.86);
+  --cp-panel-strong: rgba(255, 255, 255, 0.96);
+  --cp-sheen: rgba(255, 255, 255, 0.55);
+  --cp-highlight: rgba(177, 31, 75, 0.12);
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --cp-bg: #3d3b3a;
+  --cp-bg-elevated: #343231;
+  --cp-surface: #292929;
+  --cp-surface-soft: #2e2e2e;
+  --cp-border: #474747;
+  --cp-border-strong: #5f5f5f;
+  --cp-text: #dedede;
+  --cp-text-muted: #919191;
+  --cp-text-soft: #b0b0b0;
+  --cp-accent: #fd8ea1;
+  --cp-accent-hover: #fb7b91;
+  --cp-accent-soft: rgba(253, 142, 161, 0.14);
+  --cp-accent-fg: #1a1a1a;
+  --cp-success: #4ade80;
+  --cp-danger: #f87171;
+  --cp-warning: #fbbf24;
+  --cp-link: #4da6ff;
+  --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+  --cp-overlay: rgba(41, 41, 41, 0.88);
+  --cp-panel: rgba(41, 41, 41, 0.72);
+  --cp-panel-strong: rgba(41, 41, 41, 0.96);
+  --cp-sheen: rgba(255, 255, 255, 0.04);
+  --cp-highlight: rgba(253, 142, 161, 0.12);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--cp-bg);
+  color: var(--cp-text);
+  font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.5;
+}
+a {
+  color: var(--cp-link);
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+.wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 20px 56px;
+}
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+.hero,
+.card,
+.scheme-card,
+.purpose-card,
+.template-card {
+  background: var(--cp-surface);
+  border: 1px solid var(--cp-border);
+  border-radius: 16px;
+  box-shadow: 0 10px 24px var(--cp-accent-soft);
+}
+.hero {
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.eyebrow {
+  margin: 0 0 0.5rem;
+  color: var(--cp-text-muted);
+  font-size: 0.95rem;
+}
+h1, h2, h3 {
+  margin: 0;
+  line-height: 1.2;
+}
+.hero h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin-bottom: 0.75rem;
+}
+.lede {
+  margin: 0;
+  color: var(--cp-text-muted);
+  max-width: 70ch;
+}
+.meta-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  margin-top: 1rem;
+}
+.meta-item {
+  padding: 0.9rem 1rem;
+  background: var(--cp-bg-elevated);
+  border: 1px solid var(--cp-border);
+  border-radius: 0.625rem;
+}
+.meta-label {
+  display: block;
+  color: var(--cp-text-muted);
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+}
+.stack {
+  display: grid;
+  gap: 1rem;
+}
+.card,
+.scheme-card,
+.purpose-card,
+.template-card {
+  padding: 1.25rem;
+}
+.section-copy {
+  margin: 0.5rem 0 0;
+  color: var(--cp-text-muted);
+}
+.search-input {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border-radius: 0.625rem;
+  border: 1px solid var(--cp-border-strong);
+  background: var(--cp-surface);
+  color: var(--cp-text);
+  font: inherit;
+}
+.search-input:focus {
+  outline: 2px solid var(--cp-accent);
+  outline-offset: 2px;
+  border-color: var(--cp-accent);
+}
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.625rem;
+  margin-top: 1rem;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 680px;
+}
+th, td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--cp-border);
+  text-align: left;
+  vertical-align: top;
+}
+thead th {
+  background: var(--cp-surface-soft);
+  color: var(--cp-text);
+  font-size: 0.95rem;
+}
+tbody tr:nth-child(even) {
+  background: var(--cp-bg-elevated);
+}
+tbody tr:hover {
+  background: var(--cp-highlight);
+}
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+.pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid var(--cp-border);
+  background: var(--cp-bg-elevated);
+  color: var(--cp-text-muted);
+  font-size: 0.95rem;
+}
+.scheme-card {
+  border-top: 4px solid var(--scheme-accent, var(--cp-accent));
+}
+.scheme-header,
+.section-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: start;
+}
+.scheme-badge,
+.section-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--scheme-accent, var(--cp-accent));
+  color: var(--scheme-accent, var(--cp-accent));
+  font-size: 0.85rem;
+  font-weight: 700;
+  background: var(--cp-surface);
+}
+.section-badge {
+  border-color: var(--cp-accent);
+  color: var(--cp-accent);
+}
+.empty-state {
+  display: none;
+  padding: 1rem;
+  border: 1px dashed var(--cp-border-strong);
+  border-radius: 0.625rem;
+  color: var(--cp-text-muted);
+  text-align: center;
+  background: var(--cp-bg-elevated);
+}
+.empty-state.visible { display: block; }
+.coverage-table tbody tr {
+  transition: background 160ms ease, transform 160ms ease;
+}
+.coverage-table tbody tr:hover {
+  transform: translateY(-1px);
+}
+.purpose-grid,
+.template-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+.purpose-card,
+.template-card {
+  display: grid;
+  gap: 1rem;
+}
+.purpose-copy {
+  margin: 0;
+  color: var(--cp-text-muted);
+  font-style: italic;
+}
+.styled-list {
+  counter-reset: item;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+.styled-list li {
+  counter-increment: item;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.85rem;
+  align-items: start;
+  padding: 0.9rem;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.625rem;
+  background: var(--cp-bg-elevated);
+}
+.styled-list li::before {
+  content: counter(item);
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: var(--cp-accent);
+  color: var(--cp-accent-fg);
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  margin-top: 0.05rem;
+}
+.checklist,
+.detail-list {
+  margin: 0;
+  padding-left: 1.2rem;
+  display: grid;
+  gap: 0.5rem;
+}
+.detail-list strong {
+  color: var(--cp-text);
+}
+.subsection {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.625rem;
+  background: var(--cp-bg-elevated);
+}
+.muted {
+  color: var(--cp-text-muted);
+}
+.footer-note {
+  margin-top: 1.5rem;
+  color: var(--cp-text-soft);
+  font-size: 0.92rem;
+}
+@media (max-width: 700px) {
+  .wrap { padding: 20px 14px 40px; }
+  .hero, .card, .scheme-card, .purpose-card, .template-card { padding: 1rem; }
+  table { min-width: 620px; }
+}
+
+  </style>
+</head>
+<body data-nav-root=".">
+  <main class="wrap">
+<a class="back-link" href="index.html">← Back to Index</a>
+<section class="hero">
+  <p class="eyebrow">Author: Dave Voyles</p>
+  <h1>🧠 Route Concepts &amp; Coverage Beaters</h1>
+  <p class="lede">Use this guide to understand <strong>why</strong> certain plays work against specific defenses.</p>
+</section>
+
+<section class="card stack">
+  <div class="section-header">
+    <div>
+      <h2>1. Coverage Beaters (The “Rock, Paper, Scissors” of Passing) 👊✋✌️</h2>
+      <p class="section-copy">Quick answers for what each shell gives up, where the void lives, and which concept punishes it.</p>
+    </div>
+    <span class="section-badge">Coverage table</span>
+  </div>
+  <div class="table-wrap coverage-table">
+    <table>
+      <thead>
+        <tr>
+          <th>If the Defense Plays...</th>
+          <th>Their Weakness 📉</th>
+          <th>The “Killer” Routes/Concepts 🚀</th>
+          <th>Why it works / Where to throw</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Cover 0 (Zero Blitz)</strong></td><td>No deep help; 1-on-1 everywhere.</td><td><strong>Go/Fade, Slant, Zig, Screen</strong></td><td>Throw deep immediately or hit a slant/screen hot.</td></tr>
+        <tr><td><strong>Cover 1 (Man Free)</strong></td><td>1 Safety deep; Man underneath.</td><td><strong>Mesh, Drag, Slant, Double Moves</strong></td><td>Crossing routes rub defenders off; double moves win vs man.</td></tr>
+        <tr><td><strong>Cover 2 (Zone)</strong></td><td>Deep sidelines (Honey hole); Middle deep.</td><td><strong>Smash (Corner), Fade (sideline), Post</strong></td><td>Throw the corner route over the flat defender, or the post between safeties.</td></tr>
+        <tr><td><strong>Cover 3 (Zone)</strong></td><td>Seams (Hashes); Flats.</td><td><strong>4 Verts (Seams), Curl-Flat, Flood</strong></td><td>Throw the seams between the deep 3rd defenders; or hit the flat quickly.</td></tr>
+        <tr><td><strong>Cover 4 (Quarters)</strong></td><td>Underneath; Intermediate middle.</td><td><strong>Digs, Curls, Stick, Draw Run</strong></td><td>Safeties bail deep fast; tons of space for 10-yard stop routes.</td></tr>
+        <tr><td><strong>Cover 6 (Quarter-Quarter-Half)</strong></td><td>Weak side flat; Deep middle.</td><td><strong>Flood (field side), Post-Dig</strong></td><td>Attack the Cover 2 side with Smash; attack the Cover 4 side with Digs.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="stack">
+  <div class="section-header">
+    <div>
+      <h2>2. Route Concepts by “Purpose” 🎯</h2>
+      <p class="section-copy">Grouped the same way you think on game day: man beaters, zone beaters, and blitz beaters.</p>
+    </div>
+    <span class="section-badge">Organized by purpose</span>
+  </div>
+  <div class="purpose-grid">
+    <article class="purpose-card">
+      <div>
+        <h3>Man Beaters (Vs Tight Coverage)</h3>
+        <p class="purpose-copy">Requires WRs with good Release (REL) and Short Route Running (SRR).</p>
+      </div>
+      <ol class="styled-list">
+        <li><div><strong>Zig / Whip:</strong> The ultimate man-beater. Fakes in, breaks out. DBs get lost.</div></li>
+        <li><div><strong>Drag / Shallow Cross:</strong> fast run across the field. Speed wins.</div></li>
+        <li><div><strong>Texas (RB Angle):</strong> RB fakes flat, cuts sharply inside. LBs can't cover this.</div></li>
+        <li><div><strong>Slant:</strong> Quick inside leverage win.</div></li>
+      </ol>
+    </article>
+
+    <article class="purpose-card">
+      <div>
+        <h3>Zone Beaters (Vs Soft Coverage)</h3>
+        <p class="purpose-copy">Requires patience and finding the “window.”</p>
+      </div>
+      <ol class="styled-list">
+        <li><div><strong>Flood:</strong> 3 routes to one sideline (Deep, Intermediate, Short). Overloads the zone.</div></li>
+        <li><div><strong>Spot / Snag:</strong> Triangle concept (Corner, Flat, Spot). Stretches defense horizontally.</div></li>
+        <li><div><strong>Mesh:</strong> Two shallow crossers sit down in holes vs zone (or keep running vs man).</div></li>
+        <li><div><strong>Curl-Flat:</strong> Pushes DBs back with the deep threat, hits the curl in the void.</div></li>
+      </ol>
+    </article>
+
+    <article class="purpose-card">
+      <div>
+        <h3>Blitz Beaters (Hot Reads)</h3>
+        <p class="purpose-copy">When they send the house, throw these NOW.</p>
+      </div>
+      <ol class="styled-list">
+        <li><div><strong>Slant:</strong> Standard hot route. One step, throw.</div></li>
+        <li><div><strong>Bubble Screen:</strong> Get the ball to the edge before pressure arrives.</div></li>
+        <li><div><strong>Pop Pass (TE):</strong> Fake run, pop the ball to TE over the blitzing LBs.</div></li>
+        <li><div><strong>Hitch:</strong> 3-step drop, ball out.</div></li>
+      </ol>
+    </article>
+  </div>
+</section>
+
+<section class="card stack">
+  <div class="section-header">
+    <div>
+      <h2>3. Audibles Blueprint (What to set in your “Custom Audibles”) 🗣️</h2>
+      <p class="section-copy">Every playbook lets you set 4-5 audibles. Don’t be random. Build a <strong>toolbelt</strong>.</p>
+    </div>
+    <span class="section-badge">Audible plan</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Audible Slot</th><th>Recommended Call</th><th>Purpose (When to call it)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Run (Inside)</strong></td><td>Inside Zone / Dive</td><td>Call vs <strong>Light Box</strong> (High Safeties, Spread DL).</td></tr>
+        <tr><td><strong>Pass (Quick)</strong></td><td>Stick / Slants</td><td>Call vs <strong>Blitz</strong> or Soft Off-Coverage.</td></tr>
+        <tr><td><strong>Pass (Deep)</strong></td><td>Verts / PA Shot</td><td>Call vs <strong>Press Man</strong> (if WR is fast) or Safety creeping down.</td></tr>
+        <tr><td><strong>Cover Beater</strong></td><td>Flood / Smash</td><td>Call vs <strong>Cover 3 / Cover 2</strong> Zone shells.</td></tr>
+        <tr><td><strong>Screen</strong></td><td>Bubble / HB Screen</td><td>Call vs <strong>Aggressive Pass Rush</strong> to slow them down.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="card stack">
+  <div class="section-header">
+    <div>
+      <h2>4. Reading the Defense 101 (Pre-Snap) 👀</h2>
+      <p class="section-copy">Three quick checkpoints before the ball is snapped.</p>
+    </div>
+    <span class="section-badge">Pre-snap reads</span>
+  </div>
+  <div class="stack">
+    <section class="subsection">
+      <h3><strong>1. Check the Safeties:</strong></h3>
+      <ul class="detail-list">
+        <li><strong>1 High Safety:</strong> Likely Cover 1 (Man) or Cover 3 (Zone). -&gt; <em>Think Seams, Crossers.</em></li>
+        <li><strong>2 High Safeties:</strong> Likely Cover 2, Cover 4, or Man-Under. -&gt; <em>Think Run, Middle of Field.</em></li>
+      </ul>
+    </section>
+    <section class="subsection">
+      <h3><strong>2. Check the Corners:</strong></h3>
+      <ul class="detail-list">
+        <li><strong>Pressing (Close):</strong> Likely Man or Cover 2 Hard Flat. -&gt; <em>Fade/Go if fast; Drag/Mesh if slow.</em></li>
+        <li><strong>Off (Back 5+ yds):</strong> Likely Cover 3 or Cover 4. -&gt; <em>Quick Hitch, Screen, Out route.</em></li>
+      </ul>
+    </section>
+    <section class="subsection">
+      <h3><strong>3. Check the “Box” (LBs + DL):</strong></h3>
+      <ul class="detail-list">
+        <li><strong>5 or fewer:</strong> Run the ball! (Light box).</li>
+        <li><strong>7 or more:</strong> Pass! (Stacked box).</li>
+      </ul>
+    </section>
+  </div>
+</section>
+  </main>
+
+</body>
+</html>

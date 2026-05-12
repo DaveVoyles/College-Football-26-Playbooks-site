@@ -1,0 +1,1213 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("clawpilotTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Air Raid — CFB26 Playbook</title>
+  <script src="assets/scripts/theme.js?v=1"></script>
+  <link rel="stylesheet" href="assets/styles/theme.css?v=1">
+  <link rel="stylesheet" href="assets/styles/site-nav.css?v=1">
+  <script defer src="assets/scripts/site-nav.js?v=1"></script>
+  <style>
+:root {
+  color-scheme: light;
+  --cp-bg: #f7f4ef;
+  --cp-bg-elevated: #fcfbf8;
+  --cp-surface: #ffffff;
+  --cp-surface-soft: #f5f5f5;
+  --cp-border: #dedede;
+  --cp-border-strong: #919191;
+  --cp-text: #242424;
+  --cp-text-muted: #5c5c5c;
+  --cp-text-soft: #6f6f6f;
+  --cp-accent: #b11f4b;
+  --cp-accent-hover: #9a1a41;
+  --cp-accent-soft: rgba(177, 31, 75, 0.08);
+  --cp-accent-fg: #ffffff;
+  --cp-success: #16a34a;
+  --cp-danger: #dc2626;
+  --cp-warning: #f59e0b;
+  --cp-link: #0078d4;
+  --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+  --cp-overlay: rgba(255, 255, 255, 0.8);
+  --cp-panel: rgba(255, 255, 255, 0.86);
+  --cp-panel-strong: rgba(255, 255, 255, 0.96);
+  --cp-sheen: rgba(255, 255, 255, 0.55);
+  --cp-highlight: rgba(177, 31, 75, 0.12);
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --cp-bg: #3d3b3a;
+  --cp-bg-elevated: #343231;
+  --cp-surface: #292929;
+  --cp-surface-soft: #2e2e2e;
+  --cp-border: #474747;
+  --cp-border-strong: #5f5f5f;
+  --cp-text: #dedede;
+  --cp-text-muted: #919191;
+  --cp-text-soft: #b0b0b0;
+  --cp-accent: #fd8ea1;
+  --cp-accent-hover: #fb7b91;
+  --cp-accent-soft: rgba(253, 142, 161, 0.14);
+  --cp-accent-fg: #1a1a1a;
+  --cp-success: #4ade80;
+  --cp-danger: #f87171;
+  --cp-warning: #fbbf24;
+  --cp-link: #4da6ff;
+  --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+  --cp-overlay: rgba(41, 41, 41, 0.88);
+  --cp-panel: rgba(41, 41, 41, 0.72);
+  --cp-panel-strong: rgba(41, 41, 41, 0.96);
+  --cp-sheen: rgba(255, 255, 255, 0.04);
+  --cp-highlight: rgba(253, 142, 161, 0.12);
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  margin: 0;
+  background: var(--cp-bg);
+  color: var(--cp-text);
+  font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.65;
+}
+a {
+  color: var(--cp-link);
+}
+a:hover {
+  color: var(--cp-accent-hover);
+}
+body.scheme-air-raid {
+  --scheme-tone: var(--cp-link);
+}
+.wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1rem 3rem;
+}
+.page-layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+.toc-panel,
+.guide-card {
+  background: var(--cp-surface);
+  border: 1px solid var(--cp-border);
+  border-radius: 16px;
+  box-shadow: 0 12px 28px var(--cp-highlight);
+}
+.toc-panel {
+  position: sticky;
+  top: 1rem;
+  padding: 1rem;
+  background: var(--cp-panel-strong);
+}
+.toc-panel h2 {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  color: var(--scheme-tone);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+.toc-item a {
+  display: block;
+  padding: 0.45rem 0.6rem;
+  border-radius: 0.625rem;
+  text-decoration: none;
+  color: var(--cp-text-muted);
+}
+.toc-item a:hover {
+  background: var(--cp-accent-soft);
+  color: var(--cp-text);
+}
+.toc-level-3 {
+  margin-inline-start: 0.8rem;
+  font-size: 0.96rem;
+}
+.guide-card {
+  padding: 1.5rem;
+  overflow: hidden;
+}
+.content > :first-child {
+  margin-top: 0;
+}
+.content h1,
+.content h2,
+.content h3 {
+  scroll-margin-top: 1rem;
+  line-height: 1.2;
+}
+.content h1 {
+  margin-bottom: 0.4rem;
+  color: var(--scheme-tone);
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+.content h2 {
+  margin-top: 2rem;
+  padding-top: 0.2rem;
+  border-top: 1px solid var(--cp-border);
+  color: var(--scheme-tone);
+  font-size: clamp(1.35rem, 2vw, 1.7rem);
+}
+.content h3 {
+  margin-top: 1.35rem;
+  color: var(--cp-text);
+  font-size: 1.1rem;
+}
+.content p,
+.content li {
+  color: var(--cp-text);
+}
+.content strong {
+  color: var(--cp-text);
+}
+.content em {
+  color: var(--cp-text-soft);
+}
+.content ul,
+.content ol {
+  padding-inline-start: 1.35rem;
+}
+.content hr {
+  border: 0;
+  border-top: 1px solid var(--cp-border);
+  margin: 2rem 0;
+}
+.content p > a[href="index.html"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid var(--cp-border);
+  border-radius: 999px;
+  text-decoration: none;
+  background: var(--cp-bg-elevated);
+}
+.table-scroll {
+  overflow-x: auto;
+  margin: 1rem 0 1.5rem;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.625rem;
+  background: var(--cp-surface);
+}
+.table-scroll table {
+  width: 100%;
+  min-width: 620px;
+  border-collapse: collapse;
+}
+.table-scroll th,
+.table-scroll td {
+  padding: 0.75rem 0.85rem;
+  border-bottom: 1px solid var(--cp-border);
+  text-align: left;
+  vertical-align: top;
+}
+.table-scroll th {
+  background: var(--cp-bg-elevated);
+  color: var(--scheme-tone);
+}
+.table-scroll tbody tr:nth-child(odd) {
+  background: var(--cp-surface-soft);
+}
+.callout {
+  position: relative;
+  margin: 1.25rem 0;
+  padding: 1rem 1rem 1rem 1.2rem;
+  border-inline-start: 0.35rem solid var(--callout-tone, var(--cp-accent));
+  border-radius: 0.625rem;
+  background: var(--cp-accent-soft);
+}
+.callout::before {
+  content: var(--callout-icon, "💡");
+  position: absolute;
+  inset-inline-end: 0.9rem;
+  inset-block-start: 0.85rem;
+  font-size: 1rem;
+}
+.callout.tip {
+  --callout-tone: var(--cp-success);
+  --callout-icon: "💡";
+}
+.callout.warning {
+  --callout-tone: var(--cp-warning);
+  --callout-icon: "⚠️";
+}
+.callout.note {
+  --callout-tone: var(--cp-link);
+  --callout-icon: "📝";
+}
+.callout > :first-child {
+  margin-top: 0;
+}
+.callout > :last-child {
+  margin-bottom: 0;
+}
+pre.code-block {
+  margin: 1rem 0 1.5rem;
+  padding: 1rem;
+  border-radius: 0.625rem;
+  border: 1px solid var(--cp-border-strong);
+  background: var(--cp-text);
+  color: var(--cp-bg);
+  overflow-x: auto;
+}
+pre.code-block code,
+code {
+  font-family: Consolas, "Courier New", Courier, monospace;
+}
+p code,
+li code,
+td code {
+  padding: 0.1rem 0.35rem;
+  border-radius: 0.35rem;
+  background: var(--cp-surface-soft);
+  color: var(--cp-text);
+}
+pre.diff code {
+  display: grid;
+  gap: 0.1rem;
+}
+.diff-line {
+  display: block;
+  white-space: pre;
+}
+.diff-add {
+  color: var(--cp-success);
+}
+.diff-del {
+  color: var(--cp-danger);
+}
+.diff-note {
+  color: var(--cp-warning);
+}
+.diff-context {
+  color: var(--cp-bg);
+}
+details {
+  margin: 1.25rem 0;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.625rem;
+  background: var(--cp-bg-elevated);
+  overflow: hidden;
+}
+summary {
+  cursor: pointer;
+  padding: 0.85rem 1rem;
+  font-weight: 600;
+  color: var(--scheme-tone);
+  background: var(--cp-accent-soft);
+}
+details > :not(summary) {
+  margin-inline: 1rem;
+}
+.scheme-nav {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--cp-border);
+}
+.scheme-link,
+.nav-spacer {
+  min-height: 100%;
+}
+.scheme-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.625rem;
+  text-decoration: none;
+  color: var(--cp-text);
+  background: var(--cp-bg-elevated);
+  text-align: center;
+}
+.scheme-link:hover {
+  border-color: var(--scheme-tone);
+  background: var(--cp-accent-soft);
+}
+.scheme-link.center {
+  font-weight: 600;
+}
+@media (max-width: 920px) {
+  .wrap {
+    padding-top: 1rem;
+  }
+  .page-layout {
+    grid-template-columns: 1fr;
+  }
+  .toc-panel {
+    position: static;
+    overflow-x: auto;
+  }
+  .toc-list {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+    width: max-content;
+    min-width: 100%;
+  }
+  .toc-level-3 {
+    margin-inline-start: 0;
+  }
+}
+@media (max-width: 640px) {
+  .guide-card {
+    padding: 1rem;
+  }
+  .scheme-nav {
+    grid-template-columns: 1fr;
+  }
+  .table-scroll table {
+    min-width: 520px;
+  }
+}
+  </style>
+</head>
+<body data-nav-root="." class="scheme-air-raid">
+  <main class="wrap">
+    <div class="page-layout">
+      <aside class="toc-panel" aria-label="Table of contents">
+        <h2>On this page</h2>
+        <ul class="toc-list">
+<li class="toc-item toc-level-2"><a href="#quick-definition-brain">Quick definition 🧠</a></li>
+<li class="toc-item toc-level-2"><a href="#the-identity-one-sentence-dart">The identity (one sentence) 🎯</a></li>
+<li class="toc-item toc-level-2"><a href="#pros-white_check_mark-and-cons-warning">Pros ✅ and cons ⚠️</a></li>
+<li class="toc-item toc-level-2"><a href="#typical-personnel-whos-on-the-field-jigsaw">Typical personnel (who’s on the field) 🧩</a></li>
+<li class="toc-item toc-level-3"><a href="#personnel-cheat-table">Personnel cheat table</a></li>
+<li class="toc-item toc-level-3"><a href="#role-archetypes-more-useful-than-position-labels">Role archetypes (more useful than position labels)</a></li>
+<li class="toc-item toc-level-2"><a href="#typical-formations-triangular_ruler">Typical formations 📐</a></li>
+<li class="toc-item toc-level-3"><a href="#formation-families-quick-pick-table">Formation families (quick pick table)</a></li>
+<li class="toc-item toc-level-2"><a href="#core-run-game-families-running">Core run game families 🏃</a></li>
+<li class="toc-item toc-level-2"><a href="#core-pass-game-families--concept-menu-gear">Core pass game families / concept menu ⚙️</a></li>
+<li class="toc-item toc-level-3"><a href="#1-stick--spacing-quick-game">1) Stick / Spacing (quick game)</a></li>
+<li class="toc-item toc-level-3"><a href="#2-mesh-man-beater--zone-settle">2) Mesh (man-beater + zone settle)</a></li>
+<li class="toc-item toc-level-3"><a href="#3-four-verticals-with-seam-reads">3) Four Verticals (with seam reads)</a></li>
+<li class="toc-item toc-level-3"><a href="#4-y-cross--shallow-cross-intermediate-dagger">4) Y-Cross / Shallow Cross (intermediate dagger)</a></li>
+<li class="toc-item toc-level-3"><a href="#5-screens-wr--rb">5) Screens (WR + RB)</a></li>
+<li class="toc-item toc-level-3"><a href="#6-draw--inside-zone-the-honest-run">6) Draw / Inside Zone (the honest run)</a></li>
+<li class="toc-item toc-level-2"><a href="#sequencing-how-air-raid-creates-explosives-repeat">Sequencing (how Air Raid creates explosives) 🔁</a></li>
+<li class="toc-item toc-level-2"><a href="#building-your-air-raid-call-sheet-practical-cfb26-plan-card_index_dividers">Building your Air Raid call sheet (practical CFB26 plan) 🗂️</a></li>
+<li class="toc-item toc-level-3"><a href="#1st-and-10-stay-efficient">1st and 10 (stay efficient)</a></li>
+<li class="toc-item toc-level-3"><a href="#2nd-and-short-take-a-shot">2nd and short (take a shot)</a></li>
+<li class="toc-item toc-level-3"><a href="#2nd-and-long-dont-panic">2nd and long (don’t panic)</a></li>
+<li class="toc-item toc-level-3"><a href="#3rd-down">3rd down</a></li>
+<li class="toc-item toc-level-3"><a href="#red-zone-inside-the-20">Red zone (inside the 20)</a></li>
+<li class="toc-item toc-level-3"><a href="#goal-line-inside-the-5">Goal line (inside the 5)</a></li>
+<li class="toc-item toc-level-3"><a href="#backed-up-own-110">Backed up (own 1–10)</a></li>
+<li class="toc-item toc-level-3"><a href="#two-minute-favorites">Two-minute (favorites)</a></li>
+<li class="toc-item toc-level-2"><a href="#pre-snap-plan-audibles--box-count--motion-video_game">Pre-snap plan (audibles + box count + motion) 🎮</a></li>
+<li class="toc-item toc-level-3"><a href="#the-box-count-habit">The “box-count” habit</a></li>
+<li class="toc-item toc-level-2"><a href="#defensive-looks-and-your-counters-shield">Defensive looks and your counters 🛡️</a></li>
+<li class="toc-item toc-level-3"><a href="#two-high-rally-and-tackle">Two-high, rally-and-tackle</a></li>
+<li class="toc-item toc-level-3"><a href="#press-man--pressure">Press man + pressure</a></li>
+<li class="toc-item toc-level-3"><a href="#user-lurk--linebacker-baiting">User lurk / linebacker baiting</a></li>
+<li class="toc-item toc-level-2"><a href="#roster-building-priorities-dna">Roster building priorities 🧬</a></li>
+<li class="toc-item toc-level-2"><a href="#qb-operation-timing--progressions-stopwatch">QB operation (timing + progressions) ⏱️</a></li>
+<li class="toc-item toc-level-3"><a href="#coverage-cheat-sheet-how-your-core-concepts-want-to-win-receipt">Coverage cheat sheet (how your core concepts “want” to win) 🧾</a></li>
+<li class="toc-item toc-level-3"><a href="#stick--spacing">Stick / spacing</a></li>
+<li class="toc-item toc-level-3"><a href="#mesh">Mesh</a></li>
+<li class="toc-item toc-level-3"><a href="#four-verts--seams">Four verts / seams</a></li>
+<li class="toc-item toc-level-3"><a href="#y-cross--shallow">Y-cross / shallow</a></li>
+<li class="toc-item toc-level-3"><a href="#screens">Screens</a></li>
+<li class="toc-item toc-level-2"><a href="#weekly-install-plan-books">Weekly install plan 📚</a></li>
+<li class="toc-item toc-level-3"><a href="#week-1-quick-game--one-run">Week 1: quick game + one run</a></li>
+<li class="toc-item toc-level-3"><a href="#week-2-add-a-man-beater">Week 2: add a man-beater</a></li>
+<li class="toc-item toc-level-3"><a href="#week-3-add-a-shot">Week 3: add a shot</a></li>
+<li class="toc-item toc-level-3"><a href="#week-4-add-a-pressure-punish">Week 4: add a pressure punish</a></li>
+<li class="toc-item toc-level-2"><a href="#protection--checkdowns--sack-avoidance-rules-shield">Protection + checkdowns + sack-avoidance rules 🛡️</a></li>
+<li class="toc-item toc-level-2"><a href="#troubleshooting-fire_extinguisher">Troubleshooting 🧯</a></li>
+<li class="toc-item toc-level-3"><a href="#problem-i-complete-passes-but-never-score">Problem: “I complete passes but never score.”</a></li>
+<li class="toc-item toc-level-3"><a href="#problem-i-throw-picks-on-outs">Problem: “I throw picks on outs.”</a></li>
+<li class="toc-item toc-level-3"><a href="#problem-the-defense-just-sits-in-two-high">Problem: “The defense just sits in two-high.”</a></li>
+<li class="toc-item toc-level-2"><a href="#situational-packages-what-to-favorite-star">Situational packages (what to favorite) ⭐</a></li>
+<li class="toc-item toc-level-3"><a href="#early-downs">Early downs</a></li>
+<li class="toc-item toc-level-3"><a href="#manpressure-answers">Man/pressure answers</a></li>
+<li class="toc-item toc-level-3"><a href="#chunk-plays">Chunk plays</a></li>
+<li class="toc-item toc-level-3"><a href="#red-zone">Red zone</a></li>
+<li class="toc-item toc-level-3"><a href="#two-minute">Two-minute</a></li>
+<li class="toc-item toc-level-2"><a href="#sample-15-play-opening-script-pencil">Sample 15-play opening script 📝</a></li>
+<li class="toc-item toc-level-3"><a href="#quick-list">Quick list</a></li>
+<li class="toc-item toc-level-3"><a href="#table-format-air-raid-tempo">Table format (Air Raid tempo)</a></li>
+<li class="toc-item toc-level-2"><a href="#post-game-metrics-did-i-run-it-right-bar_chart">Post-Game Metrics (Did I run it right?) 📊</a></li>
+<li class="toc-item toc-level-2"><a href="#dynasty-recruiting-guide-mortar_board">Dynasty Recruiting Guide 🎓</a></li>
+<li class="toc-item toc-level-2"><a href="#in-game-execution-notes-video_game">In-game execution notes 🎮</a></li>
+<li class="toc-item toc-level-2"><a href="#pace-note-stopwatch">Pace note ⏱️</a></li>
+<li class="toc-item toc-level-2"><a href="#teams-to-check-first-in-cfb26-real-world-scheme-fit-mag">Teams to check first in CFB26 (real-world scheme fit) 🔍</a></li>
+<li class="toc-item toc-level-2"><a href="#nfl-analogs-closest-cousins-football">NFL analogs (closest cousins) 🏈</a></li>
+<li class="toc-item toc-level-2"><a href="#teams-in-cfb26-that-use-an-air-raid-playbook-fill-this-in-stadium">Teams in CFB26 that use an Air Raid playbook (fill this in) 🏟️</a></li>
+<li class="toc-item toc-level-2"><a href="#minimal-glossary-pushpin">Minimal glossary 📌</a></li>
+</ul>
+      </aside>
+      <article class="guide-card">
+        <div class="content">
+          <h1 id="air-raid-dart-cfb26-playbook-style">Air Raid 🎯 (CFB26 Playbook Style)</h1>
+<p>Author: Dave Voyles</p>
+<p><a href="index.html">← Back to Index</a></p>
+<div class="callout tip">
+<p><strong>How to use this guide in CFB26</strong></p>
+<ul>
+<li>Build a small “core menu”: 2 runs + 4 passes + 1 shot</li>
+<li>Set audibles: 1 light-box run, 1 blitz answer, 1 man beater, 1 zone beater, 1 shot</li>
+<li>Use the opening script to identify coverage + box counts early</li>
+</ul>
+</div>
+<h2 id="quick-definition-brain">Quick definition 🧠</h2>
+<p>The Air Raid is a <strong>spread passing system</strong> built on:</p>
+<ul>
+<li>🔄 High repetition</li>
+<li>📐 Spacing and leverage</li>
+<li>👓 Simple reads that scale from quick game to deep shots</li>
+<li>🏃 Using short passes as “runs” to stay on schedule</li>
+</ul>
+<pre class="code-block text"><code>      WR          LT LG C RG RT          WR
+           SB                        SB
+     (Slot Receiver)           (Slot Receiver)
+                    QB (Gun)
+                       RB</code></pre>
+<p>It’s at its best when you can reliably throw on early downs, force the defense to widen, and then <strong>run into light boxes</strong>.</p>
+<h2 id="the-identity-one-sentence-dart">The identity (one sentence) 🎯</h2>
+<p><strong>Throw efficient, high-percentage routes until the defense breaks, then hit the seam or the deep shot.</strong></p>
+<hr />
+<h2 id="pros-white_check_mark-and-cons-warning">Pros ✅ and cons ⚠️</h2>
+<pre class="code-block diff"><code><span class="diff-line diff-add">+ PRO: Elite down-to-down consistency when your QB is accurate.</span>
+<span class="diff-line diff-add">+ PRO: Built-in answers vs pressure (hot routes &amp; quick game).</span>
+<span class="diff-line diff-add">+ PRO: Easy to call (small menu, high repetition).</span>
+<span class="diff-line diff-add">+ PRO: Maximizes WR skill (separation/RAC &gt; size).</span>
+<span class="diff-line diff-add">+ PRO: Tempo-friendly (fast spacing, simple checks).</span>
+<span class="diff-line diff-context"></span>
+<span class="diff-line diff-del">- CON: Can become too horizontal (need vertical discipline).</span>
+<span class="diff-line diff-del">- CON: Red zone tightening (spacing compresses inside the 15).</span>
+<span class="diff-line diff-del">- CON: Stalls quickly if QB is inaccurate (incompletions kill clock).</span>
+<span class="diff-line diff-del">- CON: Relies on patience vs soft 2-high shells.</span></code></pre>
+<h2 id="typical-personnel-whos-on-the-field-jigsaw">Typical personnel (who’s on the field) 🧩</h2>
+<p>Air Raid playbooks commonly live in:</p>
+<ul>
+<li><strong>10 personnel</strong>: 1 RB, 0 TE, 4 WR
+<ul>
+<li>Great for spacing, screens, shallow cross, and empty.</li>
+<li>Risk: pass pro can be fragile; you must punish light boxes.</li>
+</ul></li>
+<li><strong>11 personnel</strong>: 1 RB, 1 TE, 3 WR
+<ul>
+<li>Most balanced Air Raid base.</li>
+<li>TE can be a seam/bender target and a protection helper.</li>
+</ul></li>
+<li><strong>20 personnel</strong>: 2 RB, 0 TE, 3 WR
+<ul>
+<li>Used for “pony” packages (two backs) to force mismatches.</li>
+</ul></li>
+</ul>
+<h3 id="personnel-cheat-table">Personnel cheat table</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>Personnel</strong></th>
+<th><strong>On-field</strong></th>
+<th><strong>Why you’d use it in Air Raid</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>10</td>
+<td>1 RB / 4 WR</td>
+<td>Maximum spacing; quick game and empty variations</td>
+</tr>
+<tr>
+<td>11</td>
+<td>1 RB / 1 TE / 3 WR</td>
+<td>Balanced base; seams/benders + better protection help</td>
+</tr>
+<tr>
+<td>20</td>
+<td>2 RB / 3 WR</td>
+<td>Pony mismatches; easy checkdowns and pass-pro options</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="role-archetypes-more-useful-than-position-labels">Role archetypes (more useful than position labels)</h3>
+<ul>
+<li><strong>QB:</strong> accurate short-to-intermediate, quick decision-maker, calm vs pressure.</li>
+<li><strong>RB:</strong> good hands + pass pro + ability to win on draw/inside zone.</li>
+<li><strong>WR1 (X):</strong> can win isolation (slants, fades, glance, comebacks).</li>
+<li><strong>Slot(s):</strong> twitch + option route IQ + reliable hands.</li>
+<li><strong>TE (if used):</strong> seam threat or physical blocker (depends on your flavor).</li>
+</ul>
+<hr />
+<h2 id="typical-formations-triangular_ruler">Typical formations 📐</h2>
+<p>You don’t need many. Pick a small “family” and get great at it.</p>
+<p><strong>Core Air Raid families (common across EA-style playbooks):</strong></p>
+<ul>
+<li><strong>Gun Trips / Trips Open</strong>: spacing, stick, verts, flood, screens.</li>
+<li><strong>Gun Doubles (2x2)</strong>: mesh, Y-cross, four verts, shallow.</li>
+<li><strong>Gun Empty</strong>: quick game, spacing, option routes, quick outs.</li>
+<li><strong>Gun Bunch</strong>: natural picks/rubs, flood, corner routes, quick screens.</li>
+</ul>
+<h3 id="formation-families-quick-pick-table">Formation families (quick pick table)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>Family</strong></th>
+<th><strong>What it’s great for</strong></th>
+<th><strong>When to lean on it</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gun Trips</td>
+<td>Spacing/stick/verts; consistent reads</td>
+<td>Early downs; tempo drives</td>
+</tr>
+<tr>
+<td>Gun Doubles (2x2)</td>
+<td>Mesh/Y-Cross/verts; balanced access</td>
+<td>Base menu; 3rd-and-medium</td>
+</tr>
+<tr>
+<td>Gun Empty</td>
+<td>Quick game; option routes; fast “get it out” answers</td>
+<td>2-minute; vs heavy blitz looks</td>
+</tr>
+<tr>
+<td>Gun Bunch</td>
+<td>Rubs/picks; flood; red zone spacing</td>
+<td>Red zone; short yardage passes</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>A simple “major/minor” menu:</strong></p>
+<ul>
+<li>Major: Trips + Doubles</li>
+<li>Minor: Empty (third-and-medium), Bunch (red zone / short yardage passes)</li>
+</ul>
+<h2 id="core-run-game-families-running">Core run game families 🏃</h2>
+<p>Air Raid is pass-first, but you still need a simple “honest” run menu to punish light boxes.</p>
+<ul>
+<li><strong>Inside zone / split zone</strong>: your stay-on-schedule run.</li>
+<li><strong>Draw</strong>: the easiest pass tendency punish.</li>
+</ul>
+<hr />
+<h2 id="core-pass-game-families--concept-menu-gear">Core pass game families / concept menu ⚙️</h2>
+<p>The trick is not knowing 50 plays; it’s mastering <strong>a small set of concepts</strong> and how they beat different coverages.</p>
+<h3 id="1-stick--spacing-quick-game">1) Stick / Spacing (quick game)</h3>
+<p><strong>What it is:</strong> quick outs + hooks/option route to create a fast, safe completion.</p>
+<p><strong>When to call:</strong></p>
+<ul>
+<li>1st &amp; 10, 2nd &amp; 6, any time you want an easy completion</li>
+<li>vs blitz looks or soft zone</li>
+</ul>
+<p><strong>What you’re reading:</strong></p>
+<pre class="code-block diff"><code><span class="diff-line diff-add">+ GREEN:  Apex Defender widens -&gt; THROW the Hitch/Stick</span>
+<span class="diff-line diff-del">- RED:    Apex Defender sits   -&gt; THROW the Out/Flat</span></code></pre>
+<p><strong>Common counters:</strong></p>
+<ul>
+<li>If defense squats the flat: pump-and-go or switch release.</li>
+</ul>
+<h3 id="2-mesh-man-beater--zone-settle">2) Mesh (man-beater + zone settle)</h3>
+<p><strong>What it is:</strong> two shallow crossers with a sit route and a corner/post over the top.</p>
+<p><strong>Why it works:</strong> creates traffic vs man and spacing vs zone.</p>
+<p><strong>Coaching points:</strong></p>
+<ul>
+<li>Don’t force the crossers immediately; confirm leverage.</li>
+<li>Against zone, look for the sit/hook window behind the shallow.</li>
+</ul>
+<p><strong>Add-on:</strong> motion to identify man/zone.</p>
+<h3 id="3-four-verticals-with-seam-reads">3) Four Verticals (with seam reads)</h3>
+<p><strong>What it is:</strong> vertical stems that attack the safeties.</p>
+<p><strong>When to call:</strong></p>
+<ul>
+<li>vs single-high after you’ve forced them to play honest underneath</li>
+<li>2nd &amp; short, after a big completion, or after a run that forces safety rotation</li>
+</ul>
+<p><strong>QB coaching points (simple version):</strong></p>
+<ul>
+<li>Identify shell (1-high vs 2-high).</li>
+<li>Against 2-high: seams can split; take the best matchup and lead away from safeties.</li>
+<li>Against 1-high: outside verts can win; seam can occupy the middle safety.</li>
+</ul>
+<h3 id="4-y-cross--shallow-cross-intermediate-dagger">4) Y-Cross / Shallow Cross (intermediate dagger)</h3>
+<p><strong>What it is:</strong> a deep crossing route paired with a shallow and a backside dig/post.</p>
+<p><strong>Why it works:</strong> it layers defenders and punishes zone rotations.</p>
+<p><strong>How to use it in-game:</strong></p>
+<ul>
+<li>If users or AI overplays the deep cross, hit the shallow early for RAC.</li>
+<li>If linebackers widen to the shallow, throw the cross behind them.</li>
+</ul>
+<h3 id="5-screens-wr--rb">5) Screens (WR + RB)</h3>
+<p>Screens are a major Air Raid “run game.”</p>
+<p><strong>WR screens:</strong></p>
+<ul>
+<li>Great vs off-coverage, cushion, and aggressive pass rush.</li>
+<li>Pair with a backside slant or glance if they start triggering.</li>
+</ul>
+<p><strong>RB screens:</strong></p>
+<ul>
+<li>Great vs blitz and man coverage.</li>
+<li>Coach point: don’t drift too deep before throwing; timing matters.</li>
+</ul>
+<h3 id="6-draw--inside-zone-the-honest-run">6) Draw / Inside Zone (the honest run)</h3>
+<p>You still need a real run call to punish light boxes.</p>
+<ul>
+<li><strong>Inside zone</strong>: staple; read the box count.</li>
+<li><strong>Draw</strong>: great in empty or pass-heavy tendencies.</li>
+</ul>
+<hr />
+<h2 id="sequencing-how-air-raid-creates-explosives-repeat">Sequencing (how Air Raid creates explosives) 🔁</h2>
+<p>Air Raid explosives usually come from patience:</p>
+<ul>
+<li>take quick game repeatedly until defenders start squatting</li>
+<li>call your shot on purpose (2nd &amp; short, after a big completion, or once safeties cheat)</li>
+</ul>
+<hr />
+<h2 id="building-your-air-raid-call-sheet-practical-cfb26-plan-card_index_dividers">Building your Air Raid call sheet (practical CFB26 plan) 🗂️</h2>
+<p>This section is intentionally actionable: you can copy it into your in-game favorites.</p>
+<h3 id="1st-and-10-stay-efficient">1st and 10 (stay efficient)</h3>
+<ul>
+<li>Stick / spacing</li>
+<li>Inside zone (or split zone)</li>
+<li>Quick slants (vs soft press)</li>
+<li>Bubble/now screen (if corners are off)</li>
+</ul>
+<p><strong>Rule of thumb:</strong> take the free 5–7 yards repeatedly until safeties start cheating.</p>
+<h3 id="2nd-and-short-take-a-shot">2nd and short (take a shot)</h3>
+<ul>
+<li>Four verts</li>
+<li>Post + dig / “dagger” concepts</li>
+<li>Play-action shot (if your playbook includes it from gun)</li>
+</ul>
+<h3 id="2nd-and-long-dont-panic">2nd and long (don’t panic)</h3>
+<ul>
+<li>Mesh</li>
+<li>Shallow cross</li>
+<li>RB screen</li>
+</ul>
+<h3 id="3rd-down">3rd down</h3>
+<ul>
+<li>3rd &amp; 1–2: quick out, stick, inside zone, or bunch quick rub</li>
+<li>3rd &amp; 3–6: mesh, spacing with an option route, shallow</li>
+<li>3rd &amp; 7+: Y-cross, verts (with protection), RB checkdown built-in</li>
+</ul>
+<h3 id="red-zone-inside-the-20">Red zone (inside the 20)</h3>
+<p>Spacing shrinks; win with <strong>leverage</strong> and <strong>pick concepts</strong>.</p>
+<ul>
+<li>Bunch flood / corner routes</li>
+<li>Smash (corner + hitch)</li>
+<li>Slant/flat</li>
+<li>Fade + underneath option</li>
+</ul>
+<h3 id="goal-line-inside-the-5">Goal line (inside the 5)</h3>
+<ul>
+<li>Pick/rub concepts from bunch or stack</li>
+<li>Quick sprint-out if your QB throws well on the move</li>
+<li>Power run if they go dime</li>
+</ul>
+<h3 id="backed-up-own-110">Backed up (own 1–10)</h3>
+<ul>
+<li>Inside zone</li>
+<li>Stick (fast throw)</li>
+<li>RB screen (safe vs pressure)</li>
+</ul>
+<h3 id="two-minute-favorites">Two-minute (favorites)</h3>
+<ul>
+<li>Sideline outs, quick seams, and stop routes</li>
+<li>Use screens as “clock-friendly runs” if you can get out of bounds</li>
+</ul>
+<hr />
+<h2 id="pre-snap-plan-audibles--box-count--motion-video_game">Pre-snap plan (audibles + box count + motion) 🎮</h2>
+<p>You want an audible set that answers:</p>
+<ul>
+<li>a heavy box</li>
+<li>a light box</li>
+<li>a blitz</li>
+<li>a soft zone shell</li>
+</ul>
+<p><strong>Suggested audible package (example):</strong></p>
+<ol type="1">
+<li>Inside Zone (run)</li>
+<li>Stick / Spacing (quick)</li>
+<li>Mesh (man/pressure answer)</li>
+<li>Four Verticals (shot)</li>
+<li>RB Screen (blitz punish)</li>
+</ol>
+<h3 id="the-box-count-habit">The “box-count” habit</h3>
+<ul>
+<li>If the defense shows <strong>5 or fewer</strong> in the box vs your spread set: consider running.</li>
+<li>If the defense shows <strong>6+</strong> and corners are off: take quick game.</li>
+<li>If you see obvious pressure: keep a screen or quick slant ready.</li>
+</ul>
+<hr />
+<h2 id="defensive-looks-and-your-counters-shield">Defensive looks and your counters 🛡️</h2>
+<h3 id="two-high-rally-and-tackle">Two-high, rally-and-tackle</h3>
+<p><strong>What you’ll see:</strong> Cover 2 / Cover 4 shells, soft underneath.</p>
+<p><strong>Your answers:</strong></p>
+<ul>
+<li>Keep taking quick game and be patient.</li>
+<li>Run inside zone/draw to punish light boxes.</li>
+<li>Call seams/benders or switch verts when they get too passive.</li>
+</ul>
+<h3 id="press-man--pressure">Press man + pressure</h3>
+<p><strong>What you’ll see:</strong> tight corners, blitzes, forced quick throws.</p>
+<p><strong>Your answers:</strong></p>
+<ul>
+<li>Mesh and rubs from bunch/stack.</li>
+<li>RB screens.</li>
+<li>Slant/flat and quick fades (only if your WR wins consistently).</li>
+</ul>
+<h3 id="user-lurk--linebacker-baiting">User lurk / linebacker baiting</h3>
+<p><strong>What you’ll see:</strong> user defender sitting in the hook/crosser lane.</p>
+<p><strong>Your answers:</strong></p>
+<ul>
+<li>Throw away from the user: outs, flats, or backside hitches.</li>
+<li>Use motion to change who the user is responsible for.</li>
+<li>Call a concept that forces the user to choose (high-low him).</li>
+</ul>
+<hr />
+<h2 id="roster-building-priorities-dna">Roster building priorities 🧬</h2>
+<p>If you’re building a Dynasty roster, Air Raid priorities are usually:</p>
+<ol type="1">
+<li><strong>QB accuracy + awareness</strong> (quick reads matter more than arm strength)</li>
+<li><strong>WR separation</strong> (route running / release / catching)</li>
+<li><strong>Pass protection</strong> (especially tackles)</li>
+<li><strong>RB hands + pass pro</strong></li>
+<li><strong>One seam threat</strong> (TE or big slot)</li>
+</ol>
+<p>Speed is nice, but consistent separation is what keeps drives alive.</p>
+<hr />
+<h2 id="qb-operation-timing--progressions-stopwatch">QB operation (timing + progressions) ⏱️</h2>
+<p>Practical Air Raid QB rules:</p>
+<ul>
+<li>Quick game is only “safe” if it’s on time—late throws are picks.</li>
+<li>If you don’t like the leverage by the time the rush arrives: check it down or throw it away.</li>
+<li>Know one repeatable progression pattern you can trust:
+<ul>
+<li>high-low the flat defender (stick/spacing, slant/flat variants)</li>
+<li>clear-out + intermediate window (verts clearing space for cross/dig)</li>
+</ul></li>
+</ul>
+<h3 id="coverage-cheat-sheet-how-your-core-concepts-want-to-win-receipt">Coverage cheat sheet (how your core concepts “want” to win) 🧾</h3>
+<p>Air Raid is easiest when you understand what each concept is trying to stress.</p>
+<h3 id="stick--spacing">Stick / spacing</h3>
+<ul>
+<li>Loves: soft zone, off coverage, blitz looks</li>
+<li>Struggles: squat corners and hard-flat defenders jumping outs</li>
+</ul>
+<p>Counter ideas:</p>
+<ul>
+<li>pump-and-go</li>
+<li>switch releases</li>
+</ul>
+<h3 id="mesh">Mesh</h3>
+<ul>
+<li>Loves: man coverage (traffic), pressure</li>
+<li>Also good: zone (sit route settling behind shallows)</li>
+</ul>
+<h3 id="four-verts--seams">Four verts / seams</h3>
+<ul>
+<li>Loves: single-high when you can isolate outside</li>
+<li>Also good: two-high if you can split seams and throw on time</li>
+</ul>
+<h3 id="y-cross--shallow">Y-cross / shallow</h3>
+<ul>
+<li>Loves: zone rotations and match coverage</li>
+<li>The shallow is the “get out of jail,” the cross is the chunk</li>
+</ul>
+<h3 id="screens">Screens</h3>
+<ul>
+<li>Loves: aggressive pass rush and off coverage</li>
+<li>Struggles: corners that trigger instantly and tackle well</li>
+</ul>
+<p>Counter idea:</p>
+<ul>
+<li>screen-and-go / sluggo / tunnel screen (depending on your playbook)</li>
+</ul>
+<hr />
+<h2 id="weekly-install-plan-books">Weekly install plan 📚</h2>
+<p>If you’re building favorites, build in layers so you can play fast without thinking.</p>
+<h3 id="week-1-quick-game--one-run">Week 1: quick game + one run</h3>
+<ul>
+<li>stick/spacing</li>
+<li>inside zone</li>
+</ul>
+<p>Goal: learn box count + apex reads.</p>
+<h3 id="week-2-add-a-man-beater">Week 2: add a man-beater</h3>
+<ul>
+<li>mesh</li>
+</ul>
+<p>Goal: stop punting on 3rd &amp; 5.</p>
+<h3 id="week-3-add-a-shot">Week 3: add a shot</h3>
+<ul>
+<li>four verts variant</li>
+</ul>
+<p>Goal: take explosives on schedule (2nd &amp; short, after big gains).</p>
+<h3 id="week-4-add-a-pressure-punish">Week 4: add a pressure punish</h3>
+<ul>
+<li>RB screen</li>
+</ul>
+<p>Goal: make blitzing feel expensive.</p>
+<hr />
+<h2 id="protection--checkdowns--sack-avoidance-rules-shield">Protection + checkdowns + sack-avoidance rules 🛡️</h2>
+<p>Air Raid is about staying on schedule. A sack is often worse than a throwaway.</p>
+<p>Practical rules:</p>
+<ul>
+<li>If your first read isn’t there by the time the rush arrives, take the checkdown or throw it away.</li>
+<li>Against heavy blitz, lean on:
+<ul>
+<li>quick game</li>
+<li>screens</li>
+<li>empty only if you have immediate throws</li>
+</ul></li>
+</ul>
+<p>If you notice a specific edge rusher wrecking you, avoid calling longer-developing concepts toward him.</p>
+<hr />
+<h2 id="troubleshooting-fire_extinguisher">Troubleshooting 🧯</h2>
+<h3 id="problem-i-complete-passes-but-never-score">Problem: “I complete passes but never score.”</h3>
+<p>Fix:</p>
+<ul>
+<li>call a shot on 2nd &amp; short (don’t wait until 3rd &amp; 12)</li>
+<li>use seams and switch verts once the defense widens</li>
+</ul>
+<h3 id="problem-i-throw-picks-on-outs">Problem: “I throw picks on outs.”</h3>
+<p>Fix:</p>
+<ul>
+<li>stop throwing late to the flat</li>
+<li>throw hitch/inside option instead when the flat defender widens</li>
+</ul>
+<h3 id="problem-the-defense-just-sits-in-two-high">Problem: “The defense just sits in two-high.”</h3>
+<p>Fix:</p>
+<ul>
+<li>run inside zone/draw more often</li>
+<li>keep taking 5–7 yard completions and stay patient</li>
+</ul>
+<hr />
+<h2 id="situational-packages-what-to-favorite-star">Situational packages (what to favorite) ⭐</h2>
+<p>If you only favorite 12–18 plays, favor them by situation.</p>
+<h3 id="early-downs">Early downs</h3>
+<ul>
+<li>stick/spacing</li>
+<li>inside zone</li>
+<li>bubble/now screen</li>
+</ul>
+<h3 id="manpressure-answers">Man/pressure answers</h3>
+<ul>
+<li>mesh</li>
+<li>RB screen</li>
+</ul>
+<h3 id="chunk-plays">Chunk plays</h3>
+<ul>
+<li>Y-cross / shallow cross</li>
+<li>four verts (seams)</li>
+</ul>
+<h3 id="red-zone">Red zone</h3>
+<ul>
+<li>smash</li>
+<li>slant/flat</li>
+<li>bunch flood (if available)</li>
+</ul>
+<h3 id="two-minute">Two-minute</h3>
+<ul>
+<li>quick outs to the boundary</li>
+<li>seams when safeties widen</li>
+</ul>
+<p>This keeps your play calling fast and reduces “random” calls that don’t fit your identity.</p>
+<hr />
+<h2 id="sample-15-play-opening-script-pencil">Sample 15-play opening script 📝</h2>
+<p>The goal is to find the "lazy" defender and throw at him repeatedly.</p>
+<h3 id="quick-list">Quick list</h3>
+<ol type="1">
+<li>Mesh</li>
+<li>4 Verts</li>
+<li>Stick</li>
+<li>Bubble Screen</li>
+<li>Zone Read / Draw</li>
+<li>Shallow Cross</li>
+<li>Y-Cross</li>
+<li>Corner Strike</li>
+<li>Tunnel Screen</li>
+<li>Mesh (Return)</li>
+<li>HB Draw</li>
+<li>Spacing</li>
+<li>Sprint Out / Whip</li>
+<li>Mesh (Wheel Tag)</li>
+<li>Post-Wheel</li>
+</ol>
+<h3 id="table-format-air-raid-tempo">Table format (Air Raid tempo)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th style="text-align: center;"><strong>Play #</strong></th>
+<th><strong>Situation / Note</strong></th>
+<th><strong>Concept / Call</strong></th>
+<th><strong>Why?</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td>Scripted Opener</td>
+<td><strong>Mesh</strong></td>
+<td>🟢 Easy completion vs man or zone</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td>Tempo Shot</td>
+<td><strong>4 Verts</strong></td>
+<td>🔴 Force safeties to back up early</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td>Quick Game</td>
+<td><strong>Stick</strong></td>
+<td>🟢 Take the free 5 yards if LB retreats</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td>Screen</td>
+<td><strong>Bubble Screen</strong></td>
+<td>🟡 Punish off-coverage on the outside</td>
+</tr>
+<tr>
+<td style="text-align: center;">5</td>
+<td>Run (Honest Work)</td>
+<td><strong>Zone Read / Draw</strong></td>
+<td>🟢 If the box is light (5 or less)</td>
+</tr>
+<tr>
+<td style="text-align: center;">6</td>
+<td>Base Pass</td>
+<td><strong>Shallow Cross</strong></td>
+<td>🟢 The bread &amp; butter. High % throw.</td>
+</tr>
+<tr>
+<td style="text-align: center;">7</td>
+<td>Shot Play</td>
+<td><strong>Y-Cross</strong></td>
+<td>🔴 Hit the intermediate void</td>
+</tr>
+<tr>
+<td style="text-align: center;">8</td>
+<td>Quick Game</td>
+<td><strong>Corner Strike</strong></td>
+<td>🟡 Beat cover 3 or man</td>
+</tr>
+<tr>
+<td style="text-align: center;">9</td>
+<td>Screen</td>
+<td><strong>Tunnel Screen</strong></td>
+<td>🟡 Slow down the pass rush</td>
+</tr>
+<tr>
+<td style="text-align: center;">10</td>
+<td>Base Pass</td>
+<td><strong>Mesh (Return)</strong></td>
+<td>🟢 Go back to what works</td>
+</tr>
+<tr>
+<td style="text-align: center;">11</td>
+<td>Run (Draw)</td>
+<td><strong>HB Draw</strong></td>
+<td>🟡 Catch DL penetrating upfield</td>
+</tr>
+<tr>
+<td style="text-align: center;">12</td>
+<td>Red Zone High</td>
+<td><strong>Spacing</strong></td>
+<td>🟢 5-yard hitch windows</td>
+</tr>
+<tr>
+<td style="text-align: center;">13</td>
+<td>Goal Line</td>
+<td><strong>Sprint Out / Whip</strong></td>
+<td>🟢 Create leverage in tight space</td>
+</tr>
+<tr>
+<td style="text-align: center;">14</td>
+<td>2-Point / 4th Down</td>
+<td><strong>Mesh (Wheel Tag)</strong></td>
+<td>🟢 The ultimate answers play</td>
+</tr>
+<tr>
+<td style="text-align: center;">15</td>
+<td>Shot (End of Q1)</td>
+<td><strong>Post-Wheel</strong></td>
+<td>🔴 Try to steal a TD</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="post-game-metrics-did-i-run-it-right-bar_chart">Post-Game Metrics (Did I run it right?) 📊</h2>
+<p>If you played a true Air Raid game, your stats should look like this:</p>
+<ul>
+<li><strong>Completion Percentage:</strong> &gt; 70% (staying on schedule)</li>
+<li><strong>3rd Down Conversions:</strong> &gt; 50% (quick game + crossers)</li>
+<li><strong>Explosives (15+ yards):</strong> 6+ (shots on purpose, not random)</li>
+<li><strong>Sacks:</strong> 2 or fewer (throwaways/checkdowns count as wins)</li>
+</ul>
+<h2 id="dynasty-recruiting-guide-mortar_board">Dynasty Recruiting Guide 🎓</h2>
+<p>Air Raid recruiting is about <strong>speed and hands</strong>, not size or blocking strength.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th style="text-align: left;"><strong>Position</strong></th>
+<th><strong>Archetype / Key Stats</strong></th>
+<th><strong>Why?</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>QB</strong></td>
+<td><strong>Improviser</strong> (SAC, MAC, TUP)</td>
+<td>🧠 Accuracy &gt; arm strength. Must throw under pressure.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>HB</strong></td>
+<td><strong>Receiving Back</strong> (CTH, CIT, SRR)</td>
+<td>🏃 Basically a 5th WR in this offense.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>WR</strong></td>
+<td><strong>Route Runner</strong> (SRR, MRR, REL)</td>
+<td>🧤 Separation is everything. Need 10+ recruits here.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>TE</strong></td>
+<td><strong>Vertical Threat</strong> (SPD, CTH)</td>
+<td>🧲 Doesn't need to block. Needs to win seam routes.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>OL</strong></td>
+<td><strong>Pass Protector</strong> (PBP, PBF, AWR)</td>
+<td>🧱 They will pass set 50 times a game.</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="in-game-execution-notes-video_game">In-game execution notes 🎮</h2>
+<ul>
+<li>If the defense gives you 5 yards, take it 10 times.</li>
+<li>When users start lurking crossers, throw away from the user (outs/flats/backside hitches).</li>
+<li>Don’t confuse “horizontal” with “bad”—it’s only bad if you never take the seam/shot.</li>
+</ul>
+<hr />
+<h2 id="pace-note-stopwatch">Pace note ⏱️</h2>
+<ul>
+<li>Go fast after easy completions/screens (keep the same shell on the field).</li>
+<li>Slow down after negative plays and pick your next concept intentionally.</li>
+</ul>
+<h2 id="teams-to-check-first-in-cfb26-real-world-scheme-fit-mag">Teams to check first in CFB26 (real-world scheme fit) 🔍</h2>
+<p>These are programs commonly associated with Air Raid principles historically or in recent eras.</p>
+<p><strong>Verify in-game</strong> (playbook assignments can change), but these are good teams to start checking:</p>
+<ul>
+<li>Texas Tech</li>
+<li>Washington State</li>
+<li>Mississippi State</li>
+<li>Hawaii (Air Raid influence in some eras)</li>
+<li>Western Kentucky (Air Raid influence)</li>
+<li>USC / Oklahoma (spread pass influence; not always “pure” Air Raid)</li>
+</ul>
+<h2 id="nfl-analogs-closest-cousins-football">NFL analogs (closest cousins) 🏈</h2>
+<p>The NFL rarely runs a “pure” Air Raid, but many teams borrow the spacing/quick-game DNA.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>NFL team (varies by year)</strong></th>
+<th><strong>What feels Air Raid-ish</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kansas City Chiefs</td>
+<td>Spacing, quick game answers, option routes</td>
+</tr>
+<tr>
+<td>Cincinnati Bengals</td>
+<td>Shot plays off spread looks, rhythm passing</td>
+</tr>
+<tr>
+<td>Buffalo Bills</td>
+<td>Spread formations + QB-driven quick decisions</td>
+</tr>
+<tr>
+<td>Arizona Cardinals (Air Raid-era influence)</td>
+<td>Spread/quick-game emphasis in certain seasons</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="teams-in-cfb26-that-use-an-air-raid-playbook-fill-this-in-stadium">Teams in CFB26 that use an Air Raid playbook (fill this in) 🏟️</h2>
+<p>Because team playbook assignments can change, this is a <strong>tracking table</strong>.</p>
+<p>How to fill:</p>
+<ol type="1">
+<li>In CFB26, view the team’s offensive playbook label.</li>
+<li>If it matches an Air Raid-style book (or plays like one), add it here.</li>
+</ol>
+<!-- markdownlint-disable MD033 -->
+
+<details>
+<summary>Show editable teams table</summary>
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>Team</strong></th>
+<th><strong>In-game offensive playbook name</strong></th>
+<th><strong>Notes (formations you see a lot, standout concepts)</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+</details>
+<!-- markdownlint-enable MD033 -->
+
+<hr />
+<h2 id="minimal-glossary-pushpin">Minimal glossary 📌</h2>
+<ul>
+<li><strong>Apex defender:</strong> the player between slot and box; key for RPO/spacing reads.</li>
+<li><strong>Leverage:</strong> defender positioning; throw away from it.</li>
+<li><strong>RAC:</strong> run after catch.</li>
+<li><strong>Shell:</strong> the pre-snap safety structure (1-high / 2-high).</li>
+</ul>
+        </div>
+        <nav class="scheme-nav" aria-label="Scheme navigation">
+      <a class="scheme-link prev" href="index.html">← Back to Index</a>
+      <a class="scheme-link center" href="index.html">All Schemes</a>
+      <a class="scheme-link next" href="pro-style.html">Pro Style →</a>
+    </nav>
+      </article>
+    </div>
+  </main>
+</body>
+</html>

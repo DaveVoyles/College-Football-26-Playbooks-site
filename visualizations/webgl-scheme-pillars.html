@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CFB26 Scheme Pillars</title>
+    <script>
+      (() => {
+        const param = new URLSearchParams(window.location.search).get("clawpilotTheme");
+        const theme =
+          param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", theme);
+      })();
+    </script>
+    <link rel="stylesheet" href="../assets/styles/site-nav.css" />
+    <script defer src="../assets/scripts/site-nav.js"></script>
+    <style>
+      :root {
+        color-scheme: light;
+        --cp-bg: #f7f4ef;
+        --cp-bg-elevated: #fcfbf8;
+        --cp-surface: #ffffff;
+        --cp-surface-soft: #f5f5f5;
+        --cp-border: #dedede;
+        --cp-border-strong: #919191;
+        --cp-text: #242424;
+        --cp-text-muted: #5c5c5c;
+        --cp-text-soft: #6f6f6f;
+        --cp-accent: #b11f4b;
+        --cp-accent-hover: #9a1a41;
+        --cp-accent-soft: rgba(177, 31, 75, 0.08);
+        --cp-accent-fg: #ffffff;
+        --cp-success: #16a34a;
+        --cp-danger: #dc2626;
+        --cp-warning: #f59e0b;
+        --cp-link: #0078d4;
+        --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+        --cp-overlay: rgba(255, 255, 255, 0.8);
+        --cp-panel: rgba(255, 255, 255, 0.86);
+        --cp-panel-strong: rgba(255, 255, 255, 0.96);
+        --cp-sheen: rgba(255, 255, 255, 0.55);
+        --cp-highlight: rgba(177, 31, 75, 0.12);
+      }
+      html[data-theme="dark"] {
+        color-scheme: dark;
+        --cp-bg: #3d3b3a;
+        --cp-bg-elevated: #343231;
+        --cp-surface: #292929;
+        --cp-surface-soft: #2e2e2e;
+        --cp-border: #474747;
+        --cp-border-strong: #5f5f5f;
+        --cp-text: #dedede;
+        --cp-text-muted: #919191;
+        --cp-text-soft: #b0b0b0;
+        --cp-accent: #fd8ea1;
+        --cp-accent-hover: #fb7b91;
+        --cp-accent-soft: rgba(253, 142, 161, 0.14);
+        --cp-accent-fg: #1a1a1a;
+        --cp-success: #4ade80;
+        --cp-danger: #f87171;
+        --cp-warning: #fbbf24;
+        --cp-link: #4da6ff;
+        --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+        --cp-overlay: rgba(41, 41, 41, 0.88);
+        --cp-panel: rgba(41, 41, 41, 0.72);
+        --cp-panel-strong: rgba(41, 41, 41, 0.96);
+        --cp-sheen: rgba(255, 255, 255, 0.04);
+        --cp-highlight: rgba(253, 142, 161, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+      }
+
+      body {
+        background: var(--cp-bg);
+        color: var(--cp-text);
+        font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+      }
+
+      a {
+        color: var(--cp-link);
+      }
+
+      .page-shell {
+        position: relative;
+        padding: 1rem;
+      }
+
+      .canvas-shell {
+        position: relative;
+        min-height: calc(100vh - 5.5rem);
+        border: 1px solid var(--cp-border);
+        border-radius: 16px;
+        overflow: hidden;
+        background: linear-gradient(180deg, var(--cp-bg-elevated), var(--cp-bg));
+        box-shadow: 0 0 2px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.14);
+      }
+
+      #sceneHost {
+        position: absolute;
+        inset: 0;
+      }
+
+      #sceneHost canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+
+      .scene-note,
+      .info-card {
+        position: relative;
+        z-index: 1;
+        border: 1px solid var(--cp-border);
+        border-radius: 16px;
+        background: var(--cp-panel);
+        box-shadow: 0 0 2px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.14);
+      }
+
+      .scene-note {
+        max-width: 21rem;
+        margin: 1rem;
+        padding: 1rem;
+        pointer-events: none;
+      }
+
+      .info-card {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        max-width: 22rem;
+        padding: 1rem;
+      }
+
+      .eyebrow {
+        margin: 0 0 0.5rem;
+        color: var(--cp-text-muted);
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .info-card h2,
+      .scene-note h1 {
+        margin: 0;
+        line-height: 1.1;
+      }
+
+      .scheme-kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.35rem 0.625rem;
+        border-radius: 999px;
+        background: var(--cp-accent-soft);
+        color: var(--cp-accent);
+        font-size: 0.82rem;
+        font-weight: 700;
+      }
+
+      .copy,
+      .info-meta,
+      .scene-note p,
+      .legend-chip {
+        color: var(--cp-text-muted);
+      }
+
+      .info-stack {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.75rem;
+      }
+
+      .metric {
+        padding: 0.875rem;
+        border: 1px solid var(--cp-border);
+        border-radius: 0.625rem;
+        background: var(--cp-surface-soft);
+      }
+
+      .metric-label {
+        display: block;
+        margin-bottom: 0.35rem;
+        color: var(--cp-text-soft);
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+
+      .metric strong {
+        font-size: 1rem;
+      }
+
+      .cta-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: fit-content;
+        min-height: 2.5rem;
+        padding: 0.625rem 0.95rem;
+        border-radius: 0.625rem;
+        background: var(--cp-accent);
+        color: var(--cp-accent-fg);
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .cta-link:hover,
+      .cta-link:focus-visible {
+        background: var(--cp-accent-hover);
+        outline: none;
+      }
+
+      .legend {
+        position: absolute;
+        left: 1rem;
+        right: 1rem;
+        bottom: 1rem;
+        z-index: 1;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .legend-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        min-height: 2rem;
+        padding: 0.4rem 0.7rem;
+        border: 1px solid var(--cp-border);
+        border-radius: 0.625rem;
+        background: var(--cp-panel-strong);
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      @media (max-width: 900px) {
+        .canvas-shell {
+          min-height: 40rem;
+        }
+
+        .info-card {
+          position: static;
+          max-width: none;
+          margin: 0 1rem 1rem;
+        }
+
+        .legend {
+          position: static;
+          padding: 0 1rem 1rem;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .page-shell {
+          padding: 0.75rem;
+        }
+
+        .scene-note,
+        .info-card {
+          margin: 0.75rem;
+        }
+
+        .metrics {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.165.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.165.0/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body data-nav-root="..">
+    <main class="page-shell">
+      <section class="canvas-shell">
+        <div id="sceneHost" aria-label="3D scheme pillar chart"></div>
+        <div class="scene-note">
+          <p class="eyebrow">3D Scheme Pillars</p>
+          <h1>Click a pillar to compare how many teams anchor each identity.</h1>
+          <p>Rotate, zoom, and scan the skyline to see which philosophies show up across the most programs.</p>
+        </div>
+        <aside class="info-card">
+          <div class="info-stack">
+            <span class="scheme-kicker" id="schemeKicker">🎯 Scheme spotlight</span>
+            <div>
+              <h2 id="schemeTitle">Air Raid</h2>
+              <p class="copy" id="schemeIdea">Spacing + quick game + repeatable reads</p>
+            </div>
+            <div class="metrics">
+              <div class="metric">
+                <span class="metric-label">Team count</span>
+                <strong id="teamCount">4 teams</strong>
+              </div>
+              <div class="metric">
+                <span class="metric-label">Guide</span>
+                <strong><a id="guideInline" href="../air-raid.html">Open scheme guide</a></strong>
+              </div>
+            </div>
+            <a class="cta-link" id="schemeGuide" href="../air-raid.html">View full guide</a>
+            <p class="info-meta">Pillar height reflects the number of representative CFB teams listed for each scheme.</p>
+          </div>
+        </aside>
+        <div class="legend" id="legend"></div>
+      </section>
+    </main>
+
+    <script type="module">
+      import * as THREE from 'three';
+      import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+      const schemeData = [
+        { name: 'Air Raid', emoji: '🎯', color: 0xef476f, idea: 'Spacing + quick game + repeatable reads', teamCount: 4, href: '../air-raid.html', heightFactor: 0.8 },
+        { name: 'Pro Style', emoji: '🧱', color: 0x118ab2, idea: 'Run game sets up PA, win in red zone', teamCount: 5, href: '../pro-style.html', heightFactor: 1.0 },
+        { name: 'Spread', emoji: '🏃', color: 0x06d6a0, idea: 'Box counts + RPOs + tempo', teamCount: 5, href: '../spread.html', heightFactor: 1.0 },
+        { name: 'Veer and Shoot', emoji: '🚀', color: 0xffd166, idea: 'Wide splits + access throws + inside zone', teamCount: 4, href: '../veer-and-shoot.html', heightFactor: 0.8 },
+        { name: 'West Coast', emoji: '🌊', color: 0x8338ec, idea: 'Rhythm throws + YAC + layered concepts', teamCount: 4, href: '../west-coast.html', heightFactor: 0.8 },
+        { name: 'Option', emoji: '🦵', color: 0xff6b35, idea: 'Read/pitch creates +1 run advantage', teamCount: 4, href: '../option.html', heightFactor: 0.8 },
+        { name: 'Run and Shoot', emoji: '🎲', color: 0xe63946, idea: 'Option routes + leverage reads', teamCount: 3, href: '../run-and-shoot.html', heightFactor: 0.6 }
+      ];
+
+      const host = document.getElementById('sceneHost');
+      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      host.appendChild(renderer.domElement);
+
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x07090f);
+      scene.fog = new THREE.Fog(0x07090f, 16, 42);
+
+      const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+      camera.position.set(0, 9, 24);
+
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.enablePan = false;
+      controls.minDistance = 14;
+      controls.maxDistance = 32;
+      controls.maxPolarAngle = Math.PI / 2.08;
+      controls.target.set(0, 5, 0);
+
+      scene.add(new THREE.HemisphereLight(0xf2f3ff, 0x17202e, 1.15));
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 1.7);
+      directionalLight.position.set(-6, 14, 8);
+      scene.add(directionalLight);
+
+      const floor = new THREE.Mesh(
+        new THREE.CircleGeometry(20, 120),
+        new THREE.MeshStandardMaterial({
+          color: 0x0d1017,
+          roughness: 0.94,
+          metalness: 0.08,
+          transparent: true,
+          opacity: 0.96
+        })
+      );
+      floor.rotation.x = -Math.PI / 2;
+      scene.add(floor);
+
+      const starsGeometry = new THREE.BufferGeometry();
+      const starPositions = new Float32Array(900 * 3);
+      for (let index = 0; index < 900; index += 1) {
+        const stride = index * 3;
+        const radius = 18 + Math.random() * 20;
+        const angle = Math.random() * Math.PI * 2;
+        starPositions[stride] = Math.cos(angle) * radius;
+        starPositions[stride + 1] = Math.random() * 18 + 4;
+        starPositions[stride + 2] = Math.sin(angle) * radius;
+      }
+      starsGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+      scene.add(new THREE.Points(starsGeometry, new THREE.PointsMaterial({ color: 0xffffff, size: 0.07, transparent: true, opacity: 0.8 })));
+
+      const pillarEntries = [];
+      const spacing = 4.6;
+      const baseHeight = 8.8;
+      schemeData.forEach((scheme, index) => {
+        const height = baseHeight * scheme.heightFactor;
+        const x = (index - (schemeData.length - 1) / 2) * spacing;
+        const group = new THREE.Group();
+        group.position.set(x, 0, 0);
+
+        const pillar = new THREE.Mesh(
+          new THREE.BoxGeometry(2.15, height, 2.15),
+          new THREE.MeshStandardMaterial({
+            color: scheme.color,
+            emissive: scheme.color,
+            emissiveIntensity: 0.7,
+            roughness: 0.32,
+            metalness: 0.18
+          })
+        );
+        pillar.position.y = height / 2;
+        pillar.userData.schemeName = scheme.name;
+        group.add(pillar);
+
+        const cap = new THREE.Mesh(
+          new THREE.SphereGeometry(0.64, 28, 28),
+          new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xffffff, emissiveIntensity: 0.45, roughness: 0.2, metalness: 0.2 })
+        );
+        cap.position.y = height + 0.88;
+        group.add(cap);
+
+        const glow = new THREE.Mesh(
+          new THREE.CylinderGeometry(1.45, 1.45, height + 0.3, 24, 1, true),
+          new THREE.MeshBasicMaterial({ color: scheme.color, transparent: true, opacity: 0.12, side: THREE.DoubleSide })
+        );
+        glow.position.y = height / 2;
+        group.add(glow);
+
+        scene.add(group);
+        pillarEntries.push({ scheme, group, pillar, cap, glow, height, swaySeed: index * 0.85 + 0.2 });
+      });
+
+      const picker = new THREE.Raycaster();
+      const pointer = new THREE.Vector2();
+      let selectedName = 'Air Raid';
+
+      const schemeKicker = document.getElementById('schemeKicker');
+      const schemeTitle = document.getElementById('schemeTitle');
+      const schemeIdea = document.getElementById('schemeIdea');
+      const teamCount = document.getElementById('teamCount');
+      const guideInline = document.getElementById('guideInline');
+      const schemeGuide = document.getElementById('schemeGuide');
+      const legend = document.getElementById('legend');
+
+      schemeData.forEach((scheme) => {
+        const chip = document.createElement('span');
+        chip.className = 'legend-chip';
+        chip.textContent = `${scheme.emoji} ${scheme.name}`;
+        legend.appendChild(chip);
+      });
+
+      function updateInfo(name) {
+        selectedName = name;
+        const active = pillarEntries.find((entry) => entry.scheme.name === name)?.scheme;
+        if (!active) {
+          return;
+        }
+
+        schemeKicker.textContent = `${active.emoji} Scheme spotlight`;
+        schemeTitle.textContent = active.name;
+        schemeIdea.textContent = active.idea;
+        teamCount.textContent = `${active.teamCount} ${active.teamCount === 1 ? 'team' : 'teams'}`;
+        guideInline.href = active.href;
+        schemeGuide.href = active.href;
+
+        pillarEntries.forEach((entry) => {
+          const isSelected = entry.scheme.name === name;
+          entry.pillar.material.emissiveIntensity = isSelected ? 1.55 : 0.7;
+          entry.cap.material.emissiveIntensity = isSelected ? 0.9 : 0.45;
+          entry.glow.material.opacity = isSelected ? 0.24 : 0.12;
+          entry.pillar.scale.set(isSelected ? 1.04 : 1, 1, isSelected ? 1.04 : 1);
+        });
+      }
+
+      function setPointer(event) {
+        const rect = renderer.domElement.getBoundingClientRect();
+        pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+      }
+
+      renderer.domElement.addEventListener('pointermove', (event) => {
+        setPointer(event);
+        picker.setFromCamera(pointer, camera);
+        const hit = picker.intersectObjects(pillarEntries.map((entry) => entry.pillar))[0];
+        renderer.domElement.style.cursor = hit ? 'pointer' : 'grab';
+      });
+
+      renderer.domElement.addEventListener('click', (event) => {
+        setPointer(event);
+        picker.setFromCamera(pointer, camera);
+        const hit = picker.intersectObjects(pillarEntries.map((entry) => entry.pillar))[0];
+        if (hit?.object?.userData?.schemeName) {
+          updateInfo(hit.object.userData.schemeName);
+        }
+      });
+
+      function resize() {
+        const { clientWidth, clientHeight } = host;
+        camera.aspect = clientWidth / Math.max(clientHeight, 1);
+        camera.updateProjectionMatrix();
+        renderer.setSize(clientWidth, clientHeight, false);
+      }
+
+      window.addEventListener('resize', resize);
+      resize();
+      updateInfo(selectedName);
+
+      const clock = new THREE.Clock();
+      function animate() {
+        const elapsed = clock.getElapsedTime();
+        pillarEntries.forEach((entry, index) => {
+          entry.group.position.z = Math.sin(elapsed * 0.95 + entry.swaySeed) * 0.42;
+          entry.cap.position.x = Math.sin(elapsed * 0.8 + index) * 0.08;
+        });
+        controls.update();
+        renderer.render(scene, camera);
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CFB26 Scheme Constellation</title>
+    <script>
+      (() => {
+        const param = new URLSearchParams(window.location.search).get("clawpilotTheme");
+        const theme =
+          param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", theme);
+      })();
+    </script>
+    <link rel="stylesheet" href="../assets/styles/site-nav.css" />
+    <script defer src="../assets/scripts/site-nav.js"></script>
+    <style>
+      :root {
+        color-scheme: light;
+        --cp-bg: #f7f4ef;
+        --cp-bg-elevated: #fcfbf8;
+        --cp-surface: #ffffff;
+        --cp-surface-soft: #f5f5f5;
+        --cp-border: #dedede;
+        --cp-border-strong: #919191;
+        --cp-text: #242424;
+        --cp-text-muted: #5c5c5c;
+        --cp-text-soft: #6f6f6f;
+        --cp-accent: #b11f4b;
+        --cp-accent-hover: #9a1a41;
+        --cp-accent-soft: rgba(177, 31, 75, 0.08);
+        --cp-accent-fg: #ffffff;
+        --cp-success: #16a34a;
+        --cp-danger: #dc2626;
+        --cp-warning: #f59e0b;
+        --cp-link: #0078d4;
+        --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+        --cp-overlay: rgba(255, 255, 255, 0.8);
+        --cp-panel: rgba(255, 255, 255, 0.86);
+        --cp-panel-strong: rgba(255, 255, 255, 0.96);
+        --cp-sheen: rgba(255, 255, 255, 0.55);
+        --cp-highlight: rgba(177, 31, 75, 0.12);
+      }
+      html[data-theme="dark"] {
+        color-scheme: dark;
+        --cp-bg: #3d3b3a;
+        --cp-bg-elevated: #343231;
+        --cp-surface: #292929;
+        --cp-surface-soft: #2e2e2e;
+        --cp-border: #474747;
+        --cp-border-strong: #5f5f5f;
+        --cp-text: #dedede;
+        --cp-text-muted: #919191;
+        --cp-text-soft: #b0b0b0;
+        --cp-accent: #fd8ea1;
+        --cp-accent-hover: #fb7b91;
+        --cp-accent-soft: rgba(253, 142, 161, 0.14);
+        --cp-accent-fg: #1a1a1a;
+        --cp-success: #4ade80;
+        --cp-danger: #f87171;
+        --cp-warning: #fbbf24;
+        --cp-link: #4da6ff;
+        --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+        --cp-overlay: rgba(41, 41, 41, 0.88);
+        --cp-panel: rgba(41, 41, 41, 0.72);
+        --cp-panel-strong: rgba(41, 41, 41, 0.96);
+        --cp-sheen: rgba(255, 255, 255, 0.04);
+        --cp-highlight: rgba(253, 142, 161, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+      }
+
+      body {
+        background: var(--cp-bg);
+        color: var(--cp-text);
+        font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+      }
+
+      a {
+        color: var(--cp-link);
+      }
+
+      .page-shell {
+        display: grid;
+        gap: 1rem;
+        padding: 1rem;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.45fr) minmax(18rem, 24rem);
+        gap: 1rem;
+        min-height: calc(100vh - 5.5rem);
+      }
+
+      .scene-card,
+      .info-card {
+        border: 1px solid var(--cp-border);
+        border-radius: 16px;
+        background: var(--cp-surface);
+        box-shadow: 0 0 2px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.14);
+        overflow: hidden;
+      }
+
+      .scene-card {
+        position: relative;
+        display: flex;
+        min-height: 32rem;
+        background: linear-gradient(180deg, var(--cp-bg-elevated), var(--cp-bg));
+      }
+
+      #sceneHost {
+        position: absolute;
+        inset: 0;
+      }
+
+      #sceneHost canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+
+      .scene-copy {
+        position: relative;
+        z-index: 1;
+        max-width: 20rem;
+        margin: 1rem;
+        padding: 1rem;
+        border: 1px solid var(--cp-border);
+        border-radius: 16px;
+        background: var(--cp-panel);
+        box-shadow: 0 0 2px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.14);
+        pointer-events: none;
+      }
+
+      .eyebrow {
+        margin: 0 0 0.5rem;
+        color: var(--cp-text-muted);
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .scene-copy h1,
+      .info-card h2 {
+        margin: 0;
+        line-height: 1.1;
+      }
+
+      .scene-copy p,
+      .info-description,
+      .info-note,
+      .team-list li,
+      .meta-list dd {
+        color: var(--cp-text-muted);
+      }
+
+      .info-card {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .info-inner {
+        display: grid;
+        gap: 1rem;
+        padding: 1.25rem;
+      }
+
+      .scheme-kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        width: fit-content;
+        padding: 0.375rem 0.625rem;
+        border-radius: 999px;
+        background: var(--cp-accent-soft);
+        color: var(--cp-accent);
+        font-size: 0.82rem;
+        font-weight: 700;
+      }
+
+      .info-description {
+        margin: 0;
+        font-size: 1rem;
+      }
+
+      .chip-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        min-height: 2rem;
+        padding: 0.35rem 0.7rem;
+        border: 1px solid var(--cp-border);
+        border-radius: 0.625rem;
+        background: var(--cp-surface-soft);
+        color: var(--cp-text);
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      .meta-list {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.75rem;
+        margin: 0;
+      }
+
+      .meta-list div {
+        padding: 0.875rem;
+        border: 1px solid var(--cp-border);
+        border-radius: 0.625rem;
+        background: var(--cp-surface-soft);
+      }
+
+      .meta-list dt {
+        margin: 0 0 0.35rem;
+        color: var(--cp-text-soft);
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+
+      .meta-list dd {
+        margin: 0;
+        font-size: 0.95rem;
+        font-weight: 600;
+      }
+
+      .team-list {
+        margin: 0;
+        padding-left: 1.1rem;
+        display: grid;
+        gap: 0.45rem;
+      }
+
+      .cta-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: fit-content;
+        min-height: 2.5rem;
+        padding: 0.625rem 0.95rem;
+        border-radius: 0.625rem;
+        background: var(--cp-accent);
+        color: var(--cp-accent-fg);
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .cta-link:hover,
+      .cta-link:focus-visible {
+        background: var(--cp-accent-hover);
+        outline: none;
+      }
+
+      .info-note {
+        margin: 0;
+        padding-top: 0.25rem;
+        border-top: 1px solid var(--cp-border);
+        font-size: 0.92rem;
+      }
+
+      @media (max-width: 960px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
+
+        .scene-card {
+          min-height: 28rem;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .page-shell {
+          padding: 0.75rem;
+        }
+
+        .scene-copy {
+          max-width: 100%;
+          margin: 0.75rem;
+        }
+
+        .meta-list {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.165.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.165.0/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body data-nav-root="..">
+    <main class="page-shell">
+      <section class="hero">
+        <div class="scene-card">
+          <div id="sceneHost" aria-label="3D scheme constellation"></div>
+          <div class="scene-copy">
+            <p class="eyebrow">3D Scheme Constellation</p>
+            <h1>Rotate the constellation and click a glowing node.</h1>
+            <p>Each sphere maps a major offensive identity and highlights shared DNA across modern college football systems.</p>
+          </div>
+        </div>
+
+        <aside class="info-card">
+          <div class="info-inner">
+            <span class="scheme-kicker" id="schemeKicker">🎯 Scheme spotlight</span>
+            <div>
+              <h2 id="schemeTitle">Air Raid</h2>
+              <p class="info-description" id="schemeIdea">Spacing + quick game + repeatable reads</p>
+            </div>
+            <div>
+              <p class="eyebrow">Personnel families</p>
+              <div class="chip-row" id="personnelChips"></div>
+            </div>
+            <dl class="meta-list">
+              <div>
+                <dt>Core lens</dt>
+                <dd id="schemeCore">Spacing + quick game + repeatable reads</dd>
+              </div>
+              <div>
+                <dt>Guide</dt>
+                <dd><a id="schemeGuideInline" href="../air-raid.html">Open the full scheme guide</a></dd>
+              </div>
+            </dl>
+            <div>
+              <p class="eyebrow">Related CFB teams</p>
+              <ul class="team-list" id="teamList"></ul>
+            </div>
+            <a class="cta-link" id="schemeGuide" href="../air-raid.html">View scheme guide</a>
+            <p class="info-note">Connections show overlap in spacing, route choice, option-read, and RPO structures.</p>
+          </div>
+        </aside>
+      </section>
+    </main>
+
+    <script type="module">
+      import * as THREE from 'three';
+      import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+      const schemeData = {
+        'Air Raid': {
+          emoji: '🎯', color: 0xef476f,
+          idea: 'Spacing + quick game + repeatable reads',
+          personnel: '10 / 11',
+          teams: ['Texas Tech', 'Washington State', 'Mississippi State', 'Wisconsin'],
+          href: '../air-raid.html'
+        },
+        'Pro Style': {
+          emoji: '🧱', color: 0x118ab2,
+          idea: 'Run game sets up PA, win in red zone',
+          personnel: '12 / 21',
+          teams: ['Michigan', 'Georgia', 'Alabama', 'Notre Dame', 'Iowa'],
+          href: '../pro-style.html'
+        },
+        'Spread': {
+          emoji: '🏃', color: 0x06d6a0,
+          idea: 'Box counts + RPOs + tempo',
+          personnel: '10 / 11',
+          teams: ['Oregon', 'Ohio State', 'Ole Miss', 'TCU', 'Tennessee'],
+          href: '../spread.html'
+        },
+        'Veer and Shoot': {
+          emoji: '🚀', color: 0xffd166,
+          idea: 'Wide splits + access throws + inside zone',
+          personnel: '10 / 11',
+          teams: ['Tennessee (Heupel)', 'UCF', 'Baylor', 'Houston'],
+          href: '../veer-and-shoot.html'
+        },
+        'West Coast': {
+          emoji: '🌊', color: 0x8338ec,
+          idea: 'Rhythm throws + YAC + layered concepts',
+          personnel: '11 / 12 / 21',
+          teams: ['Stanford', 'Utah', 'Notre Dame', 'BYU'],
+          href: '../west-coast.html'
+        },
+        'Option': {
+          emoji: '🦵', color: 0xff6b35,
+          idea: 'Read/pitch creates +1 run advantage',
+          personnel: '11 / 20 / 21',
+          teams: ['Army', 'Navy', 'Air Force', 'Georgia Tech'],
+          href: '../option.html'
+        },
+        'Run and Shoot': {
+          emoji: '🎲', color: 0xe63946,
+          idea: 'Option routes + leverage reads',
+          personnel: '10 / 11',
+          teams: ['Hawaii (June Jones)', 'SMU', 'Houston'],
+          href: '../run-and-shoot.html'
+        }
+      };
+
+      const connections = [
+        ['Air Raid', 'Run and Shoot'],
+        ['Air Raid', 'Spread'],
+        ['Spread', 'Veer and Shoot'],
+        ['Pro Style', 'West Coast'],
+        ['Option', 'Spread'],
+        ['Veer and Shoot', 'Run and Shoot']
+      ];
+
+      const host = document.getElementById('sceneHost');
+      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      host.appendChild(renderer.domElement);
+
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x07090f);
+      scene.fog = new THREE.Fog(0x07090f, 18, 40);
+
+      const camera = new THREE.PerspectiveCamera(48, 1, 0.1, 100);
+      camera.position.set(0, 9, 22);
+
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.enablePan = false;
+      controls.minDistance = 12;
+      controls.maxDistance = 30;
+      controls.maxPolarAngle = Math.PI / 2.1;
+      controls.target.set(0, 3.2, 0);
+
+      scene.add(new THREE.HemisphereLight(0xf2f3ff, 0x18202f, 1.2));
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 1.8);
+      directionalLight.position.set(6, 14, 10);
+      scene.add(directionalLight);
+
+      const base = new THREE.Mesh(
+        new THREE.CircleGeometry(10.5, 96),
+        new THREE.MeshStandardMaterial({
+          color: 0x0e1118,
+          roughness: 0.92,
+          metalness: 0.08,
+          transparent: true,
+          opacity: 0.95
+        })
+      );
+      base.rotation.x = -Math.PI / 2;
+      scene.add(base);
+
+      const starPositions = new Float32Array(900 * 3);
+      for (let index = 0; index < 900; index += 1) {
+        const stride = index * 3;
+        const radius = 18 + Math.random() * 20;
+        const angle = Math.random() * Math.PI * 2;
+        starPositions[stride] = Math.cos(angle) * radius;
+        starPositions[stride + 1] = Math.random() * 18 + 2;
+        starPositions[stride + 2] = Math.sin(angle) * radius;
+      }
+      const starsGeometry = new THREE.BufferGeometry();
+      starsGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+      const stars = new THREE.Points(
+        starsGeometry,
+        new THREE.PointsMaterial({ color: 0xffffff, size: 0.07, transparent: true, opacity: 0.8 })
+      );
+      scene.add(stars);
+
+      const nodeEntries = [];
+      const schemeNames = Object.keys(schemeData);
+      const radius = 8.5;
+
+      schemeNames.forEach((name, index) => {
+        const data = schemeData[name];
+        const angle = (index / schemeNames.length) * Math.PI * 2 - Math.PI / 2;
+        const x = Math.cos(angle) * radius;
+        const z = Math.sin(angle) * radius;
+        const y = 2.8 + Math.sin(angle * 2) * 0.9;
+
+        const group = new THREE.Group();
+        group.position.set(x, y, z);
+
+        const sphere = new THREE.Mesh(
+          new THREE.SphereGeometry(0.88, 36, 36),
+          new THREE.MeshStandardMaterial({
+            color: data.color,
+            emissive: data.color,
+            emissiveIntensity: 0.65,
+            metalness: 0.2,
+            roughness: 0.22
+          })
+        );
+        sphere.userData.schemeName = name;
+        sphere.userData.kind = 'node';
+        group.add(sphere);
+
+        const halo = new THREE.Mesh(
+          new THREE.SphereGeometry(1.28, 24, 24),
+          new THREE.MeshBasicMaterial({ color: data.color, transparent: true, opacity: 0.2 })
+        );
+        group.add(halo);
+
+        scene.add(group);
+        nodeEntries.push({
+          name,
+          data,
+          group,
+          sphere,
+          halo,
+          baseY: y,
+          bobSeed: index * 0.9 + 0.35
+        });
+      });
+
+      const nodeMap = Object.fromEntries(nodeEntries.map((entry) => [entry.name, entry]));
+
+      connections.forEach(([from, to]) => {
+        const start = nodeMap[from].group.position.clone();
+        const end = nodeMap[to].group.position.clone();
+        const mid = start.clone().lerp(end, 0.5);
+        const curve = new THREE.CubicBezierCurve3(
+          start,
+          start.clone().lerp(mid, 0.45).add(new THREE.Vector3(0, 4.4, 0)),
+          end.clone().lerp(mid, 0.45).add(new THREE.Vector3(0, 4.4, 0)),
+          end
+        );
+        const points = curve.getPoints(80);
+        const geometry = new THREE.BufferGeometry().setFromPoints(points);
+        const line = new THREE.Line(
+          geometry,
+          new THREE.LineBasicMaterial({ color: 0xdde7ff, transparent: true, opacity: 0.42 })
+        );
+        scene.add(line);
+      });
+
+      const picker = new THREE.Raycaster();
+      const pointer = new THREE.Vector2();
+      let selectedName = 'Air Raid';
+
+      const schemeKicker = document.getElementById('schemeKicker');
+      const schemeTitle = document.getElementById('schemeTitle');
+      const schemeIdea = document.getElementById('schemeIdea');
+      const schemeCore = document.getElementById('schemeCore');
+      const personnelChips = document.getElementById('personnelChips');
+      const teamList = document.getElementById('teamList');
+      const schemeGuide = document.getElementById('schemeGuide');
+      const schemeGuideInline = document.getElementById('schemeGuideInline');
+
+      function updateInfo(name) {
+        const data = schemeData[name];
+        selectedName = name;
+        schemeKicker.textContent = `${data.emoji} Scheme spotlight`;
+        schemeTitle.textContent = name;
+        schemeIdea.textContent = data.idea;
+        schemeCore.textContent = data.idea;
+        schemeGuide.href = data.href;
+        schemeGuideInline.href = data.href;
+
+        personnelChips.innerHTML = '';
+        data.personnel.split('/').map((item) => item.trim()).forEach((grouping) => {
+          const chip = document.createElement('span');
+          chip.className = 'chip';
+          chip.textContent = grouping;
+          personnelChips.appendChild(chip);
+        });
+
+        teamList.innerHTML = '';
+        data.teams.forEach((team) => {
+          const li = document.createElement('li');
+          li.textContent = team;
+          teamList.appendChild(li);
+        });
+
+        nodeEntries.forEach((entry) => {
+          const isSelected = entry.name === name;
+          entry.sphere.material.emissiveIntensity = isSelected ? 1.45 : 0.65;
+          entry.halo.material.opacity = isSelected ? 0.34 : 0.2;
+          entry.halo.scale.setScalar(isSelected ? 1.18 : 1);
+        });
+      }
+
+      function setPointerPosition(event) {
+        const rect = renderer.domElement.getBoundingClientRect();
+        pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+      }
+
+      renderer.domElement.addEventListener('pointermove', (event) => {
+        setPointerPosition(event);
+        picker.setFromCamera(pointer, camera);
+        const hit = picker.intersectObjects(nodeEntries.map((entry) => entry.sphere))[0];
+        renderer.domElement.style.cursor = hit ? 'pointer' : 'grab';
+      });
+
+      renderer.domElement.addEventListener('click', (event) => {
+        setPointerPosition(event);
+        picker.setFromCamera(pointer, camera);
+        const hit = picker.intersectObjects(nodeEntries.map((entry) => entry.sphere))[0];
+        if (hit?.object?.userData?.schemeName) {
+          updateInfo(hit.object.userData.schemeName);
+        }
+      });
+
+      function resize() {
+        const { clientWidth, clientHeight } = host;
+        camera.aspect = clientWidth / Math.max(clientHeight, 1);
+        camera.updateProjectionMatrix();
+        renderer.setSize(clientWidth, clientHeight, false);
+      }
+
+      window.addEventListener('resize', resize);
+      resize();
+      updateInfo(selectedName);
+
+      const clock = new THREE.Clock();
+      function animate() {
+        const elapsed = clock.getElapsedTime();
+        nodeEntries.forEach((entry, index) => {
+          entry.group.position.y = entry.baseY + Math.sin(elapsed * 1.15 + entry.bobSeed) * 0.38;
+          entry.group.rotation.y = elapsed * 0.12 + index * 0.18;
+          entry.halo.scale.setScalar((entry.name === selectedName ? 1.18 : 1) + Math.sin(elapsed * 1.6 + entry.bobSeed) * 0.035);
+        });
+        stars.rotation.y = elapsed * 0.02;
+        controls.update();
+        renderer.render(scene, camera);
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+    </script>
+  </body>
+</html>

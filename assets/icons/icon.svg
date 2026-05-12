@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">CFB26 Playbook icon</title>
+  <desc id="desc">A minimal green football icon with white laces.</desc>
+  <g transform="rotate(-18 64 64)">
+    <path
+      d="M20 64c0-22.091 17.909-40 40-40h8c22.091 0 40 17.909 40 40s-17.909 40-40 40h-8c-22.091 0-40-17.909-40-40Z"
+      fill="#2d6a4f"
+    />
+    <path
+      d="M20 64c0-22.091 17.909-40 40-40h8c22.091 0 40 17.909 40 40s-17.909 40-40 40h-8c-22.091 0-40-17.909-40-40Z"
+      fill="none"
+      stroke="#74c69d"
+      stroke-width="6"
+    />
+    <path d="M45 64h38" fill="none" stroke="#f8fafc" stroke-linecap="round" stroke-width="8"/>
+    <path d="M54 52v24M64 52v24M74 52v24" fill="none" stroke="#f8fafc" stroke-linecap="round" stroke-width="6"/>
+    <path d="M24 64h14M90 64h14" fill="none" stroke="#f8fafc" stroke-linecap="round" stroke-width="5" opacity="0.75"/>
+  </g>
+</svg>

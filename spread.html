@@ -1,0 +1,1358 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("clawpilotTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spread — CFB26 Playbook</title>
+  <script src="assets/scripts/theme.js?v=1"></script>
+  <link rel="stylesheet" href="assets/styles/theme.css?v=1">
+  <link rel="stylesheet" href="assets/styles/site-nav.css?v=1">
+  <script defer src="assets/scripts/site-nav.js?v=1"></script>
+  <style>
+:root {
+  color-scheme: light;
+  --cp-bg: #f7f4ef;
+  --cp-bg-elevated: #fcfbf8;
+  --cp-surface: #ffffff;
+  --cp-surface-soft: #f5f5f5;
+  --cp-border: #dedede;
+  --cp-border-strong: #919191;
+  --cp-text: #242424;
+  --cp-text-muted: #5c5c5c;
+  --cp-text-soft: #6f6f6f;
+  --cp-accent: #b11f4b;
+  --cp-accent-hover: #9a1a41;
+  --cp-accent-soft: rgba(177, 31, 75, 0.08);
+  --cp-accent-fg: #ffffff;
+  --cp-success: #16a34a;
+  --cp-danger: #dc2626;
+  --cp-warning: #f59e0b;
+  --cp-link: #0078d4;
+  --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+  --cp-overlay: rgba(255, 255, 255, 0.8);
+  --cp-panel: rgba(255, 255, 255, 0.86);
+  --cp-panel-strong: rgba(255, 255, 255, 0.96);
+  --cp-sheen: rgba(255, 255, 255, 0.55);
+  --cp-highlight: rgba(177, 31, 75, 0.12);
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --cp-bg: #3d3b3a;
+  --cp-bg-elevated: #343231;
+  --cp-surface: #292929;
+  --cp-surface-soft: #2e2e2e;
+  --cp-border: #474747;
+  --cp-border-strong: #5f5f5f;
+  --cp-text: #dedede;
+  --cp-text-muted: #919191;
+  --cp-text-soft: #b0b0b0;
+  --cp-accent: #fd8ea1;
+  --cp-accent-hover: #fb7b91;
+  --cp-accent-soft: rgba(253, 142, 161, 0.14);
+  --cp-accent-fg: #1a1a1a;
+  --cp-success: #4ade80;
+  --cp-danger: #f87171;
+  --cp-warning: #fbbf24;
+  --cp-link: #4da6ff;
+  --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+  --cp-overlay: rgba(41, 41, 41, 0.88);
+  --cp-panel: rgba(41, 41, 41, 0.72);
+  --cp-panel-strong: rgba(41, 41, 41, 0.96);
+  --cp-sheen: rgba(255, 255, 255, 0.04);
+  --cp-highlight: rgba(253, 142, 161, 0.12);
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  margin: 0;
+  background: var(--cp-bg);
+  color: var(--cp-text);
+  font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.65;
+}
+a {
+  color: var(--cp-link);
+}
+a:hover {
+  color: var(--cp-accent-hover);
+}
+body.scheme-spread {
+  --scheme-tone: var(--cp-success);
+}
+.wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1rem 3rem;
+}
+.page-layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+.toc-panel,
+.guide-card {
+  background: var(--cp-surface);
+  border: 1px solid var(--cp-border);
+  border-radius: 16px;
+  box-shadow: 0 12px 28px var(--cp-highlight);
+}
+.toc-panel {
+  position: sticky;
+  top: 1rem;
+  padding: 1rem;
+  background: var(--cp-panel-strong);
+}
+.toc-panel h2 {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  color: var(--scheme-tone);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+.toc-item a {
+  display: block;
+  padding: 0.45rem 0.6rem;
+  border-radius: 0.625rem;
+  text-decoration: none;
+  color: var(--cp-text-muted);
+}
+.toc-item a:hover {
+  background: var(--cp-accent-soft);
+  color: var(--cp-text);
+}
+.toc-level-3 {
+  margin-inline-start: 0.8rem;
+  font-size: 0.96rem;
+}
+.guide-card {
+  padding: 1.5rem;
+  overflow: hidden;
+}
+.content > :first-child {
+  margin-top: 0;
+}
+.content h1,
+.content h2,
+.content h3 {
+  scroll-margin-top: 1rem;
+  line-height: 1.2;
+}
+.content h1 {
+  margin-bottom: 0.4rem;
+  color: var(--scheme-tone);
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+.content h2 {
+  margin-top: 2rem;
+  padding-top: 0.2rem;
+  border-top: 1px solid var(--cp-border);
+  color: var(--scheme-tone);
+  font-size: clamp(1.35rem, 2vw, 1.7rem);
+}
+.content h3 {
+  margin-top: 1.35rem;
+  color: var(--cp-text);
+  font-size: 1.1rem;
+}
+.content p,
+.content li {
+  color: var(--cp-text);
+}
+.content strong {
+  color: var(--cp-text);
+}
+.content em {
+  color: var(--cp-text-soft);
+}
+.content ul,
+.content ol {
+  padding-inline-start: 1.35rem;
+}
+.content hr {
+  border: 0;
+  border-top: 1px solid var(--cp-border);
+  margin: 2rem 0;
+}
+.content p > a[href="index.html"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid var(--cp-border);
+  border-radius: 999px;
+  text-decoration: none;
+  background: var(--cp-bg-elevated);
+}
+.table-scroll {
+  overflow-x: auto;
+  margin: 1rem 0 1.5rem;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.625rem;
+  background: var(--cp-surface);
+}
+.table-scroll table {
+  width: 100%;
+  min-width: 620px;
+  border-collapse: collapse;
+}
+.table-scroll th,
+.table-scroll td {
+  padding: 0.75rem 0.85rem;
+  border-bottom: 1px solid var(--cp-border);
+  text-align: left;
+  vertical-align: top;
+}
+.table-scroll th {
+  background: var(--cp-bg-elevated);
+  color: var(--scheme-tone);
+}
+.table-scroll tbody tr:nth-child(odd) {
+  background: var(--cp-surface-soft);
+}
+.callout {
+  position: relative;
+  margin: 1.25rem 0;
+  padding: 1rem 1rem 1rem 1.2rem;
+  border-inline-start: 0.35rem solid var(--callout-tone, var(--cp-accent));
+  border-radius: 0.625rem;
+  background: var(--cp-accent-soft);
+}
+.callout::before {
+  content: var(--callout-icon, "💡");
+  position: absolute;
+  inset-inline-end: 0.9rem;
+  inset-block-start: 0.85rem;
+  font-size: 1rem;
+}
+.callout.tip {
+  --callout-tone: var(--cp-success);
+  --callout-icon: "💡";
+}
+.callout.warning {
+  --callout-tone: var(--cp-warning);
+  --callout-icon: "⚠️";
+}
+.callout.note {
+  --callout-tone: var(--cp-link);
+  --callout-icon: "📝";
+}
+.callout > :first-child {
+  margin-top: 0;
+}
+.callout > :last-child {
+  margin-bottom: 0;
+}
+pre.code-block {
+  margin: 1rem 0 1.5rem;
+  padding: 1rem;
+  border-radius: 0.625rem;
+  border: 1px solid var(--cp-border-strong);
+  background: var(--cp-text);
+  color: var(--cp-bg);
+  overflow-x: auto;
+}
+pre.code-block code,
+code {
+  font-family: Consolas, "Courier New", Courier, monospace;
+}
+p code,
+li code,
+td code {
+  padding: 0.1rem 0.35rem;
+  border-radius: 0.35rem;
+  background: var(--cp-surface-soft);
+  color: var(--cp-text);
+}
+pre.diff code {
+  display: grid;
+  gap: 0.1rem;
+}
+.diff-line {
+  display: block;
+  white-space: pre;
+}
+.diff-add {
+  color: var(--cp-success);
+}
+.diff-del {
+  color: var(--cp-danger);
+}
+.diff-note {
+  color: var(--cp-warning);
+}
+.diff-context {
+  color: var(--cp-bg);
+}
+details {
+  margin: 1.25rem 0;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.625rem;
+  background: var(--cp-bg-elevated);
+  overflow: hidden;
+}
+summary {
+  cursor: pointer;
+  padding: 0.85rem 1rem;
+  font-weight: 600;
+  color: var(--scheme-tone);
+  background: var(--cp-accent-soft);
+}
+details > :not(summary) {
+  margin-inline: 1rem;
+}
+.scheme-nav {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--cp-border);
+}
+.scheme-link,
+.nav-spacer {
+  min-height: 100%;
+}
+.scheme-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.625rem;
+  text-decoration: none;
+  color: var(--cp-text);
+  background: var(--cp-bg-elevated);
+  text-align: center;
+}
+.scheme-link:hover {
+  border-color: var(--scheme-tone);
+  background: var(--cp-accent-soft);
+}
+.scheme-link.center {
+  font-weight: 600;
+}
+@media (max-width: 920px) {
+  .wrap {
+    padding-top: 1rem;
+  }
+  .page-layout {
+    grid-template-columns: 1fr;
+  }
+  .toc-panel {
+    position: static;
+    overflow-x: auto;
+  }
+  .toc-list {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+    width: max-content;
+    min-width: 100%;
+  }
+  .toc-level-3 {
+    margin-inline-start: 0;
+  }
+}
+@media (max-width: 640px) {
+  .guide-card {
+    padding: 1rem;
+  }
+  .scheme-nav {
+    grid-template-columns: 1fr;
+  }
+  .table-scroll table {
+    min-width: 520px;
+  }
+}
+  </style>
+</head>
+<body data-nav-root="." class="scheme-spread">
+  <main class="wrap">
+    <div class="page-layout">
+      <aside class="toc-panel" aria-label="Table of contents">
+        <h2>On this page</h2>
+        <ul class="toc-list">
+<li class="toc-item toc-level-2"><a href="#quick-definition-brain">Quick definition 🧠</a></li>
+<li class="toc-item toc-level-2"><a href="#the-identity-one-sentence-dart">The identity (one sentence) 🎯</a></li>
+<li class="toc-item toc-level-2"><a href="#pros-white_check_mark-and-cons-warning">Pros ✅ and cons ⚠️</a></li>
+<li class="toc-item toc-level-2"><a href="#typical-personnel-whos-on-the-field-jigsaw">Typical personnel (who’s on the field) 🧩</a></li>
+<li class="toc-item toc-level-3"><a href="#personnel-cheat-table">Personnel cheat table</a></li>
+<li class="toc-item toc-level-3"><a href="#role-archetypes">Role archetypes</a></li>
+<li class="toc-item toc-level-2"><a href="#typical-formations-triangular_ruler">Typical formations 📐</a></li>
+<li class="toc-item toc-level-3"><a href="#formation-families-quick-pick-table">Formation families (quick pick table)</a></li>
+<li class="toc-item toc-level-3"><a href="#suggested-small-menu">Suggested “small menu”</a></li>
+<li class="toc-item toc-level-2"><a href="#core-concept-menu-gear">Core concept menu ⚙️</a></li>
+<li class="toc-item toc-level-3"><a href="#1-inside-zone-the-foundation">1) Inside Zone (the foundation)</a></li>
+<li class="toc-item toc-level-3"><a href="#2-outside-zone--stretch">2) Outside Zone / Stretch</a></li>
+<li class="toc-item toc-level-3"><a href="#3-zone-read--read-option-if-your-qb-can-run">3) Zone Read / Read Option (if your QB can run)</a></li>
+<li class="toc-item toc-level-3"><a href="#4-quick-game-stick-slants-hitches">4) Quick game: Stick, slants, hitches</a></li>
+<li class="toc-item toc-level-3"><a href="#5-screens-bubblenow-tunnel-rb-swing">5) Screens (bubble/now, tunnel, RB swing)</a></li>
+<li class="toc-item toc-level-3"><a href="#6-rpos-the-spread-cheat-code">6) RPOs (the spread cheat code)</a></li>
+<li class="toc-item toc-level-3"><a href="#7-play-action-glance--seams">7) Play-action glance / seams</a></li>
+<li class="toc-item toc-level-2"><a href="#building-your-spread-call-sheet-practical-cfb26-plan-card_index_dividers">Building your Spread call sheet (practical CFB26 plan) 🗂️</a></li>
+<li class="toc-item toc-level-3"><a href="#1st-and-10">1st and 10</a></li>
+<li class="toc-item toc-level-3"><a href="#2nd-and-short">2nd and short</a></li>
+<li class="toc-item toc-level-3"><a href="#2nd-and-long">2nd and long</a></li>
+<li class="toc-item toc-level-3"><a href="#3rd-down">3rd down</a></li>
+<li class="toc-item toc-level-3"><a href="#red-zone-favorites">Red zone (favorites)</a></li>
+<li class="toc-item toc-level-3"><a href="#two-minute">Two-minute</a></li>
+<li class="toc-item toc-level-2"><a href="#defensive-looks-and-your-counters-shield">Defensive looks and your counters 🛡️</a></li>
+<li class="toc-item toc-level-3"><a href="#they-play-two-high-and-invite-runs">They play two-high and invite runs</a></li>
+<li class="toc-item toc-level-3"><a href="#they-spin-to-single-high-and-crowd-the-box">They spin to single-high and crowd the box</a></li>
+<li class="toc-item toc-level-3"><a href="#they-blitz-and-press">They blitz and press</a></li>
+<li class="toc-item toc-level-3"><a href="#they-spy-the-qb">They “spy” the QB</a></li>
+<li class="toc-item toc-level-2"><a href="#roster-building-priorities-dna">Roster building priorities 🧬</a></li>
+<li class="toc-item toc-level-2"><a href="#pace-note-stopwatch">Pace note ⏱️</a></li>
+<li class="toc-item toc-level-3"><a href="#when-to-go-fast">When to go fast</a></li>
+<li class="toc-item toc-level-3"><a href="#when-to-slow-down">When to slow down</a></li>
+<li class="toc-item toc-level-3"><a href="#a-practical-tempo-rule">A practical tempo rule</a></li>
+<li class="toc-item toc-level-2"><a href="#pre-snap-plan-audibles--box-count--motion-video_game">Pre-snap plan (audibles + box count + motion) 🎮</a></li>
+<li class="toc-item toc-level-3"><a href="#rpo-selection-matrix-pick-the-right-tag-for-the-look-receipt">RPO selection matrix (pick the right tag for the look) 🧾</a></li>
+<li class="toc-item toc-level-3"><a href="#if-the-apex-defender-is-tight-to-the-box">If the apex defender is tight to the box</a></li>
+<li class="toc-item toc-level-3"><a href="#if-linebackers-are-overfitting-inside-zone">If linebackers are overfitting inside zone</a></li>
+<li class="toc-item toc-level-3"><a href="#if-corners-are-bailing-and-safeties-are-deep">If corners are bailing and safeties are deep</a></li>
+<li class="toc-item toc-level-3"><a href="#if-they-start-jumping-bubbles">If they start jumping bubbles</a></li>
+<li class="toc-item toc-level-3"><a href="#audible-package-spread-should-always-have-answers-video_game">Audible package (spread should always have answers) 🎮</a></li>
+<li class="toc-item toc-level-2"><a href="#qb-operation-timing--progressions-stopwatch">QB operation (timing + progressions) ⏱️</a></li>
+<li class="toc-item toc-level-2"><a href="#protection--checkdowns--sack-avoidance-rules-shield">Protection + checkdowns + sack-avoidance rules 🛡️</a></li>
+<li class="toc-item toc-level-2"><a href="#spread-but-not-soft-short-yardage-and-goal-line-plan-red_square">“Spread but not soft” (short yardage and goal-line plan) 🟥</a></li>
+<li class="toc-item toc-level-2"><a href="#weekly-install-plan-build-it-in-layers-books">Weekly install plan (build it in layers) 📚</a></li>
+<li class="toc-item toc-level-3"><a href="#week-1-inside-zone--bubble">Week 1: inside zone + bubble</a></li>
+<li class="toc-item toc-level-3"><a href="#week-2-add-one-rpo-glance">Week 2: add one RPO (glance)</a></li>
+<li class="toc-item toc-level-3"><a href="#week-3-add-one-qb-run">Week 3: add one QB run</a></li>
+<li class="toc-item toc-level-3"><a href="#week-4-add-one-shot-play">Week 4: add one shot play</a></li>
+<li class="toc-item toc-level-2"><a href="#troubleshooting-fire_extinguisher">Troubleshooting 🧯</a></li>
+<li class="toc-item toc-level-3"><a href="#problem-rpos-keep-getting-picked">Problem: “RPOs keep getting picked.”</a></li>
+<li class="toc-item toc-level-3"><a href="#problem-im-fast-but-i-keep-going-3-and-out">Problem: “I’m fast but I keep going 3-and-out.”</a></li>
+<li class="toc-item toc-level-3"><a href="#problem-qb-run-gets-me-injured">Problem: “QB run gets me injured.”</a></li>
+<li class="toc-item toc-level-3"><a href="#box-count-examples-turn-formation-into-a-decision-package">Box-count examples (turn formation into a decision) 📦</a></li>
+<li class="toc-item toc-level-3"><a href="#example-a-2x2-gun-set-vs-two-high">Example A: 2x2 gun set vs two-high</a></li>
+<li class="toc-item toc-level-3"><a href="#example-b-trips-set-with-the-defense-sliding-toward-trips">Example B: trips set with the defense sliding toward trips</a></li>
+<li class="toc-item toc-level-3"><a href="#example-c-defense-walks-a-safety-down-late">Example C: defense walks a safety down late</a></li>
+<li class="toc-item toc-level-2"><a href="#sequencing-how-spread-stays-unpredictable-repeat">Sequencing (how Spread stays unpredictable) 🔁</a></li>
+<li class="toc-item toc-level-2"><a href="#situational-packages-what-to-favorite-star">Situational packages (what to favorite) ⭐</a></li>
+<li class="toc-item toc-level-3"><a href="#early-down-efficiency">Early-down efficiency</a></li>
+<li class="toc-item toc-level-3"><a href="#medium-downs">Medium downs</a></li>
+<li class="toc-item toc-level-3"><a href="#explosives">Explosives</a></li>
+<li class="toc-item toc-level-3"><a href="#short-yardage">Short yardage</a></li>
+<li class="toc-item toc-level-3"><a href="#red-zone">Red zone</a></li>
+<li class="toc-item toc-level-3"><a href="#turnover-avoidance-the-spread-killer-no_entry_sign">Turnover avoidance (the spread killer) 🚫</a></li>
+<li class="toc-item toc-level-2"><a href="#sample-15-play-opening-script-pencil">Sample 15-play opening script 📝</a></li>
+<li class="toc-item toc-level-3"><a href="#quick-list">Quick list</a></li>
+<li class="toc-item toc-level-3"><a href="#table-format-copypaste-idea">Table format (copy/paste idea)</a></li>
+<li class="toc-item toc-level-3"><a href="#mini-opening-script-spread-rpo-pacing">Mini opening script (Spread RPO pacing)</a></li>
+<li class="toc-item toc-level-2"><a href="#post-game-metrics-did-i-run-it-right-bar_chart">Post-Game Metrics (Did I run it right?) 📊</a></li>
+<li class="toc-item toc-level-2"><a href="#dynasty-recruiting-guide-mortar_board">Dynasty Recruiting Guide 🎓</a></li>
+<li class="toc-item toc-level-3"><a href="#quick-targets">Quick targets</a></li>
+<li class="toc-item toc-level-2"><a href="#teams-to-check-first-in-cfb26-real-world-scheme-fit-mag">Teams to check first in CFB26 (real-world scheme fit) 🔍</a></li>
+<li class="toc-item toc-level-2"><a href="#nfl-analogs-closest-cousins-football">NFL analogs (closest cousins) 🏈</a></li>
+<li class="toc-item toc-level-2"><a href="#teams-in-cfb26-that-use-a-spread-playbook-fill-this-in-stadium">Teams in CFB26 that use a Spread playbook (fill this in) 🏟️</a></li>
+<li class="toc-item toc-level-2"><a href="#minimal-glossary-pushpin">Minimal glossary 📌</a></li>
+</ul>
+      </aside>
+      <article class="guide-card">
+        <div class="content">
+          <h1 id="spread-running_mandash-cfb26-playbook-style">Spread 🏃‍♂️💨 (CFB26 Playbook Style)</h1>
+<p>Author: Dave Voyles</p>
+<p><a href="index.html">← Back to Index</a></p>
+<div class="callout tip">
+<p><strong>How to use this guide in CFB26</strong></p>
+<ul>
+<li>Build a small “core menu”: 2 runs + 4 passes + 1 shot</li>
+<li>Set audibles: 1 light-box run, 1 blitz answer, 1 man beater, 1 zone beater, 1 shot</li>
+<li>Use the opening script to identify coverage + box counts early</li>
+</ul>
+</div>
+<h2 id="quick-definition-brain">Quick definition 🧠</h2>
+<p>The Spread is a <strong>space-creating offense</strong> that widens the defense horizontally so you can:</p>
+<ul>
+<li>↔︎️ Run vs light boxes</li>
+<li>⚡ Throw quick, high-efficiency passes</li>
+<li>🧩 Use RPOs and tempo to keep the defense in bad looks</li>
+</ul>
+<pre class="code-block text"><code>      WR                      OL                       WR
+               SB                               BS
+        (Slot Receiver)                   (Big Slot/TE)
+                          QB (Gun)
+                             RB</code></pre>
+<p>Different teams “spread” differently. In games, the most common flavors are:</p>
+<ul>
+<li><strong>Spread-to-run</strong> (zone read, QB run, RPO)</li>
+<li><strong>Spread-to-throw</strong> (quick game, screens, option routes)</li>
+<li><strong>Balanced spread</strong> (a bit of both)</li>
+</ul>
+<h2 id="the-identity-one-sentence-dart">The identity (one sentence) 🎯</h2>
+<p><strong>Force the defense to defend every blade of grass, then take the easiest yards available on every snap.</strong></p>
+<hr />
+<h2 id="pros-white_check_mark-and-cons-warning">Pros ✅ and cons ⚠️</h2>
+<pre class="code-block diff"><code><span class="diff-line diff-add">+ PRO: Easy Box Count Reads (math is simple).</span>
+<span class="diff-line diff-add">+ PRO: One/Two-Key Reads (fast processing).</span>
+<span class="diff-line diff-add">+ PRO: Tempo Leverage (keep defense vanilla).</span>
+<span class="diff-line diff-add">+ PRO: Built-in Access (hitch/bubble punishes cushions).</span>
+<span class="diff-line diff-add">+ PRO: QB Run Threat (the ultimate equalizer).</span>
+<span class="diff-line diff-context"></span>
+<span class="diff-line diff-del">- CON: Defense can Jump Routes (if predictable).</span>
+<span class="diff-line diff-del">- CON: Requires fast QB decisions (hesitation kills).</span>
+<span class="diff-line diff-del">- CON: Short Yardage struggles (without a power package).</span>
+<span class="diff-line diff-del">- CON: Red Zone can be crowded (windows shrink).</span></code></pre>
+<h2 id="typical-personnel-whos-on-the-field-jigsaw">Typical personnel (who’s on the field) 🧩</h2>
+<p>Spread playbooks commonly live in:</p>
+<ul>
+<li><strong>11 personnel</strong>: 1 RB, 1 TE, 3 WR
+<ul>
+<li>The most flexible base (good for RPO, zone run, play-action).</li>
+</ul></li>
+<li><strong>10 personnel</strong>: 1 RB, 0 TE, 4 WR
+<ul>
+<li>Maximum spacing; great for quick screens and box-count runs.</li>
+</ul></li>
+<li><strong>20 personnel</strong>: 2 RB, 0 TE, 3 WR
+<ul>
+<li>“Pony” sets create mismatch headaches.</li>
+</ul></li>
+</ul>
+<h3 id="personnel-cheat-table">Personnel cheat table</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>Personnel</strong></th>
+<th><strong>On-field</strong></th>
+<th><strong>Why you’d use it in Spread</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>11</td>
+<td>1 RB / 1 TE / 3 WR</td>
+<td>Best all-around base for RPO + zone + play-action</td>
+</tr>
+<tr>
+<td>10</td>
+<td>1 RB / 4 WR</td>
+<td>Maximum spacing; easiest box-count decisions</td>
+</tr>
+<tr>
+<td>20</td>
+<td>2 RB / 3 WR</td>
+<td>Pony mismatches; motion; option/RPO variants</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="role-archetypes">Role archetypes</h3>
+<ul>
+<li><strong>QB:</strong> quick processor, accurate short, plus mobility (even if not a true runner).</li>
+<li><strong>RB:</strong> one-cut runner (zone), good in space, good hands.</li>
+<li><strong>Slot WR:</strong> the engine—twitch + hands + RAC.</li>
+<li><strong>TE (if present):</strong> conflict player on seams/sticks; can arc block on split flow.</li>
+</ul>
+<hr />
+<h2 id="typical-formations-triangular_ruler">Typical formations 📐</h2>
+<p>Spread in CFB-style playbooks often centers on:</p>
+<ul>
+<li><strong>Gun Trips / Trips Offset</strong></li>
+<li><strong>Gun Doubles (2x2)</strong></li>
+<li><strong>Gun Spread / Wide</strong> (max splits)</li>
+<li><strong>Gun Empty</strong> (situational)</li>
+<li><strong>Pistol Spread</strong> (in some books)</li>
+</ul>
+<h3 id="formation-families-quick-pick-table">Formation families (quick pick table)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>Family</strong></th>
+<th><strong>What it’s great for</strong></th>
+<th><strong>When to lean on it</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gun Trips / Trips Offset</td>
+<td>RPOs, quick game, simple box-count reads</td>
+<td>Base menu; tempo</td>
+</tr>
+<tr>
+<td>Gun Doubles (2x2)</td>
+<td>Balanced run/pass; mesh and intermediate reads</td>
+<td>3rd-and-medium; “stay on schedule”</td>
+</tr>
+<tr>
+<td>Gun Spread / Wide</td>
+<td>Max spacing; screens + light-box runs</td>
+<td>When defense is packed inside</td>
+</tr>
+<tr>
+<td>Empty (situational)</td>
+<td>Quick answers; option routes; 2-minute</td>
+<td>3rd-and-long; end-of-half</td>
+</tr>
+<tr>
+<td>Pistol (if present)</td>
+<td>Downhill run feel with spread spacing</td>
+<td>Mix-up; QB run tags</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="suggested-small-menu">Suggested “small menu”</h3>
+<ul>
+<li>Major: Gun Trips + Gun Doubles</li>
+<li>Minor: Gun Spread (wide) + Empty</li>
+</ul>
+<hr />
+<h2 id="core-concept-menu-gear">Core concept menu ⚙️</h2>
+<h3 id="1-inside-zone-the-foundation">1) Inside Zone (the foundation)</h3>
+<p>Even in a pass-happy spread, inside zone is your “keep them honest” run.</p>
+<p><strong>When it’s great:</strong></p>
+<ul>
+<li>vs two-high shells with light boxes</li>
+<li>when defense is widening to stop screens</li>
+</ul>
+<p><strong>Coaching point:</strong> don’t force it. If A-gap is muddy, cut backside.</p>
+<h3 id="2-outside-zone--stretch">2) Outside Zone / Stretch</h3>
+<p>Use it to punish defenses that overload the middle.</p>
+<h3 id="3-zone-read--read-option-if-your-qb-can-run">3) Zone Read / Read Option (if your QB can run)</h3>
+<p><strong>What it does:</strong> accounts for the backside defender by reading him.</p>
+<p><strong>When to call:</strong></p>
+<ul>
+<li>vs aggressive ends who chase inside zone</li>
+<li>after you’ve shown inside zone a few times</li>
+</ul>
+<pre class="code-block diff"><code><span class="diff-line diff-add">+ GREEN: DE Sits/Widens -&gt; GIVE to RB</span>
+<span class="diff-line diff-del">- RED:   DE Crashes     -&gt; PULL and Run</span></code></pre>
+<p><strong>Key habit:</strong> commit quickly—hesitation kills read plays.</p>
+<h3 id="4-quick-game-stick-slants-hitches">4) Quick game: Stick, slants, hitches</h3>
+<p>Spread quick game is about <strong>free access</strong>.</p>
+<p>Examples of “free access” cues:</p>
+<ul>
+<li>corner playing 7+ yards off: take hitch/now</li>
+<li>linebacker widened out of the box: run inside zone</li>
+</ul>
+<h3 id="5-screens-bubblenow-tunnel-rb-swing">5) Screens (bubble/now, tunnel, RB swing)</h3>
+<p>Screens are your perimeter run game.</p>
+<ul>
+<li><strong>Bubble/now</strong>: punish off-coverage and soft flats.</li>
+<li><strong>Tunnel</strong>: better vs corners that trigger on bubbles.</li>
+<li><strong>RB swing/flat</strong>: great vs blitz and man.</li>
+</ul>
+<h3 id="6-rpos-the-spread-cheat-code">6) RPOs (the spread cheat code)</h3>
+<p>RPOs are at their best when you treat them like a <strong>decision framework</strong>, not a random play call.</p>
+<h4 id="rpo-rule-1-read-the-conflict-defender">RPO rule #1: read the conflict defender</h4>
+<p>Common conflict defenders:</p>
+<ul>
+<li>apex defender (between slot and box)</li>
+<li>overhang safety</li>
+<li>inside linebacker to the passing side</li>
+</ul>
+<pre class="code-block diff"><code><span class="diff-line diff-add">+ GREEN: Conflict Defender bites on run -&gt; THROW the slant/bubble</span>
+<span class="diff-line diff-del">- RED:   Conflict Defender hangs back   -&gt; GIVE the run</span></code></pre>
+<p>If he fits the run, throw behind him. If he widens to the pass, run.</p>
+<h4 id="rpo-rule-2-keep-your-throws-simple">RPO rule #2: keep your throws simple</h4>
+<p>Pick RPOs where the throw is:</p>
+<ul>
+<li>bubble/now</li>
+<li>quick slant/glance</li>
+<li>speed out</li>
+</ul>
+<h4 id="rpo-rule-3-dont-get-greedy">RPO rule #3: don’t get greedy</h4>
+<p>Take the 4–7 yards. The explosive comes later when the defense overcorrects.</p>
+<h3 id="7-play-action-glance--seams">7) Play-action glance / seams</h3>
+<p>Once quick game and RPOs widen the defense, you can hit:</p>
+<ul>
+<li>seam routes</li>
+<li>posts</li>
+<li>deep crossers</li>
+</ul>
+<hr />
+<h2 id="building-your-spread-call-sheet-practical-cfb26-plan-card_index_dividers">Building your Spread call sheet (practical CFB26 plan) 🗂️</h2>
+<h3 id="1st-and-10">1st and 10</h3>
+<ul>
+<li>Inside zone</li>
+<li>Bubble/now (if cushion)</li>
+<li>Stick</li>
+<li>RPO bubble / RPO glance</li>
+</ul>
+<h3 id="2nd-and-short">2nd and short</h3>
+<ul>
+<li>Shot play (post, seam)</li>
+<li>Read option</li>
+<li>Play-action glance</li>
+</ul>
+<h3 id="2nd-and-long">2nd and long</h3>
+<ul>
+<li>Screens</li>
+<li>Mesh/shallow (if included)</li>
+<li>RPO that gives you a fast completion</li>
+</ul>
+<h3 id="3rd-down">3rd down</h3>
+<ul>
+<li>3rd &amp; 1–2: inside zone, QB keep, quick out</li>
+<li>3rd &amp; 3–6: stick, spacing, slant/flat</li>
+<li>3rd &amp; 7+: dagger, verts, Y-cross (with a checkdown)</li>
+</ul>
+<h3 id="red-zone-favorites">Red zone (favorites)</h3>
+<ul>
+<li>QB run threat (read option, QB power if available)</li>
+<li>Bunch/stack rubs</li>
+<li>Smash / corner routes</li>
+<li>RPOs with quick throws (but be careful; windows shrink)</li>
+</ul>
+<h3 id="two-minute">Two-minute</h3>
+<ul>
+<li>Tempo + sidelines (outs, stop routes)</li>
+<li>Seam reads if defense stays two-high</li>
+</ul>
+<hr />
+<h2 id="defensive-looks-and-your-counters-shield">Defensive looks and your counters 🛡️</h2>
+<h3 id="they-play-two-high-and-invite-runs">They play two-high and invite runs</h3>
+<ul>
+<li>Run inside zone until they rotate a safety.</li>
+<li>Add RPO glance behind the LB if they overfit.</li>
+</ul>
+<h3 id="they-spin-to-single-high-and-crowd-the-box">They spin to single-high and crowd the box</h3>
+<ul>
+<li>Hit quick perimeter throws (bubble/now).</li>
+<li>Call play-action seams/posts.</li>
+</ul>
+<h3 id="they-blitz-and-press">They blitz and press</h3>
+<ul>
+<li>RB swing, quick slants, tunnel screens.</li>
+<li>Use bunch/stack to get free releases.</li>
+</ul>
+<h3 id="they-spy-the-qb">They “spy” the QB</h3>
+<ul>
+<li>Make the spy wrong: throw quick game to replace him.</li>
+<li>If they remove a rusher to spy, you often have time for deeper concepts.</li>
+</ul>
+<hr />
+<h2 id="roster-building-priorities-dna">Roster building priorities 🧬</h2>
+<ol type="1">
+<li><strong>QB processing + mobility</strong></li>
+<li><strong>Slot WR(s) with RAC</strong></li>
+<li><strong>RB in space</strong> (agility/acceleration + catching)</li>
+<li><strong>OL athleticism</strong> (zone steps, screens)</li>
+<li><strong>One vertical threat</strong> (forces safety depth)</li>
+</ol>
+<hr />
+<h2 id="pace-note-stopwatch">Pace note ⏱️</h2>
+<p>Spread teams often talk about “playing fast,” but the best tempo is <strong>selective</strong>.</p>
+<h3 id="when-to-go-fast">When to go fast</h3>
+<ul>
+<li>After a big gain (defense is disorganized)</li>
+<li>When the defense is stuck in a bad personnel grouping</li>
+<li>When you’ve found a concept they can’t align to cleanly (e.g., bubble looks free)</li>
+</ul>
+<h3 id="when-to-slow-down">When to slow down</h3>
+<ul>
+<li>After a negative play (reset and don’t compound mistakes)</li>
+<li>In the red zone (decisions matter more than speed)</li>
+<li>When you’re protecting a lead (burn clock)</li>
+</ul>
+<h3 id="a-practical-tempo-rule">A practical tempo rule</h3>
+<p>Run tempo until you get:</p>
+<ul>
+<li>a penalty</li>
+<li>a tackle for loss</li>
+<li>a 3rd down</li>
+</ul>
+<p>Then slow down and call the next play with intent.</p>
+<hr />
+<h2 id="pre-snap-plan-audibles--box-count--motion-video_game">Pre-snap plan (audibles + box count + motion) 🎮</h2>
+<h3 id="rpo-selection-matrix-pick-the-right-tag-for-the-look-receipt">RPO selection matrix (pick the right tag for the look) 🧾</h3>
+<p>If your playbook has a lot of RPOs, it can feel overwhelming. Use a simple “if-then” matrix.</p>
+<h3 id="if-the-apex-defender-is-tight-to-the-box">If the apex defender is tight to the box</h3>
+<ul>
+<li>throw bubble/now</li>
+<li>throw quick out</li>
+</ul>
+<h3 id="if-linebackers-are-overfitting-inside-zone">If linebackers are overfitting inside zone</h3>
+<ul>
+<li>throw glance/slant behind them</li>
+<li>throw stick/spot behind the fit</li>
+</ul>
+<h3 id="if-corners-are-bailing-and-safeties-are-deep">If corners are bailing and safeties are deep</h3>
+<ul>
+<li>take hitches/now screens repeatedly</li>
+<li>run inside zone until they rotate down</li>
+</ul>
+<h3 id="if-they-start-jumping-bubbles">If they start jumping bubbles</h3>
+<ul>
+<li>call a tunnel screen</li>
+<li>call a bubble-and-go / wheel if your book has it</li>
+</ul>
+<hr />
+<h3 id="audible-package-spread-should-always-have-answers-video_game">Audible package (spread should always have answers) 🎮</h3>
+<p>Build an audible set that covers four problems:</p>
+<ul>
+<li>light box</li>
+<li>heavy box</li>
+<li>pressure</li>
+<li>passive zone</li>
+</ul>
+<p>Suggested audible set (example):</p>
+<ol type="1">
+<li>Inside zone (base run)</li>
+<li>Bubble/now (free access throw)</li>
+<li>RPO glance (LB conflict punish)</li>
+<li>Mesh/shallow (man/pressure answer)</li>
+<li>Four verts/seams (shot)</li>
+</ol>
+<p>Pre-snap checklist:</p>
+<ul>
+<li>Count the box.</li>
+<li>Check corner cushion.</li>
+<li>Identify the conflict defender.</li>
+</ul>
+<hr />
+<h2 id="qb-operation-timing--progressions-stopwatch">QB operation (timing + progressions) ⏱️</h2>
+<p>Spread QB play is usually “one or two keys, then go.” Practical rules:</p>
+<ul>
+<li>If the RPO key is cloudy or late: <strong>hand it off</strong>.</li>
+<li>Throw access throws immediately (late throws = picks).</li>
+<li>When you take a shot, do it on purpose (2nd &amp; short / after a big gain).</li>
+</ul>
+<hr />
+<h2 id="protection--checkdowns--sack-avoidance-rules-shield">Protection + checkdowns + sack-avoidance rules 🛡️</h2>
+<ul>
+<li>Treat deep shots as “shot plays”: protect it and be willing to check down.</li>
+<li>If you’re unsure: throw the checkdown and live for 2nd &amp; 4.</li>
+<li>Don’t drift in the pocket; hitch once and decide.</li>
+</ul>
+<h2 id="spread-but-not-soft-short-yardage-and-goal-line-plan-red_square">“Spread but not soft” (short yardage and goal-line plan) 🟥</h2>
+<p>One reason spread users struggle is they don’t carry a physical answer.</p>
+<p>You don’t need a whole new offense—just a small package:</p>
+<ul>
+<li>inside zone from a tight split set</li>
+<li>QB power (if you have it)</li>
+<li>a bunch rub pass for 3rd &amp; 2</li>
+</ul>
+<p>If the defense goes dime to stop your spread looks, punish them with this package.</p>
+<hr />
+<h2 id="weekly-install-plan-build-it-in-layers-books">Weekly install plan (build it in layers) 📚</h2>
+<h3 id="week-1-inside-zone--bubble">Week 1: inside zone + bubble</h3>
+<ul>
+<li>master box counts</li>
+<li>learn when bubble is “free”</li>
+</ul>
+<h3 id="week-2-add-one-rpo-glance">Week 2: add one RPO (glance)</h3>
+<ul>
+<li>focus on reading the same conflict defender every time</li>
+</ul>
+<h3 id="week-3-add-one-qb-run">Week 3: add one QB run</h3>
+<ul>
+<li>zone read or QB draw</li>
+</ul>
+<h3 id="week-4-add-one-shot-play">Week 4: add one shot play</h3>
+<ul>
+<li>seams/verts or play-action post</li>
+</ul>
+<p>The goal is to make your first 15 calls feel automatic.</p>
+<hr />
+<h2 id="troubleshooting-fire_extinguisher">Troubleshooting 🧯</h2>
+<h3 id="problem-rpos-keep-getting-picked">Problem: “RPOs keep getting picked.”</h3>
+<p>Likely causes:</p>
+<ul>
+<li>throwing late (the window is quick)</li>
+<li>reading the wrong defender</li>
+</ul>
+<p>Fix:</p>
+<ul>
+<li>pick one RPO and learn its key</li>
+<li>if you’re unsure, hand it off</li>
+</ul>
+<h3 id="problem-im-fast-but-i-keep-going-3-and-out">Problem: “I’m fast but I keep going 3-and-out.”</h3>
+<p>Likely cause:</p>
+<ul>
+<li>tempo without a plan (calling low-percentage plays repeatedly)</li>
+</ul>
+<p>Fix:</p>
+<ul>
+<li>use a two-play pair: inside zone + quick throw</li>
+<li>only take shots on 2nd &amp; short or after a big gain</li>
+</ul>
+<h3 id="problem-qb-run-gets-me-injured">Problem: “QB run gets me injured.”</h3>
+<p>Fix:</p>
+<ul>
+<li>reduce designed QB runs in non-critical situations</li>
+<li>choose keepers where the QB can get down or out of bounds</li>
+</ul>
+<hr />
+<h3 id="box-count-examples-turn-formation-into-a-decision-package">Box-count examples (turn formation into a decision) 📦</h3>
+<p>One of the biggest Spread advantages is you can make the defense “declare” numbers.</p>
+<h3 id="example-a-2x2-gun-set-vs-two-high">Example A: 2x2 gun set vs two-high</h3>
+<p>If both safeties are deep and corners are off, you often get a light box.</p>
+<ul>
+<li>If the box is light: inside zone.</li>
+<li>If the box is heavy: throw the free access (hitch/now).</li>
+</ul>
+<h3 id="example-b-trips-set-with-the-defense-sliding-toward-trips">Example B: trips set with the defense sliding toward trips</h3>
+<p>Trips often pulls defenders toward the strong side.</p>
+<ul>
+<li>If the backside is isolated: take the 1-on-1 quick slant or hitch.</li>
+<li>If the defense overhang is tight: throw bubble/now to the trips side.</li>
+</ul>
+<h3 id="example-c-defense-walks-a-safety-down-late">Example C: defense walks a safety down late</h3>
+<p>That’s usually an attempt to steal your run numbers.</p>
+<ul>
+<li>If they rotate down: call play-action seam/post.</li>
+<li>If corners bail: quick game is still free.</li>
+</ul>
+<p>The point isn’t to be perfect; it’s to stop calling runs into heavy boxes and passes into free-run looks.</p>
+<hr />
+<h2 id="sequencing-how-spread-stays-unpredictable-repeat">Sequencing (how Spread stays unpredictable) 🔁</h2>
+<p>Pick a small set of “pairs” that look the same to the defense pre-snap.</p>
+<p>Examples:</p>
+<ul>
+<li>Inside zone + RPO glance (same run action, different outcome)</li>
+<li>Bubble screen + tunnel screen (punish corners that trigger)</li>
+<li>Zone read + play-action seam (QB run threat creates hesitation)</li>
+</ul>
+<p>If you always call bubble after inside zone, the defense will start jumping. Rotate pairs.</p>
+<hr />
+<h2 id="situational-packages-what-to-favorite-star">Situational packages (what to favorite) ⭐</h2>
+<h3 id="early-down-efficiency">Early-down efficiency</h3>
+<ul>
+<li>inside zone</li>
+<li>bubble/now</li>
+<li>stick</li>
+<li>one RPO (glance)</li>
+</ul>
+<h3 id="medium-downs">Medium downs</h3>
+<ul>
+<li>mesh/shallow</li>
+<li>RB screen</li>
+</ul>
+<h3 id="explosives">Explosives</h3>
+<ul>
+<li>seams/verts</li>
+<li>play-action post</li>
+</ul>
+<h3 id="short-yardage">Short yardage</h3>
+<ul>
+<li>inside zone from a tighter set</li>
+<li>QB power/keep</li>
+</ul>
+<h3 id="red-zone">Red zone</h3>
+<ul>
+<li>smash</li>
+<li>rub concept</li>
+</ul>
+<p>This “small favorites list” is usually better than trying to learn every formation in the book.</p>
+<hr />
+<h3 id="turnover-avoidance-the-spread-killer-no_entry_sign">Turnover avoidance (the spread killer) 🚫</h3>
+<p>Spread offenses lose games when they gift short fields.</p>
+<p>Practical habits:</p>
+<ul>
+<li>Don’t throw late RPOs—if the read is unclear, hand it off.</li>
+<li>If you’re unsure on a shot play, check it down and live for 2nd &amp; 6.</li>
+<li>When you’re ahead, reduce risk: run + quick game beats forcing explosives.</li>
+</ul>
+<hr />
+<h2 id="sample-15-play-opening-script-pencil">Sample 15-play opening script 📝</h2>
+<p>The Spread script is about finding where the "free hitter" is coming from and making them wrong.</p>
+<h3 id="quick-list">Quick list</h3>
+<ol type="1">
+<li>Inside Zone Read</li>
+<li>Jet Sweep / Touch Pass</li>
+<li>Stick</li>
+<li>Bash / GT Counter</li>
+<li>Tunnel Screen</li>
+<li>Y-Cross</li>
+<li>Post-Wheel</li>
+<li>Glance RPO</li>
+<li>QB Draw</li>
+<li>Reverse / Flea Flicker</li>
+<li>RB Swing</li>
+<li>Deep Post / Go</li>
+<li>Fade</li>
+<li>Speed Option</li>
+<li>QB Power</li>
+</ol>
+<h3 id="table-format-copypaste-idea">Table format (copy/paste idea)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th style="text-align: center;"><strong>Play #</strong></th>
+<th><strong>Situation / Note</strong></th>
+<th><strong>Concept / Call</strong></th>
+<th><strong>Why?</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td>Scripted Opener (Safe)</td>
+<td><strong>Inside Zone Read</strong></td>
+<td>Read the DE. If he squeezes, pull and run.</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td>Perimeter Test</td>
+<td><strong>Jet Sweep / Touch Pass</strong></td>
+<td>Can their LBs run sideline to sideline?</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td>Quick Game</td>
+<td><strong>Stick (3-Rec side)</strong></td>
+<td>Instant yards if they play off coverage.</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td>Run: Counter</td>
+<td><strong>Bash / GT Counter</strong></td>
+<td>Pulling linemen to create angles.</td>
+</tr>
+<tr>
+<td style="text-align: center;">5</td>
+<td>Screen</td>
+<td><strong>Tunnel Screen</strong></td>
+<td>Punish the blitz.</td>
+</tr>
+<tr>
+<td style="text-align: center;">6</td>
+<td>Base Pass</td>
+<td><strong>Y-Cross</strong></td>
+<td>The Air Raid staple that fits perfectly here.</td>
+</tr>
+<tr>
+<td style="text-align: center;">7</td>
+<td>Shot Play</td>
+<td><strong>Post-Wheel</strong></td>
+<td>Wheel route is often open vs man.</td>
+</tr>
+<tr>
+<td style="text-align: center;">8</td>
+<td>RPO</td>
+<td><strong>Glance RPO</strong></td>
+<td>Read the LB. If he fills, throw the slant.</td>
+</tr>
+<tr>
+<td style="text-align: center;">9</td>
+<td>Run: QB Design</td>
+<td><strong>QB Draw</strong></td>
+<td>Spread them out and run up the middle.</td>
+</tr>
+<tr>
+<td style="text-align: center;">10</td>
+<td>Trick / Tempo</td>
+<td><strong>Reverse / Flea Flicker</strong></td>
+<td>Catch them sleeping.</td>
+</tr>
+<tr>
+<td style="text-align: center;">11</td>
+<td>Checkdown</td>
+<td><strong>RB Swing</strong></td>
+<td>Get your athlete in space.</td>
+</tr>
+<tr>
+<td style="text-align: center;">12</td>
+<td>Deep Shot</td>
+<td><strong>Deep Post / Go</strong></td>
+<td>Test the safety help.</td>
+</tr>
+<tr>
+<td style="text-align: center;">13</td>
+<td>Red Zone: High</td>
+<td><strong>Fade</strong></td>
+<td>1-on-1 matchup.</td>
+</tr>
+<tr>
+<td style="text-align: center;">14</td>
+<td>Red Zone: Low</td>
+<td><strong>Speed Option</strong></td>
+<td>Get the ball to the edge.</td>
+</tr>
+<tr>
+<td style="text-align: center;">15</td>
+<td>Goal Line</td>
+<td><strong>QB Power</strong></td>
+<td>Your QB is your extra blocker.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="mini-opening-script-spread-rpo-pacing">Mini opening script (Spread RPO pacing)</h3>
+<p>The goal is to stretch them horizontally until they thin out inside.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th style="text-align: center;"><strong>Play #</strong></th>
+<th><strong>Situation / Note</strong></th>
+<th><strong>Concept / Call</strong></th>
+<th><strong>Why?</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td>Opener</td>
+<td><strong>RPO Glance / Bubble</strong></td>
+<td>🟢 Make the conflict defender choose</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td>Tempo Run</td>
+<td><strong>Inside Zone</strong></td>
+<td>🟢 Hand off if box count is favorable</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td>Screen</td>
+<td><strong>Jet Sweep / Touch Pass</strong></td>
+<td>🟡 Get your fastest guy to the edge</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td>Counter</td>
+<td><strong>Q-Counter / Bash</strong></td>
+<td>🟡 Use QB legs to gain numbers</td>
+</tr>
+<tr>
+<td style="text-align: center;">5</td>
+<td>Shot Play</td>
+<td><strong>Post-Dig (Mills)</strong></td>
+<td>🔴 Classic spread shot vs safeties</td>
+</tr>
+<tr>
+<td style="text-align: center;">6</td>
+<td>Quick Game</td>
+<td><strong>Snag / Spot</strong></td>
+<td>🟢 Triangle read vs zone</td>
+</tr>
+<tr>
+<td style="text-align: center;">7</td>
+<td>RPO</td>
+<td><strong>Zone Read (Bubble)</strong></td>
+<td>🟢 The day-1 install play.</td>
+</tr>
+<tr>
+<td style="text-align: center;">8</td>
+<td>Screen</td>
+<td><strong>Jailbreak Screen</strong></td>
+<td>🟡 Slow down aggressive DEs</td>
+</tr>
+<tr>
+<td style="text-align: center;">9</td>
+<td>Base Pass</td>
+<td><strong>Drive</strong></td>
+<td>🟢 High-low read over the middle</td>
+</tr>
+<tr>
+<td style="text-align: center;">10</td>
+<td>Run</td>
+<td><strong>Buck Sweep</strong></td>
+<td>🟡 Get OL out in space</td>
+</tr>
+<tr>
+<td style="text-align: center;">11</td>
+<td>Trick</td>
+<td><strong>Double Pass</strong></td>
+<td>🔴 Catch DBs sleeping on a screen look</td>
+</tr>
+<tr>
+<td style="text-align: center;">12</td>
+<td>Red Zone</td>
+<td><strong>Speed Option</strong></td>
+<td>🟡 Eliminate the edge defender</td>
+</tr>
+<tr>
+<td style="text-align: center;">13</td>
+<td>Goal Line</td>
+<td><strong>Q-Power</strong></td>
+<td>🟢 Direct snap physicality</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="post-game-metrics-did-i-run-it-right-bar_chart">Post-Game Metrics (Did I run it right?) 📊</h2>
+<p>If you played a true Spread game, your stats should look like this:</p>
+<ul>
+<li><strong>Rushing Yards (QB):</strong> &gt; 50 (Keep the defense honest)</li>
+<li><strong>Completion Percentage:</strong> &gt; 65% (High efficiency)</li>
+<li><strong>Plays:</strong> &gt; 75 (Tempo and first downs)</li>
+<li><strong>Turnovers:</strong> &lt; 1 (Read keys, don't force)</li>
+</ul>
+<h2 id="dynasty-recruiting-guide-mortar_board">Dynasty Recruiting Guide 🎓</h2>
+<h3 id="quick-targets">Quick targets</h3>
+<p>Spread teams need <strong>athletes in space</strong> and a diverse QB.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th style="text-align: left;"><strong>Position</strong></th>
+<th><strong>Archetype / Key Stats</strong></th>
+<th><strong>Why?</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>QB</strong></td>
+<td><strong>Scrambler</strong> (SPD, ACC, THP)</td>
+<td>🧠 His legs +1 the run game math. Must be elusive.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>HB</strong></td>
+<td><strong>Elusive Back</strong> (COD, JKM, SPIN)</td>
+<td>🏃 Needs to make the first guy miss in space.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>WR (S)</strong></td>
+<td><strong>Slot</strong> (ACC, COD, CIT)</td>
+<td>🧤 Need quick-twitch guys for screens/RPOs.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>WR (X)</strong></td>
+<td><strong>Deep Threat</strong> (SPD, DRR)</td>
+<td>🧤 One guy who forces the safety to back up.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>OL</strong></td>
+<td><strong>Agile</strong> (ACC, AGI, RBK)</td>
+<td>🧱 They tackle in space on screens and zone runs.</td>
+</tr>
+</tbody>
+</table></div>
+<p>If you run the Spread, prioritize these archetypes:</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th style="text-align: left;"><strong>Position</strong></th>
+<th><strong>Archetype / Key Stats</strong></th>
+<th><strong>Why?</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>QB</strong></td>
+<td><strong>Scrambler</strong> (SPD, ACC, THP)</td>
+<td>Must be a threat to run the Zone Read.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>HB</strong></td>
+<td><strong>Elusive Back</strong> (SPD, ACC, COD)</td>
+<td>Needs to make the first defender miss in space.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>TE</strong></td>
+<td><strong>Vertical Threat</strong> (SPD, CTH)</td>
+<td>Creates mismatches vs LBs.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>WR</strong></td>
+<td><strong>Route Runner</strong> (SRR, MRR, SPD)</td>
+<td>Quick separation is key for RPOs and quick game.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>OL</strong></td>
+<td><strong>Agile</strong> (AGI, PBF, RBK)</td>
+<td>Needs to move for screens and pulls.</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="teams-to-check-first-in-cfb26-real-world-scheme-fit-mag">Teams to check first in CFB26 (real-world scheme fit) 🔍</h2>
+<p>Spread is extremely common, but these programs are widely associated with spread formations, tempo, and RPO/box-count football.</p>
+<p>Start here and <strong>verify in-game</strong>:</p>
+<ul>
+<li>Oregon</li>
+<li>Ohio State</li>
+<li>Ole Miss</li>
+<li>TCU</li>
+<li>Baylor</li>
+<li>Tennessee</li>
+</ul>
+<h2 id="nfl-analogs-closest-cousins-football">NFL analogs (closest cousins) 🏈</h2>
+<p>Most NFL offenses incorporate spread elements now. These teams often lean into spread spacing, motion, and QB-driven answers.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>NFL team (varies by year)</strong></th>
+<th><strong>What feels “Spread-ish”</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Philadelphia Eagles</td>
+<td>Spread formations + QB run package</td>
+</tr>
+<tr>
+<td>Buffalo Bills</td>
+<td>Spread spacing + QB run threat</td>
+</tr>
+<tr>
+<td>Kansas City Chiefs</td>
+<td>Spread passing menu + spacing</td>
+</tr>
+<tr>
+<td>Dallas Cowboys</td>
+<td>Shot concepts from spread sets</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="teams-in-cfb26-that-use-a-spread-playbook-fill-this-in-stadium">Teams in CFB26 that use a Spread playbook (fill this in) 🏟️</h2>
+<!-- markdownlint-disable MD033 -->
+
+<details>
+<summary>Show editable teams table</summary>
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>Team</strong></th>
+<th><strong>In-game offensive playbook name</strong></th>
+<th><strong>Notes (tempo, RPO frequency, QB run presence)</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+</details>
+<!-- markdownlint-enable MD033 -->
+
+<hr />
+<h2 id="minimal-glossary-pushpin">Minimal glossary 📌</h2>
+<ul>
+<li><strong>RPO:</strong> run-pass option; read one defender post-snap.</li>
+<li><strong>Conflict defender:</strong> the defender who can’t cover both run and pass.</li>
+<li><strong>Free access:</strong> uncovered or soft-covered receiver you can throw to instantly.</li>
+</ul>
+        </div>
+        <nav class="scheme-nav" aria-label="Scheme navigation">
+      <a class="scheme-link prev" href="pro-style.html">← Pro Style</a>
+      <a class="scheme-link center" href="index.html">All Schemes</a>
+      <a class="scheme-link next" href="veer-and-shoot.html">Veer and Shoot →</a>
+    </nav>
+      </article>
+    </div>
+  </main>
+</body>
+</html>

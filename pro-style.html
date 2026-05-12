@@ -1,0 +1,1353 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("clawpilotTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pro Style — CFB26 Playbook</title>
+  <script src="assets/scripts/theme.js?v=1"></script>
+  <link rel="stylesheet" href="assets/styles/theme.css?v=1">
+  <link rel="stylesheet" href="assets/styles/site-nav.css?v=1">
+  <script defer src="assets/scripts/site-nav.js?v=1"></script>
+  <style>
+:root {
+  color-scheme: light;
+  --cp-bg: #f7f4ef;
+  --cp-bg-elevated: #fcfbf8;
+  --cp-surface: #ffffff;
+  --cp-surface-soft: #f5f5f5;
+  --cp-border: #dedede;
+  --cp-border-strong: #919191;
+  --cp-text: #242424;
+  --cp-text-muted: #5c5c5c;
+  --cp-text-soft: #6f6f6f;
+  --cp-accent: #b11f4b;
+  --cp-accent-hover: #9a1a41;
+  --cp-accent-soft: rgba(177, 31, 75, 0.08);
+  --cp-accent-fg: #ffffff;
+  --cp-success: #16a34a;
+  --cp-danger: #dc2626;
+  --cp-warning: #f59e0b;
+  --cp-link: #0078d4;
+  --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+  --cp-overlay: rgba(255, 255, 255, 0.8);
+  --cp-panel: rgba(255, 255, 255, 0.86);
+  --cp-panel-strong: rgba(255, 255, 255, 0.96);
+  --cp-sheen: rgba(255, 255, 255, 0.55);
+  --cp-highlight: rgba(177, 31, 75, 0.12);
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --cp-bg: #3d3b3a;
+  --cp-bg-elevated: #343231;
+  --cp-surface: #292929;
+  --cp-surface-soft: #2e2e2e;
+  --cp-border: #474747;
+  --cp-border-strong: #5f5f5f;
+  --cp-text: #dedede;
+  --cp-text-muted: #919191;
+  --cp-text-soft: #b0b0b0;
+  --cp-accent: #fd8ea1;
+  --cp-accent-hover: #fb7b91;
+  --cp-accent-soft: rgba(253, 142, 161, 0.14);
+  --cp-accent-fg: #1a1a1a;
+  --cp-success: #4ade80;
+  --cp-danger: #f87171;
+  --cp-warning: #fbbf24;
+  --cp-link: #4da6ff;
+  --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+  --cp-overlay: rgba(41, 41, 41, 0.88);
+  --cp-panel: rgba(41, 41, 41, 0.72);
+  --cp-panel-strong: rgba(41, 41, 41, 0.96);
+  --cp-sheen: rgba(255, 255, 255, 0.04);
+  --cp-highlight: rgba(253, 142, 161, 0.12);
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  margin: 0;
+  background: var(--cp-bg);
+  color: var(--cp-text);
+  font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.65;
+}
+a {
+  color: var(--cp-link);
+}
+a:hover {
+  color: var(--cp-accent-hover);
+}
+body.scheme-pro-style {
+  --scheme-tone: var(--cp-warning);
+}
+.wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1rem 3rem;
+}
+.page-layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+.toc-panel,
+.guide-card {
+  background: var(--cp-surface);
+  border: 1px solid var(--cp-border);
+  border-radius: 16px;
+  box-shadow: 0 12px 28px var(--cp-highlight);
+}
+.toc-panel {
+  position: sticky;
+  top: 1rem;
+  padding: 1rem;
+  background: var(--cp-panel-strong);
+}
+.toc-panel h2 {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  color: var(--scheme-tone);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+.toc-item a {
+  display: block;
+  padding: 0.45rem 0.6rem;
+  border-radius: 0.625rem;
+  text-decoration: none;
+  color: var(--cp-text-muted);
+}
+.toc-item a:hover {
+  background: var(--cp-accent-soft);
+  color: var(--cp-text);
+}
+.toc-level-3 {
+  margin-inline-start: 0.8rem;
+  font-size: 0.96rem;
+}
+.guide-card {
+  padding: 1.5rem;
+  overflow: hidden;
+}
+.content > :first-child {
+  margin-top: 0;
+}
+.content h1,
+.content h2,
+.content h3 {
+  scroll-margin-top: 1rem;
+  line-height: 1.2;
+}
+.content h1 {
+  margin-bottom: 0.4rem;
+  color: var(--scheme-tone);
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+.content h2 {
+  margin-top: 2rem;
+  padding-top: 0.2rem;
+  border-top: 1px solid var(--cp-border);
+  color: var(--scheme-tone);
+  font-size: clamp(1.35rem, 2vw, 1.7rem);
+}
+.content h3 {
+  margin-top: 1.35rem;
+  color: var(--cp-text);
+  font-size: 1.1rem;
+}
+.content p,
+.content li {
+  color: var(--cp-text);
+}
+.content strong {
+  color: var(--cp-text);
+}
+.content em {
+  color: var(--cp-text-soft);
+}
+.content ul,
+.content ol {
+  padding-inline-start: 1.35rem;
+}
+.content hr {
+  border: 0;
+  border-top: 1px solid var(--cp-border);
+  margin: 2rem 0;
+}
+.content p > a[href="index.html"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid var(--cp-border);
+  border-radius: 999px;
+  text-decoration: none;
+  background: var(--cp-bg-elevated);
+}
+.table-scroll {
+  overflow-x: auto;
+  margin: 1rem 0 1.5rem;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.625rem;
+  background: var(--cp-surface);
+}
+.table-scroll table {
+  width: 100%;
+  min-width: 620px;
+  border-collapse: collapse;
+}
+.table-scroll th,
+.table-scroll td {
+  padding: 0.75rem 0.85rem;
+  border-bottom: 1px solid var(--cp-border);
+  text-align: left;
+  vertical-align: top;
+}
+.table-scroll th {
+  background: var(--cp-bg-elevated);
+  color: var(--scheme-tone);
+}
+.table-scroll tbody tr:nth-child(odd) {
+  background: var(--cp-surface-soft);
+}
+.callout {
+  position: relative;
+  margin: 1.25rem 0;
+  padding: 1rem 1rem 1rem 1.2rem;
+  border-inline-start: 0.35rem solid var(--callout-tone, var(--cp-accent));
+  border-radius: 0.625rem;
+  background: var(--cp-accent-soft);
+}
+.callout::before {
+  content: var(--callout-icon, "💡");
+  position: absolute;
+  inset-inline-end: 0.9rem;
+  inset-block-start: 0.85rem;
+  font-size: 1rem;
+}
+.callout.tip {
+  --callout-tone: var(--cp-success);
+  --callout-icon: "💡";
+}
+.callout.warning {
+  --callout-tone: var(--cp-warning);
+  --callout-icon: "⚠️";
+}
+.callout.note {
+  --callout-tone: var(--cp-link);
+  --callout-icon: "📝";
+}
+.callout > :first-child {
+  margin-top: 0;
+}
+.callout > :last-child {
+  margin-bottom: 0;
+}
+pre.code-block {
+  margin: 1rem 0 1.5rem;
+  padding: 1rem;
+  border-radius: 0.625rem;
+  border: 1px solid var(--cp-border-strong);
+  background: var(--cp-text);
+  color: var(--cp-bg);
+  overflow-x: auto;
+}
+pre.code-block code,
+code {
+  font-family: Consolas, "Courier New", Courier, monospace;
+}
+p code,
+li code,
+td code {
+  padding: 0.1rem 0.35rem;
+  border-radius: 0.35rem;
+  background: var(--cp-surface-soft);
+  color: var(--cp-text);
+}
+pre.diff code {
+  display: grid;
+  gap: 0.1rem;
+}
+.diff-line {
+  display: block;
+  white-space: pre;
+}
+.diff-add {
+  color: var(--cp-success);
+}
+.diff-del {
+  color: var(--cp-danger);
+}
+.diff-note {
+  color: var(--cp-warning);
+}
+.diff-context {
+  color: var(--cp-bg);
+}
+details {
+  margin: 1.25rem 0;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.625rem;
+  background: var(--cp-bg-elevated);
+  overflow: hidden;
+}
+summary {
+  cursor: pointer;
+  padding: 0.85rem 1rem;
+  font-weight: 600;
+  color: var(--scheme-tone);
+  background: var(--cp-accent-soft);
+}
+details > :not(summary) {
+  margin-inline: 1rem;
+}
+.scheme-nav {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--cp-border);
+}
+.scheme-link,
+.nav-spacer {
+  min-height: 100%;
+}
+.scheme-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.625rem;
+  text-decoration: none;
+  color: var(--cp-text);
+  background: var(--cp-bg-elevated);
+  text-align: center;
+}
+.scheme-link:hover {
+  border-color: var(--scheme-tone);
+  background: var(--cp-accent-soft);
+}
+.scheme-link.center {
+  font-weight: 600;
+}
+@media (max-width: 920px) {
+  .wrap {
+    padding-top: 1rem;
+  }
+  .page-layout {
+    grid-template-columns: 1fr;
+  }
+  .toc-panel {
+    position: static;
+    overflow-x: auto;
+  }
+  .toc-list {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+    width: max-content;
+    min-width: 100%;
+  }
+  .toc-level-3 {
+    margin-inline-start: 0;
+  }
+}
+@media (max-width: 640px) {
+  .guide-card {
+    padding: 1rem;
+  }
+  .scheme-nav {
+    grid-template-columns: 1fr;
+  }
+  .table-scroll table {
+    min-width: 520px;
+  }
+}
+  </style>
+</head>
+<body data-nav-root="." class="scheme-pro-style">
+  <main class="wrap">
+    <div class="page-layout">
+      <aside class="toc-panel" aria-label="Table of contents">
+        <h2>On this page</h2>
+        <ul class="toc-list">
+<li class="toc-item toc-level-2"><a href="#quick-definition-brain">Quick definition 🧠</a></li>
+<li class="toc-item toc-level-2"><a href="#the-identity-one-sentence-dart">The identity (one sentence) 🎯</a></li>
+<li class="toc-item toc-level-2"><a href="#pros-white_check_mark-and-cons-warning">Pros ✅ and cons ⚠️</a></li>
+<li class="toc-item toc-level-2"><a href="#typical-personnel-whos-on-the-field-jigsaw">Typical personnel (who’s on the field) 🧩</a></li>
+<li class="toc-item toc-level-3"><a href="#personnel-cheat-table">Personnel cheat table</a></li>
+<li class="toc-item toc-level-3"><a href="#role-archetypes">Role archetypes</a></li>
+<li class="toc-item toc-level-2"><a href="#typical-formations-triangular_ruler">Typical formations 📐</a></li>
+<li class="toc-item toc-level-3"><a href="#formation-families-quick-pick-table">Formation families (quick pick table)</a></li>
+<li class="toc-item toc-level-3"><a href="#a-simple-structure-that-works">A simple structure that works</a></li>
+<li class="toc-item toc-level-2"><a href="#core-run-game-families-running">Core run game families 🏃</a></li>
+<li class="toc-item toc-level-3"><a href="#run-family-cheat-table">Run family cheat table</a></li>
+<li class="toc-item toc-level-3"><a href="#1-inside-zone--split-zone">1) Inside zone / split zone</a></li>
+<li class="toc-item toc-level-3"><a href="#2-power--counter">2) Power / Counter</a></li>
+<li class="toc-item toc-level-3"><a href="#3-stretch--outside-zone">3) Stretch / outside zone</a></li>
+<li class="toc-item toc-level-3"><a href="#4-duo-if-in-your-playbook">4) Duo (if in your playbook)</a></li>
+<li class="toc-item toc-level-2"><a href="#core-pass-game-families--concept-menu-gear">Core pass game families / concept menu ⚙️</a></li>
+<li class="toc-item toc-level-3"><a href="#pass-family-cheat-table">Pass family cheat table</a></li>
+<li class="toc-item toc-level-3"><a href="#1-play-action-deep-cross--yankee-concepts">1) Play-action deep cross / Yankee concepts</a></li>
+<li class="toc-item toc-level-3"><a href="#2-boot--rollout-flood">2) Boot / rollout flood</a></li>
+<li class="toc-item toc-level-3"><a href="#3-dagger-dig--clear-out">3) Dagger (dig + clear-out)</a></li>
+<li class="toc-item toc-level-3"><a href="#4-smash--corner-routes">4) Smash / corner routes</a></li>
+<li class="toc-item toc-level-3"><a href="#5-screens-and-checkdowns">5) Screens and checkdowns</a></li>
+<li class="toc-item toc-level-2"><a href="#building-your-pro-style-call-sheet-practical-cfb26-plan-card_index_dividers">Building your Pro Style call sheet (practical CFB26 plan) 🗂️</a></li>
+<li class="toc-item toc-level-3"><a href="#situational-call-sheet-table">Situational call sheet table</a></li>
+<li class="toc-item toc-level-3"><a href="#early-downs-establish-identity">Early downs (establish identity)</a></li>
+<li class="toc-item toc-level-3"><a href="#2nd-and-short-attack">2nd and short (attack)</a></li>
+<li class="toc-item toc-level-3"><a href="#3rd-down">3rd down</a></li>
+<li class="toc-item toc-level-3"><a href="#red-zone">Red zone</a></li>
+<li class="toc-item toc-level-3"><a href="#backed-up">Backed up</a></li>
+<li class="toc-item toc-level-2"><a href="#pre-snap-plan-audibles--box-count--motion-video_game">Pre-snap plan (audibles + box count + motion) 🎮</a></li>
+<li class="toc-item toc-level-3"><a href="#standard-audible-package-pro-check-speaking_head">Standard Audible Package (Pro Check) 🗣️</a></li>
+<li class="toc-item toc-level-3"><a href="#suggested-audible-set-example">Suggested audible set (example)</a></li>
+<li class="toc-item toc-level-2"><a href="#qb-operation-timing--progressions-stopwatch">QB operation (timing + progressions) ⏱️</a></li>
+<li class="toc-item toc-level-2"><a href="#defensive-looks-and-your-counters-shield">Defensive looks and your counters 🛡️</a></li>
+<li class="toc-item toc-level-3"><a href="#they-play-light-box-two-high-dime">They play light box (two-high, dime)</a></li>
+<li class="toc-item toc-level-3"><a href="#they-crash-run-with-aggressive-lbs">They crash run with aggressive LBs</a></li>
+<li class="toc-item toc-level-3"><a href="#they-sit-in-cover-3--single-high">They sit in Cover 3 / single-high</a></li>
+<li class="toc-item toc-level-3"><a href="#they-blitz-a-lot">They blitz a lot</a></li>
+<li class="toc-item toc-level-2"><a href="#roster-building-priorities-dna">Roster building priorities 🧬</a></li>
+<li class="toc-item toc-level-2"><a href="#sequencing-how-pro-style-creates-explosives-repeat">Sequencing (how Pro Style creates explosives) 🔁</a></li>
+<li class="toc-item toc-level-3"><a href="#the-simplest-tendencycounter-pair">The simplest tendency/counter pair</a></li>
+<li class="toc-item toc-level-3"><a href="#a-practical-8-play-setup-series">A practical 8-play “setup” series</a></li>
+<li class="toc-item toc-level-3"><a href="#personnel-packages-what-to-major-in-and-why-jigsaw">Personnel packages (what to major in and why) 🧩</a></li>
+<li class="toc-item toc-level-3"><a href="#package-1-12-personnel-modern-pro-base">Package 1: 12 personnel “modern pro” base</a></li>
+<li class="toc-item toc-level-3"><a href="#package-2-21-personnel-downhill-package">Package 2: 21 personnel “downhill” package</a></li>
+<li class="toc-item toc-level-3"><a href="#package-3-11-personnel-comeback-package">Package 3: 11 personnel comeback package</a></li>
+<li class="toc-item toc-level-2"><a href="#in-game-execution-notes-video_game">In-game execution notes 🎮</a></li>
+<li class="toc-item toc-level-3"><a href="#clock-and-field-position-plan-a-pro-style-advantage-compass">Clock and field-position plan (a Pro Style advantage) 🧭</a></li>
+<li class="toc-item toc-level-2"><a href="#weekly-install-plan-books">Weekly install plan 📚</a></li>
+<li class="toc-item toc-level-3"><a href="#week-1-one-run-family--one-boot">Week 1: one run family + one boot</a></li>
+<li class="toc-item toc-level-3"><a href="#week-2-add-one-intermediate-money-concept">Week 2: add one intermediate “money” concept</a></li>
+<li class="toc-item toc-level-3"><a href="#week-3-add-one-shot">Week 3: add one shot</a></li>
+<li class="toc-item toc-level-3"><a href="#week-4-add-one-screen">Week 4: add one screen</a></li>
+<li class="toc-item toc-level-2"><a href="#troubleshooting-fire_extinguisher">Troubleshooting 🧯</a></li>
+<li class="toc-item toc-level-3"><a href="#problem-i-cant-run-the-ball">Problem: “I can’t run the ball.”</a></li>
+<li class="toc-item toc-level-3"><a href="#problem-play-action-gets-me-sacked">Problem: “Play-action gets me sacked.”</a></li>
+<li class="toc-item toc-level-3"><a href="#problem-my-wrs-never-get-open">Problem: “My WRs never get open.”</a></li>
+<li class="toc-item toc-level-3"><a href="#run-game-diagnostics-how-to-know-where-to-run-receipt">Run-game diagnostics (how to know where to run) 🧾</a></li>
+<li class="toc-item toc-level-3"><a href="#a-simple-run-direction-rule">A simple run-direction rule</a></li>
+<li class="toc-item toc-level-3"><a href="#what-to-do-when-they-are-run-blitzing">What to do when they are run-blitzing</a></li>
+<li class="toc-item toc-level-3"><a href="#dont-forget-run-to-set-up-the-run">Don’t forget “run to set up the run”</a></li>
+<li class="toc-item toc-level-2"><a href="#situational-packages-what-to-favorite-star">Situational packages (what to favorite) ⭐</a></li>
+<li class="toc-item toc-level-3"><a href="#short-yardage-mini-playbook-red_square">Short-yardage mini-playbook 🟥</a></li>
+<li class="toc-item toc-level-2"><a href="#pace-note-stopwatch">Pace note ⏱️</a></li>
+<li class="toc-item toc-level-2"><a href="#sample-15-play-opening-script-copypaste-idea-pencil">Sample 15-play opening script (copy/paste idea) 📝</a></li>
+<li class="toc-item toc-level-2"><a href="#post-game-metrics-did-i-run-it-right-bar_chart">Post-Game Metrics (Did I run it right?) 📊</a></li>
+<li class="toc-item toc-level-2"><a href="#dynasty-recruiting-guide-mortar_board">Dynasty Recruiting Guide 🎓</a></li>
+<li class="toc-item toc-level-2"><a href="#teams-to-check-first-in-cfb26-real-world-scheme-fit-mag">Teams to check first in CFB26 (real-world scheme fit) 🔍</a></li>
+<li class="toc-item toc-level-2"><a href="#nfl-analogs-closest-cousins-football">NFL analogs (closest cousins) 🏈</a></li>
+<li class="toc-item toc-level-2"><a href="#teams-in-cfb26-that-use-a-pro-style-playbook-fill-this-in-stadium">Teams in CFB26 that use a Pro Style playbook (fill this in) 🏟️</a></li>
+<li class="toc-item toc-level-2"><a href="#minimal-glossary-pushpin">Minimal glossary 📌</a></li>
+</ul>
+      </aside>
+      <article class="guide-card">
+        <div class="content">
+          <h1 id="pro-style-bricks-cfb26-playbook-style">Pro Style 🧱 (CFB26 Playbook Style)</h1>
+<p>Author: Dave Voyles</p>
+<p><a href="index.html">← Back to Index</a></p>
+<div class="callout tip">
+<p><strong>How to use this guide in CFB26</strong></p>
+<ul>
+<li>Build a small “core menu”: 2 runs + 4 passes + 1 shot</li>
+<li>Set audibles: 1 light-box run, 1 blitz answer, 1 man beater, 1 zone beater, 1 shot</li>
+<li>Use the opening script to identify coverage + box counts early</li>
+</ul>
+</div>
+<h2 id="quick-definition-brain">Quick definition 🧠</h2>
+<p>“Pro Style” is a <strong>balanced offense</strong> that wants to:</p>
+<ul>
+<li>🏃 Run with multiple tight-end / fullback looks</li>
+<li>🚀 Use play-action to create explosive passes</li>
+<li>♟️ Control game flow with formation diversity</li>
+</ul>
+<pre class="code-block text"><code>       WR                  OL   TE
+                                     WR (Flanker)
+              TE           QB
+                           RB</code></pre>
+<p><em>Note: SB/Split Backs or Slot Back is not typically used here. This is a classic Power-I or Singleback look.</em></p>
+<p>In video game terms, Pro Style is often the best “do everything” identity if you enjoy <strong>huddling 🗣️, shifting 🔄, and setting up tendencies 📉</strong>.</p>
+<h2 id="the-identity-one-sentence-dart">The identity (one sentence) 🎯</h2>
+<p><strong>Run the ball with physicality 🔨, force the defense into the box 📦, then punish them with play-action and isolation routes 🧨.</strong></p>
+<hr />
+<h2 id="pros-white_check_mark-and-cons-warning">Pros ✅ and cons ⚠️</h2>
+<pre class="code-block diff"><code><span class="diff-line diff-add">+ PRO: Game-script friendly (works whether ahead or behind).</span>
+<span class="diff-line diff-add">+ PRO: Elite Red Zone offense (power + play-action + TE routes).</span>
+<span class="diff-line diff-add">+ PRO: Personnel mismatches (12/13/21 sets force defense heavy).</span>
+<span class="diff-line diff-add">+ PRO: Explosive Play-Action (deep crossers/posts naturally fit).</span>
+<span class="diff-line diff-add">+ PRO: Clock Control (can shorten or lengthen games).</span>
+<span class="diff-line diff-context"></span>
+<span class="diff-line diff-del">- CON: Requires patience (setting up tendencies takes series).</span>
+<span class="diff-line diff-del">- CON: Can feel slow (if run game stalls, you face 3rd &amp; long).</span>
+<span class="diff-line diff-del">- CON: Needs protection (long-developing PA is risky).</span>
+<span class="diff-line diff-del">- CON: Needs isolation winners (WRs must win 1-on-1 vs heavy boxes).</span></code></pre>
+<hr />
+<h2 id="typical-personnel-whos-on-the-field-jigsaw">Typical personnel (who’s on the field) 🧩</h2>
+<p>Pro Style playbooks commonly major in heavier groupings:</p>
+<ul>
+<li><strong>12 personnel</strong>: 1 RB, 2 TE, 2 WR
+<ul>
+<li>The “modern pro” base: multiple run looks + strong play-action.</li>
+</ul></li>
+<li><strong>21 personnel</strong>: 2 RB, 1 TE, 2 WR (often includes a FB)
+<ul>
+<li>Classic I-Form / Strong-I feel, great for downhill runs.</li>
+</ul></li>
+<li><strong>11 personnel</strong>: 1 RB, 1 TE, 3 WR
+<ul>
+<li>Used for 2-minute, obvious pass, or to lighten the box after pounding.</li>
+</ul></li>
+<li><strong>22 personnel</strong>: 2 RB, 2 TE, 1 WR
+<ul>
+<li>Short yardage and goal line.</li>
+</ul></li>
+</ul>
+<h3 id="personnel-cheat-table">Personnel cheat table</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>Personnel</strong></th>
+<th><strong>On-field</strong></th>
+<th><strong>What it’s best for in Pro Style</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>12</td>
+<td>1 RB / 2 TE / 2 WR</td>
+<td>Modern base; credible run looks + strong play-action</td>
+</tr>
+<tr>
+<td>21</td>
+<td>2 RB / 1 TE / 2 WR</td>
+<td>Downhill runs; lead blocks; short yardage and goal line</td>
+</tr>
+<tr>
+<td>11</td>
+<td>1 RB / 1 TE / 3 WR</td>
+<td>Comeback/2-minute; spreads out stacked boxes</td>
+</tr>
+<tr>
+<td>22</td>
+<td>2 RB / 2 TE / 1 WR</td>
+<td>True heavy package; goal line / “get 2 yards” football</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="role-archetypes">Role archetypes</h3>
+<ul>
+<li><strong>QB:</strong> strong play-action, good mid/deep accuracy, can throw on the move.</li>
+<li><strong>RB:</strong> vision + contact balance; must fall forward.</li>
+<li><strong>FB/H-back (if present):</strong> lead blocker + checkdown.</li>
+<li><strong>TE1:</strong> in-line blocker who can still catch.</li>
+<li><strong>TE2:</strong> move TE / H-back who can run crossers.</li>
+<li><strong>WR1:</strong> isolated route winner (dig/comeback/fade).</li>
+<li><strong>WR2:</strong> dependable chain mover.</li>
+</ul>
+<hr />
+<h2 id="typical-formations-triangular_ruler">Typical formations 📐</h2>
+<p>“Pro Style” in EA-style games usually includes a mix of:</p>
+<ul>
+<li><strong>I-Form</strong> (normal, tight, twins)</li>
+<li><strong>Singleback</strong> (ace, wing, bunch)</li>
+<li><strong>Strong / Weak</strong> (two-back sets)</li>
+<li><strong>Pistol</strong> (in some pro-style books)</li>
+<li><strong>Gun</strong> (11 personnel packages)</li>
+</ul>
+<h3 id="formation-families-quick-pick-table">Formation families (quick pick table)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>Family</strong></th>
+<th><strong>Why it’s in Pro Style</strong></th>
+<th><strong>When to lean on it</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>I-Form / Strong-I</td>
+<td>Downhill identity; easy short-yardage calls</td>
+<td>Ahead / short yardage / red zone</td>
+</tr>
+<tr>
+<td>Singleback (Ace/Wing)</td>
+<td>Versatile; lots of run looks + boot/play-action</td>
+<td>Neutral script / early downs</td>
+</tr>
+<tr>
+<td>Strong/Weak (two-back)</td>
+<td>Forces box fits and personnel responses</td>
+<td>When you want mismatch via FB/H-back</td>
+</tr>
+<tr>
+<td>Pistol (if available)</td>
+<td>Keeps downhill run feel with quicker shotgun access</td>
+<td>Mixed tempo; QB run tags if you have them</td>
+</tr>
+<tr>
+<td>Gun 11 (packages)</td>
+<td>Spreads out stacked boxes; clean 3rd down / 2-minute menu</td>
+<td>When behind / long down-and-distance</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="a-simple-structure-that-works">A simple structure that works</h3>
+<ul>
+<li>Major: Singleback + I-Form</li>
+<li>Minor: Gun 11 (comeback when down two scores)</li>
+</ul>
+<hr />
+<h2 id="core-run-game-families-running">Core run game families 🏃</h2>
+<p>You’ll be most consistent if you pick <strong>two run families</strong> and build everything off them.</p>
+<h3 id="run-family-cheat-table">Run family cheat table</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>Family</strong></th>
+<th><strong>Why you want it</strong></th>
+<th><strong>Best complements</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Inside zone / split</td>
+<td>Stay on schedule; works from almost any personnel</td>
+<td>Play-action crossers; boot flood</td>
+</tr>
+<tr>
+<td>Power / counter</td>
+<td>Defined angles; physical identity; great in short yardage</td>
+<td>Boot/play-action; shot concepts</td>
+</tr>
+<tr>
+<td>Stretch / outside zone</td>
+<td>Forces pursuit; creates cutbacks</td>
+<td>Play-action keepers; TE leak</td>
+</tr>
+<tr>
+<td>Duo (if available)</td>
+<td>Downhill double teams; “zone look, power feel”</td>
+<td>PA seams/corners; quick flats</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="1-inside-zone--split-zone">1) Inside zone / split zone</h3>
+<p><strong>What it gives you:</strong> a consistent “on schedule” run that works from many sets.</p>
+<pre class="code-block text"><code>      DE  DT     DT  DE
+      O   O   C   O   O   TE
+              QB        (Split Flow)
+              RB  ↘️</code></pre>
+<p><strong>In-game coaching points:</strong></p>
+<ul>
+<li>Read the front; don’t sprint into the A-gap every time.</li>
+</ul>
+<pre class="code-block diff"><code><span class="diff-line diff-add">+ GREEN: Squeeze/Double Team -&gt; BOUNCE outside</span>
+<span class="diff-line diff-del">- RED:   Gap shoots/Blitz    -&gt; CUTBACK inside</span></code></pre>
+<ul>
+<li>If the defense pinches, bounce to the cutback.</li>
+</ul>
+<h3 id="2-power--counter">2) Power / Counter</h3>
+<p><strong>What it gives you:</strong> gap-scheme displacement and predictable blocking angles.</p>
+<p><strong>Why it matters in Pro Style:</strong> gap schemes pair extremely well with <strong>play-action boots</strong>.</p>
+<h3 id="3-stretch--outside-zone">3) Stretch / outside zone</h3>
+<p><strong>What it gives you:</strong> forces pursuit and creates cutback lanes.</p>
+<p><strong>Best used:</strong> when you have speed at RB and a TE who can seal.</p>
+<h3 id="4-duo-if-in-your-playbook">4) Duo (if in your playbook)</h3>
+<p>“Duo” is a downhill, double-team run that plays like inside zone but hits like power.</p>
+<hr />
+<h2 id="core-pass-game-families--concept-menu-gear">Core pass game families / concept menu ⚙️</h2>
+<h3 id="pass-family-cheat-table">Pass family cheat table</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>Family / concept</strong></th>
+<th><strong>What it gives you</strong></th>
+<th><strong>When to call</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PA deep cross / Yankee</td>
+<td>Explosives off LB/safety trigger</td>
+<td>After successful runs; 1st down near midfield</td>
+</tr>
+<tr>
+<td>Boot / rollout flood</td>
+<td>Easy layered read; move pocket</td>
+<td>Early downs; vs heavy rush; “need a completion”</td>
+</tr>
+<tr>
+<td>Dagger (dig + clear-out)</td>
+<td>Reliable intermediate chunk</td>
+<td>3rd &amp; 6–10; vs two-high</td>
+</tr>
+<tr>
+<td>Smash / corners</td>
+<td>Sideline + red zone beater</td>
+<td>Red zone; vs Cover 2 looks</td>
+</tr>
+<tr>
+<td>Screens/checkdowns</td>
+<td>Blitz punish + drive sustain</td>
+<td>vs pressure; when defense overplays deep shots</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="1-play-action-deep-cross--yankee-concepts">1) Play-action deep cross / Yankee concepts</h3>
+<p><strong>What it is:</strong> a deep crosser paired with a post over the top.</p>
+<p><strong>Why it works:</strong> linebackers step up; safeties get stressed horizontally and vertically.</p>
+<p><strong>When to call:</strong></p>
+<ul>
+<li>after 2–3 successful runs</li>
+<li>1st down near midfield</li>
+<li>2nd &amp; short</li>
+</ul>
+<h3 id="2-boot--rollout-flood">2) Boot / rollout flood</h3>
+<p><strong>What it is:</strong> moving pocket with a layered route (flat + intermediate + deep).</p>
+<p><strong>Why it works:</strong> cuts the field in half; gives easy reads.</p>
+<pre class="code-block diff"><code><span class="diff-line diff-note">!  READ KEY: Flat Defender</span>
+<span class="diff-line diff-add">+ GREEN:  Defender drops deep -&gt; THROW Flat</span>
+<span class="diff-line diff-del">- RED:    Defender jumps flat -&gt; THROW Corner/Cross</span></code></pre>
+<p><strong>Key coaching point:</strong> don’t drift into sacks—set the edge and throw on time.</p>
+<h3 id="3-dagger-dig--clear-out">3) Dagger (dig + clear-out)</h3>
+<p><strong>What it is:</strong> a deep dig behind a vertical stem.</p>
+<p><strong>When to call:</strong></p>
+<ul>
+<li>vs two-high when you need an intermediate chunk</li>
+<li>on 3rd &amp; 6–10</li>
+</ul>
+<h3 id="4-smash--corner-routes">4) Smash / corner routes</h3>
+<p><strong>What it is:</strong> corner + hitch (or corner + flat).</p>
+<p><strong>Why it works:</strong> a classic red zone / sideline beater.</p>
+<h3 id="5-screens-and-checkdowns">5) Screens and checkdowns</h3>
+<p>Pro Style doesn’t have to be “deep or nothing.” Use:</p>
+<ul>
+<li>RB swing / flat routes</li>
+<li>TE delay / leak</li>
+<li>WR quick screens when corners play soft</li>
+</ul>
+<hr />
+<h2 id="building-your-pro-style-call-sheet-practical-cfb26-plan-card_index_dividers">Building your Pro Style call sheet (practical CFB26 plan) 🗂️</h2>
+<h3 id="situational-call-sheet-table">Situational call sheet table</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>Situation</strong></th>
+<th><strong>Go-to calls (examples)</strong></th>
+<th><strong>Point of emphasis</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Early downs</td>
+<td>Inside zone, power/counter, boot flood, PA cross (sprinkle)</td>
+<td>Stay on schedule; force safety trigger</td>
+</tr>
+<tr>
+<td>2nd &amp; short</td>
+<td>PA shot (post/cross), max protect dig, outside zone PA</td>
+<td>Attack; don’t “waste” advantage</td>
+</tr>
+<tr>
+<td>3rd down</td>
+<td>1–2: power/sneak/flat • 3–6: boot/smash • 7+: dagger/deep cross/mesh</td>
+<td>Know your money concept by distance</td>
+</tr>
+<tr>
+<td>Red zone</td>
+<td>Heavy run, PA TE corner/leak, fades/stops, bunch rubs</td>
+<td>Condensed field: win leverage quickly</td>
+</tr>
+<tr>
+<td>Backed up</td>
+<td>Inside zone, boot to flat, safe quick game</td>
+<td>Avoid sacks/TFLs; take easy completions</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="early-downs-establish-identity">Early downs (establish identity)</h3>
+<ul>
+<li>Inside zone (12 or 21)</li>
+<li>Power/counter</li>
+<li>Stretch (sprinkle)</li>
+<li>Play-action cross (shot)</li>
+<li>Boot flood (easy completion)</li>
+</ul>
+<p><strong>Rule of thumb:</strong> if you can average 4–5 yards on early-down runs, the passing game becomes easy.</p>
+<h3 id="2nd-and-short-attack">2nd and short (attack)</h3>
+<ul>
+<li>Play-action shot (post/cross)</li>
+<li>Max protect deep dig</li>
+<li>Outside zone play-action (if available)</li>
+</ul>
+<h3 id="3rd-down">3rd down</h3>
+<ul>
+<li>3rd &amp; 1–2: power, sneak, quick flat to FB</li>
+<li>3rd &amp; 3–6: boot flood, smash, TE option</li>
+<li>3rd &amp; 7+: dagger, deep cross with checkdown, mesh (from gun package)</li>
+</ul>
+<h3 id="red-zone">Red zone</h3>
+<ul>
+<li>Heavy run (force goal-line looks)</li>
+<li>PA TE corner / TE leak</li>
+<li>Fade/stop routes to your WR1</li>
+<li>Bunch/stack rubs if your book includes them</li>
+</ul>
+<h3 id="backed-up">Backed up</h3>
+<ul>
+<li>Inside zone</li>
+<li>Boot with immediate flat</li>
+<li>Safe quick game from gun (if needed)</li>
+</ul>
+<h2 id="pre-snap-plan-audibles--box-count--motion-video_game">Pre-snap plan (audibles + box count + motion) 🎮</h2>
+<h3 id="standard-audible-package-pro-check-speaking_head">Standard Audible Package (Pro Check) 🗣️</h3>
+<p>Don't wait for the OC to send in the perfect play. Use these 4 audibles to fix bad looks:</p>
+<ol type="1">
+<li><strong>Run Check:</strong> <strong>Inside Zone (Split)</strong> - Call vs 2-High safety looks or light boxes.</li>
+<li><strong>Quick Pass:</strong> <strong>Stick / Slants</strong> - Call vs sudden blitz pressure.</li>
+<li><strong>Deep Shot:</strong> <strong>PA Post / Verts</strong> - Call vs single-high safety creeping down.</li>
+<li><strong>Cover Beater:</strong> <strong>Flood / Sail</strong> - Call vs Cover 3 / Cover 4 zones.</li>
+</ol>
+<hr />
+<h3 id="suggested-audible-set-example">Suggested audible set (example)</h3>
+<p>Pro Style audibles should cover:</p>
+<ul>
+<li>heavy box (throw quickly)</li>
+<li>light box (run)</li>
+<li>blitz (screen or quick throw)</li>
+<li>two-high (run or intermediate concept)</li>
+</ul>
+<p>Suggested audible set (example):</p>
+<ol type="1">
+<li>Power / inside zone (base)</li>
+<li>Quick slant/flat (answer vs heavy box)</li>
+<li>Boot flood (easy completion)</li>
+<li>Play-action shot (post/cross)</li>
+<li>Screen (blitz punish)</li>
+</ol>
+<p>Pre-snap checklist:</p>
+<ul>
+<li>If they’re in dime: run it.</li>
+<li>If corners are off: take quick game.</li>
+<li>If safeties are creeping: shot play.</li>
+</ul>
+<hr />
+<h2 id="qb-operation-timing--progressions-stopwatch">QB operation (timing + progressions) ⏱️</h2>
+<p>Pro Style lives on being “on time” with longer-developing plays.</p>
+<ul>
+<li><strong>Quick answers:</strong> if they load the box, take a fast throw (flat/slant/stick).</li>
+<li><strong>Boot/rollouts:</strong> set the edge first, then throw on time—don’t drift into sacks.</li>
+<li><strong>Play-action shots:</strong> treat them like shots (protect it, and be willing to check down).</li>
+</ul>
+<p>Repeatable progression patterns that show up a lot:</p>
+<ul>
+<li>High-low the flat defender (boot flood, smash)</li>
+<li>Clear-out + intermediate window (post clears for cross/dig)</li>
+</ul>
+<h2 id="defensive-looks-and-your-counters-shield">Defensive looks and your counters 🛡️</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>Defensive look/problem</strong></th>
+<th><strong>Your answer</strong></th>
+<th><strong>Notes</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Light box (two-high, dime)</td>
+<td>Run until they stop it; add stretch</td>
+<td>Make them add a fitter</td>
+</tr>
+<tr>
+<td>Aggressive LBs crashing run</td>
+<td>PA crossers/seams; leak opposite run action</td>
+<td>Throw where they vacated</td>
+</tr>
+<tr>
+<td>Cover 3 / single-high zone</td>
+<td>Flood/deep outs; posts if you can protect</td>
+<td>Stress the seams and outside thirds</td>
+</tr>
+<tr>
+<td>Heavy blitz tendency</td>
+<td>Max protect + 1-on-1 shot; screens</td>
+<td>Don’t drift; take the cheap answer early</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="they-play-light-box-two-high-dime">They play light box (two-high, dime)</h3>
+<ul>
+<li>Run until they stop it.</li>
+<li>Mix in stretch to punish wide alignments.</li>
+</ul>
+<h3 id="they-crash-run-with-aggressive-lbs">They crash run with aggressive LBs</h3>
+<ul>
+<li>Play-action crossers and TE seams.</li>
+<li>Leak the TE/RB opposite the run action.</li>
+</ul>
+<h3 id="they-sit-in-cover-3--single-high">They sit in Cover 3 / single-high</h3>
+<ul>
+<li>Flood concepts and deep outs.</li>
+<li>Post routes behind the middle safety if you can protect.</li>
+</ul>
+<h3 id="they-blitz-a-lot">They blitz a lot</h3>
+<ul>
+<li>Use max protect.</li>
+<li>Keep the RB/TE in and take your one-on-one shot.</li>
+<li>Call screens to slow them down.</li>
+</ul>
+<hr />
+<h2 id="roster-building-priorities-dna">Roster building priorities 🧬</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>Priority</strong></th>
+<th><strong>What to target</strong></th>
+<th><strong>Why it matters in Pro Style</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Offensive line (tackles especially)</td>
+<td>Protects longer play-action; keeps run game on schedule</td>
+</tr>
+<tr>
+<td>2</td>
+<td>RB who falls forward (contact balance)</td>
+<td>Turns 2-yard plays into 4; keeps 2nd/3rd down manageable</td>
+</tr>
+<tr>
+<td>3</td>
+<td>TE who can block (credible run looks)</td>
+<td>Makes heavy personnel real; improves PA and edges</td>
+</tr>
+<tr>
+<td>4</td>
+<td>True X receiver (wins 1-on-1)</td>
+<td>Punishes loaded boxes with isolations and comebacks/digs</td>
+</tr>
+<tr>
+<td>5</td>
+<td>QB with play-action + mid/deep accuracy</td>
+<td>Converts your “setup” into explosives</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="sequencing-how-pro-style-creates-explosives-repeat">Sequencing (how Pro Style creates explosives) 🔁</h2>
+<p>Pro Style is at its best when you intentionally build tendencies and then break them.</p>
+<h3 id="the-simplest-tendencycounter-pair">The simplest tendency/counter pair</h3>
+<ul>
+<li>Tendency: inside zone / power from 12 or 21</li>
+<li>Counter: play-action deep cross / post</li>
+</ul>
+<p>If you call the counter before the tendency has forced the defense to react, it feels like “PA doesn’t work.” If you call it after you’ve forced a safety to trigger, it becomes a huge play generator.</p>
+<h3 id="a-practical-8-play-setup-series">A practical 8-play “setup” series</h3>
+<ol type="1">
+<li>Inside zone (12)</li>
+<li>Power (21)</li>
+<li>Boot flood (off the last run look)</li>
+<li>Inside zone again (12)</li>
+<li>Stretch (punish overloading inside)</li>
+<li>Play-action cross (shot)</li>
+<li>Checkdown concept (keep drive alive)</li>
+<li>Run to finish the series</li>
+</ol>
+<p>This is not a rigid script—think of it as a pattern you can repeat during a game.</p>
+<hr />
+<h3 id="personnel-packages-what-to-major-in-and-why-jigsaw">Personnel packages (what to major in and why) 🧩</h3>
+<p>Pro Style succeeds when you can force the defense to pick a poison:</p>
+<ul>
+<li>stay in base and risk getting beat by play-action/isolations</li>
+<li>go lighter and risk being run over</li>
+</ul>
+<h3 id="package-1-12-personnel-modern-pro-base">Package 1: 12 personnel “modern pro” base</h3>
+<p>Best for:</p>
+<ul>
+<li>inside zone + split zone</li>
+<li>play-action crossers</li>
+<li>TE seams and corners</li>
+</ul>
+<h3 id="package-2-21-personnel-downhill-package">Package 2: 21 personnel “downhill” package</h3>
+<p>Best for:</p>
+<ul>
+<li>power/counter</li>
+<li>play-action boot</li>
+<li>short yardage and goal line</li>
+</ul>
+<h3 id="package-3-11-personnel-comeback-package">Package 3: 11 personnel comeback package</h3>
+<p>Best for:</p>
+<ul>
+<li>playing from behind</li>
+<li>2-minute</li>
+<li>spreading a defense that is selling out to stop your heavy packages</li>
+</ul>
+<hr />
+<h2 id="in-game-execution-notes-video_game">In-game execution notes 🎮</h2>
+<h3 id="clock-and-field-position-plan-a-pro-style-advantage-compass">Clock and field-position plan (a Pro Style advantage) 🧭</h3>
+<p>If you like playing “real football,” Pro Style is excellent at controlling game state.</p>
+<ul>
+<li><strong>With a lead:</strong> run on early downs, throw off play-action on 2nd &amp; short, and avoid turnovers.</li>
+<li><strong>In a tie game late:</strong> target efficient completions to TEs/RBs and stay in bounds.</li>
+<li><strong>When backed up:</strong> call your safest run and your fastest throw; avoid slow-developing PA.</li>
+</ul>
+<hr />
+<h2 id="weekly-install-plan-books">Weekly install plan 📚</h2>
+<h3 id="week-1-one-run-family--one-boot">Week 1: one run family + one boot</h3>
+<ul>
+<li>choose inside zone or power as your base</li>
+<li>pair it with boot flood</li>
+</ul>
+<h3 id="week-2-add-one-intermediate-money-concept">Week 2: add one intermediate “money” concept</h3>
+<ul>
+<li>dagger or deep cross</li>
+</ul>
+<h3 id="week-3-add-one-shot">Week 3: add one shot</h3>
+<ul>
+<li>yankee (post + cross) or a similar PA concept</li>
+</ul>
+<h3 id="week-4-add-one-screen">Week 4: add one screen</h3>
+<ul>
+<li>slows down aggressive fronts</li>
+</ul>
+<hr />
+<h2 id="troubleshooting-fire_extinguisher">Troubleshooting 🧯</h2>
+<h3 id="problem-i-cant-run-the-ball">Problem: “I can’t run the ball.”</h3>
+<p>Fix:</p>
+<ul>
+<li>run toward your best OL/TE surface</li>
+<li>use motion to get better angles</li>
+<li>mix in stretch to punish pinching</li>
+</ul>
+<h3 id="problem-play-action-gets-me-sacked">Problem: “Play-action gets me sacked.”</h3>
+<p>Fix:</p>
+<ul>
+<li>don’t call long PA on obvious pass downs</li>
+<li>keep extra protectors in (TE/RB)</li>
+<li>take the checkdown and live for 2nd &amp; 6</li>
+</ul>
+<h3 id="problem-my-wrs-never-get-open">Problem: “My WRs never get open.”</h3>
+<p>Fix:</p>
+<ul>
+<li>throw more to TE/RB (the pro game is built on this)</li>
+<li>use bunch/stack to defeat press</li>
+<li>call isolations only when you like your matchup</li>
+</ul>
+<hr />
+<h3 id="run-game-diagnostics-how-to-know-where-to-run-receipt">Run-game diagnostics (how to know where to run) 🧾</h3>
+<p>Pro Style becomes much easier when you stop calling runs “randomly” and start aiming them at defensive structure.</p>
+<h3 id="a-simple-run-direction-rule">A simple run-direction rule</h3>
+<ul>
+<li>If the defense is <strong>over-shifted</strong> to one side (extra body outside your TE), run back the other way.</li>
+<li>If the defense is <strong>light inside</strong> (fewer bodies between the tackles), run inside zone/duo.</li>
+<li>If the defense is <strong>pinching</strong> hard, call stretch or counter.</li>
+</ul>
+<h3 id="what-to-do-when-they-are-run-blitzing">What to do when they are run-blitzing</h3>
+<p>Signs:</p>
+<ul>
+<li>linebackers shooting gaps immediately</li>
+<li>safeties filling fast on early downs</li>
+</ul>
+<p>Answers:</p>
+<ul>
+<li>use play-action leak</li>
+<li>run counter (let them run themselves out of the play)</li>
+<li>call quick slant/flat on 1st down (cheap yards)</li>
+</ul>
+<h3 id="dont-forget-run-to-set-up-the-run">Don’t forget “run to set up the run”</h3>
+<p>If you run inside zone 6 times in a row, the defense will adjust. Mix in:</p>
+<ul>
+<li>power</li>
+<li>counter</li>
+<li>stretch</li>
+</ul>
+<p>Even if the yardage is similar, the defender fits change, and that’s what creates mistakes.</p>
+<hr />
+<h2 id="situational-packages-what-to-favorite-star">Situational packages (what to favorite) ⭐</h2>
+<h3 id="short-yardage-mini-playbook-red_square">Short-yardage mini-playbook 🟥</h3>
+<p>If you want Pro Style to feel dominant, decide your “3 calls” for 3rd &amp; 1–2.</p>
+<p>Suggested menu:</p>
+<ul>
+<li>Power (behind your best surface)</li>
+<li>Inside zone/duo (if the defense spreads out)</li>
+<li>Boot flat (if the defense sells out)</li>
+</ul>
+<p>In games, short yardage is as much about avoiding negative plays as it is about getting 20-yard touchdowns.</p>
+<hr />
+<h2 id="pace-note-stopwatch">Pace note ⏱️</h2>
+<p>You don’t have to huddle every snap. A simple approach:</p>
+<ul>
+<li>Go no-huddle after a successful run to keep the same defensive look.</li>
+<li>Slow down after penalties/TFLs to reset.</li>
+</ul>
+<p>This keeps Pro Style from feeling “slow,” while still letting you control the game when you have a lead.</p>
+<hr />
+<h2 id="sample-15-play-opening-script-copypaste-idea-pencil">Sample 15-play opening script (copy/paste idea) 📝</h2>
+<p>The goal of a Pro Style script is to establish the run and force the defense to bring a safety down.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th style="text-align: center;"><strong>Play #</strong></th>
+<th><strong>Situation / Note</strong></th>
+<th><strong>Concept / Call</strong></th>
+<th><strong>Why?</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td>Scripted Opener (Safe)</td>
+<td><strong>Inside Zone</strong> (Strong side)</td>
+<td>🟢 Test the interior DL strength</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td>Scripted shot (PA?)</td>
+<td><strong>PA Crossers / Boot</strong></td>
+<td>🟡 Punish LBs for stepping up on play 1</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td>Run: Base concept</td>
+<td><strong>Duo / Power</strong></td>
+<td>🟢 Establish physical downhill presence</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td>Quick game / RPO</td>
+<td><strong>Stick / Quick Out</strong></td>
+<td>🟢 Easy completion if they play off</td>
+</tr>
+<tr>
+<td style="text-align: center;">5</td>
+<td>Run: Counter/Power</td>
+<td><strong>Counter GY</strong></td>
+<td>🟡 Show a different run blocking scheme</td>
+</tr>
+<tr>
+<td style="text-align: center;">6</td>
+<td>Shot play (Deep)</td>
+<td><strong>Yankee (Post + Cross)</strong></td>
+<td>🔴 Max protect deep shot</td>
+</tr>
+<tr>
+<td style="text-align: center;">7</td>
+<td>Screen / Draw</td>
+<td><strong>Slip Screen</strong></td>
+<td>🟡 Catch aggressive pass rushers</td>
+</tr>
+<tr>
+<td style="text-align: center;">8</td>
+<td>Base Pass</td>
+<td><strong>Mesh / Shallow Cross</strong></td>
+<td>🟢 Man-beater/zone-beater (safe yards)</td>
+</tr>
+<tr>
+<td style="text-align: center;">9</td>
+<td>Check with me (Audible)</td>
+<td><strong>Run/Pass Check</strong></td>
+<td>🟡 Let QB verify coverage at the line</td>
+</tr>
+<tr>
+<td style="text-align: center;">10</td>
+<td>Run: Left hash</td>
+<td><strong>Stretch / Outside Zone</strong></td>
+<td>🟡 Force the defense to run sideline-to-sideline</td>
+</tr>
+<tr>
+<td style="text-align: center;">11</td>
+<td>Run: Right hash</td>
+<td><strong>Cutback Zone</strong></td>
+<td>🟢 Exploit over-pursuit</td>
+</tr>
+<tr>
+<td style="text-align: center;">12</td>
+<td>Play-Action Boot</td>
+<td><strong>Naked Boot / Slide</strong></td>
+<td>🟢 Get QB on the edge for easy throw/run</td>
+</tr>
+<tr>
+<td style="text-align: center;">13</td>
+<td>Trick / Special</td>
+<td><strong>Reverse / Flea Flicker</strong></td>
+<td>🔴 High risk/reward if they are biting</td>
+</tr>
+<tr>
+<td style="text-align: center;">14</td>
+<td>2-Minute Drill practice</td>
+<td><strong>4 Verts / Seams</strong></td>
+<td>🔴 Stress the deep safeties</td>
+</tr>
+<tr>
+<td style="text-align: center;">15</td>
+<td>4-Minute Drill practice</td>
+<td><strong>Power / Jumbo Run</strong></td>
+<td>🟢 Practice closing out the game</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="post-game-metrics-did-i-run-it-right-bar_chart">Post-Game Metrics (Did I run it right?) 📊</h2>
+<p>If you played a true Pro Style game, your stats should look like this:</p>
+<ul>
+<li><strong>Rushing Attempts:</strong> &gt; 25 (You must commit to the run)</li>
+<li><strong>Play-Action Yards:</strong> &gt; 30% of Total Passing Yards</li>
+<li><strong>Time of Possession:</strong> &gt; 55% (Control the clock)</li>
+<li><strong>Turnovers:</strong> &lt; 2 (Ball security is paramount)</li>
+</ul>
+<h2 id="dynasty-recruiting-guide-mortar_board">Dynasty Recruiting Guide 🎓</h2>
+<p>If you run Pro Style, prioritize these archetypes:</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th style="text-align: left;"><strong>Position</strong></th>
+<th><strong>Archetype / Key Stats</strong></th>
+<th><strong>Why?</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>QB</strong></td>
+<td><strong>Field General</strong> (THP, DAC, PAC)</td>
+<td>🧠 Needs to hit deep PA shots + intermediate windows.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>HB</strong></td>
+<td><strong>Power Back</strong> (TRK, BTK, SFA)</td>
+<td>🏃 Must fall forward for 4 yards on 1st &amp; 10.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>TE</strong></td>
+<td><strong>Blocking</strong> (RBK, PBK, STR)</td>
+<td>🧲 You need two. One must be a glorified tackle.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>WR</strong></td>
+<td><strong>Deep Threat</strong> (SPD, DRR)</td>
+<td>🧤 Just one speedster to blow the top off post-PA.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>OL</strong></td>
+<td><strong>Power</strong> (STR, RBP, IBL)</td>
+<td>🧱 Moving people against their will is the whole plan.</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="teams-to-check-first-in-cfb26-real-world-scheme-fit-mag">Teams to check first in CFB26 (real-world scheme fit) 🔍</h2>
+<p>Pro Style is a broad label in college football, but these programs are commonly associated with physical run games, heavier personnel, and play-action staples.</p>
+<p>Start here and <strong>verify in-game</strong>:</p>
+<ul>
+<li>Michigan</li>
+<li>Georgia</li>
+<li>Alabama</li>
+<li>Notre Dame</li>
+<li>Wisconsin</li>
+<li>Iowa</li>
+</ul>
+<h2 id="nfl-analogs-closest-cousins-football">NFL analogs (closest cousins) 🏈</h2>
+<p>“Pro Style” is also a broad NFL label, so think of this as teams that frequently major in a credible run game plus play-action and condensed formations.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>NFL team (varies by year)</strong></th>
+<th><strong>What matches Pro Style</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>San Francisco 49ers</td>
+<td>Run-game identity + play-action explosives</td>
+</tr>
+<tr>
+<td>Los Angeles Rams</td>
+<td>Under-center play-action, condensed formations</td>
+</tr>
+<tr>
+<td>Detroit Lions</td>
+<td>Physical run + play-action + intermediate passing</td>
+</tr>
+<tr>
+<td>Green Bay Packers</td>
+<td>West Coast-derived pro offense structure</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="teams-in-cfb26-that-use-a-pro-style-playbook-fill-this-in-stadium">Teams in CFB26 that use a Pro Style playbook (fill this in) 🏟️</h2>
+<p>Use this as a living list you update as you confirm playbook assignments in-game.</p>
+<!-- markdownlint-disable MD033 -->
+
+<details>
+<summary>Show editable teams table</summary>
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>Team</strong></th>
+<th><strong>In-game offensive playbook name</strong></th>
+<th><strong>Notes (base personnel, favorite runs, favorite shots)</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+</details>
+<!-- markdownlint-enable MD033 -->
+
+<hr />
+<h2 id="minimal-glossary-pushpin">Minimal glossary 📌</h2>
+<ul>
+<li><strong>Gap scheme:</strong> linemen block down while a puller kicks/wraps (power/counter).</li>
+<li><strong>Zone scheme:</strong> linemen step together; RB reads leverage and cuts.</li>
+<li><strong>Flood:</strong> three routes at different depths to one side.</li>
+<li><strong>Yankee:</strong> deep post + deep crosser.</li>
+</ul>
+        </div>
+        <nav class="scheme-nav" aria-label="Scheme navigation">
+      <a class="scheme-link prev" href="air-raid.html">← Air Raid</a>
+      <a class="scheme-link center" href="index.html">All Schemes</a>
+      <a class="scheme-link next" href="spread.html">Spread →</a>
+    </nav>
+      </article>
+    </div>
+  </main>
+</body>
+</html>

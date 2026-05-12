@@ -1,0 +1,3 @@
+html, body { min-height: 100%; }
+body { background: var(--cp-bg); color: var(--cp-text); }
+a { color: var(--cp-link); }

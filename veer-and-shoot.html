@@ -1,0 +1,1102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("clawpilotTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Veer and Shoot — CFB26 Playbook</title>
+  <script src="assets/scripts/theme.js?v=1"></script>
+  <link rel="stylesheet" href="assets/styles/theme.css?v=1">
+  <link rel="stylesheet" href="assets/styles/site-nav.css?v=1">
+  <script defer src="assets/scripts/site-nav.js?v=1"></script>
+  <style>
+:root {
+  color-scheme: light;
+  --cp-bg: #f7f4ef;
+  --cp-bg-elevated: #fcfbf8;
+  --cp-surface: #ffffff;
+  --cp-surface-soft: #f5f5f5;
+  --cp-border: #dedede;
+  --cp-border-strong: #919191;
+  --cp-text: #242424;
+  --cp-text-muted: #5c5c5c;
+  --cp-text-soft: #6f6f6f;
+  --cp-accent: #b11f4b;
+  --cp-accent-hover: #9a1a41;
+  --cp-accent-soft: rgba(177, 31, 75, 0.08);
+  --cp-accent-fg: #ffffff;
+  --cp-success: #16a34a;
+  --cp-danger: #dc2626;
+  --cp-warning: #f59e0b;
+  --cp-link: #0078d4;
+  --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+  --cp-overlay: rgba(255, 255, 255, 0.8);
+  --cp-panel: rgba(255, 255, 255, 0.86);
+  --cp-panel-strong: rgba(255, 255, 255, 0.96);
+  --cp-sheen: rgba(255, 255, 255, 0.55);
+  --cp-highlight: rgba(177, 31, 75, 0.12);
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --cp-bg: #3d3b3a;
+  --cp-bg-elevated: #343231;
+  --cp-surface: #292929;
+  --cp-surface-soft: #2e2e2e;
+  --cp-border: #474747;
+  --cp-border-strong: #5f5f5f;
+  --cp-text: #dedede;
+  --cp-text-muted: #919191;
+  --cp-text-soft: #b0b0b0;
+  --cp-accent: #fd8ea1;
+  --cp-accent-hover: #fb7b91;
+  --cp-accent-soft: rgba(253, 142, 161, 0.14);
+  --cp-accent-fg: #1a1a1a;
+  --cp-success: #4ade80;
+  --cp-danger: #f87171;
+  --cp-warning: #fbbf24;
+  --cp-link: #4da6ff;
+  --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+  --cp-overlay: rgba(41, 41, 41, 0.88);
+  --cp-panel: rgba(41, 41, 41, 0.72);
+  --cp-panel-strong: rgba(41, 41, 41, 0.96);
+  --cp-sheen: rgba(255, 255, 255, 0.04);
+  --cp-highlight: rgba(253, 142, 161, 0.12);
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  margin: 0;
+  background: var(--cp-bg);
+  color: var(--cp-text);
+  font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.65;
+}
+a {
+  color: var(--cp-link);
+}
+a:hover {
+  color: var(--cp-accent-hover);
+}
+body.scheme-veer-and-shoot {
+  --scheme-tone: var(--cp-accent);
+}
+.wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1rem 3rem;
+}
+.page-layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+.toc-panel,
+.guide-card {
+  background: var(--cp-surface);
+  border: 1px solid var(--cp-border);
+  border-radius: 16px;
+  box-shadow: 0 12px 28px var(--cp-highlight);
+}
+.toc-panel {
+  position: sticky;
+  top: 1rem;
+  padding: 1rem;
+  background: var(--cp-panel-strong);
+}
+.toc-panel h2 {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  color: var(--scheme-tone);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+.toc-item a {
+  display: block;
+  padding: 0.45rem 0.6rem;
+  border-radius: 0.625rem;
+  text-decoration: none;
+  color: var(--cp-text-muted);
+}
+.toc-item a:hover {
+  background: var(--cp-accent-soft);
+  color: var(--cp-text);
+}
+.toc-level-3 {
+  margin-inline-start: 0.8rem;
+  font-size: 0.96rem;
+}
+.guide-card {
+  padding: 1.5rem;
+  overflow: hidden;
+}
+.content > :first-child {
+  margin-top: 0;
+}
+.content h1,
+.content h2,
+.content h3 {
+  scroll-margin-top: 1rem;
+  line-height: 1.2;
+}
+.content h1 {
+  margin-bottom: 0.4rem;
+  color: var(--scheme-tone);
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+.content h2 {
+  margin-top: 2rem;
+  padding-top: 0.2rem;
+  border-top: 1px solid var(--cp-border);
+  color: var(--scheme-tone);
+  font-size: clamp(1.35rem, 2vw, 1.7rem);
+}
+.content h3 {
+  margin-top: 1.35rem;
+  color: var(--cp-text);
+  font-size: 1.1rem;
+}
+.content p,
+.content li {
+  color: var(--cp-text);
+}
+.content strong {
+  color: var(--cp-text);
+}
+.content em {
+  color: var(--cp-text-soft);
+}
+.content ul,
+.content ol {
+  padding-inline-start: 1.35rem;
+}
+.content hr {
+  border: 0;
+  border-top: 1px solid var(--cp-border);
+  margin: 2rem 0;
+}
+.content p > a[href="index.html"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid var(--cp-border);
+  border-radius: 999px;
+  text-decoration: none;
+  background: var(--cp-bg-elevated);
+}
+.table-scroll {
+  overflow-x: auto;
+  margin: 1rem 0 1.5rem;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.625rem;
+  background: var(--cp-surface);
+}
+.table-scroll table {
+  width: 100%;
+  min-width: 620px;
+  border-collapse: collapse;
+}
+.table-scroll th,
+.table-scroll td {
+  padding: 0.75rem 0.85rem;
+  border-bottom: 1px solid var(--cp-border);
+  text-align: left;
+  vertical-align: top;
+}
+.table-scroll th {
+  background: var(--cp-bg-elevated);
+  color: var(--scheme-tone);
+}
+.table-scroll tbody tr:nth-child(odd) {
+  background: var(--cp-surface-soft);
+}
+.callout {
+  position: relative;
+  margin: 1.25rem 0;
+  padding: 1rem 1rem 1rem 1.2rem;
+  border-inline-start: 0.35rem solid var(--callout-tone, var(--cp-accent));
+  border-radius: 0.625rem;
+  background: var(--cp-accent-soft);
+}
+.callout::before {
+  content: var(--callout-icon, "💡");
+  position: absolute;
+  inset-inline-end: 0.9rem;
+  inset-block-start: 0.85rem;
+  font-size: 1rem;
+}
+.callout.tip {
+  --callout-tone: var(--cp-success);
+  --callout-icon: "💡";
+}
+.callout.warning {
+  --callout-tone: var(--cp-warning);
+  --callout-icon: "⚠️";
+}
+.callout.note {
+  --callout-tone: var(--cp-link);
+  --callout-icon: "📝";
+}
+.callout > :first-child {
+  margin-top: 0;
+}
+.callout > :last-child {
+  margin-bottom: 0;
+}
+pre.code-block {
+  margin: 1rem 0 1.5rem;
+  padding: 1rem;
+  border-radius: 0.625rem;
+  border: 1px solid var(--cp-border-strong);
+  background: var(--cp-text);
+  color: var(--cp-bg);
+  overflow-x: auto;
+}
+pre.code-block code,
+code {
+  font-family: Consolas, "Courier New", Courier, monospace;
+}
+p code,
+li code,
+td code {
+  padding: 0.1rem 0.35rem;
+  border-radius: 0.35rem;
+  background: var(--cp-surface-soft);
+  color: var(--cp-text);
+}
+pre.diff code {
+  display: grid;
+  gap: 0.1rem;
+}
+.diff-line {
+  display: block;
+  white-space: pre;
+}
+.diff-add {
+  color: var(--cp-success);
+}
+.diff-del {
+  color: var(--cp-danger);
+}
+.diff-note {
+  color: var(--cp-warning);
+}
+.diff-context {
+  color: var(--cp-bg);
+}
+details {
+  margin: 1.25rem 0;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.625rem;
+  background: var(--cp-bg-elevated);
+  overflow: hidden;
+}
+summary {
+  cursor: pointer;
+  padding: 0.85rem 1rem;
+  font-weight: 600;
+  color: var(--scheme-tone);
+  background: var(--cp-accent-soft);
+}
+details > :not(summary) {
+  margin-inline: 1rem;
+}
+.scheme-nav {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--cp-border);
+}
+.scheme-link,
+.nav-spacer {
+  min-height: 100%;
+}
+.scheme-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.625rem;
+  text-decoration: none;
+  color: var(--cp-text);
+  background: var(--cp-bg-elevated);
+  text-align: center;
+}
+.scheme-link:hover {
+  border-color: var(--scheme-tone);
+  background: var(--cp-accent-soft);
+}
+.scheme-link.center {
+  font-weight: 600;
+}
+@media (max-width: 920px) {
+  .wrap {
+    padding-top: 1rem;
+  }
+  .page-layout {
+    grid-template-columns: 1fr;
+  }
+  .toc-panel {
+    position: static;
+    overflow-x: auto;
+  }
+  .toc-list {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+    width: max-content;
+    min-width: 100%;
+  }
+  .toc-level-3 {
+    margin-inline-start: 0;
+  }
+}
+@media (max-width: 640px) {
+  .guide-card {
+    padding: 1rem;
+  }
+  .scheme-nav {
+    grid-template-columns: 1fr;
+  }
+  .table-scroll table {
+    min-width: 520px;
+  }
+}
+  </style>
+</head>
+<body data-nav-root="." class="scheme-veer-and-shoot">
+  <main class="wrap">
+    <div class="page-layout">
+      <aside class="toc-panel" aria-label="Table of contents">
+        <h2>On this page</h2>
+        <ul class="toc-list">
+<li class="toc-item toc-level-2"><a href="#quick-definition-brain">Quick definition 🧠</a></li>
+<li class="toc-item toc-level-2"><a href="#the-identity-one-sentence-dart">The identity (one sentence) 🎯</a></li>
+<li class="toc-item toc-level-2"><a href="#pros-white_check_mark-and-cons-warning">Pros ✅ and cons ⚠️</a></li>
+<li class="toc-item toc-level-2"><a href="#typical-personnel-whos-on-the-field-jigsaw">Typical personnel (who’s on the field) 🧩</a></li>
+<li class="toc-item toc-level-3"><a href="#personnel-cheat-table">Personnel cheat table</a></li>
+<li class="toc-item toc-level-3"><a href="#role-archetypes-what-matters-mag_right">Role archetypes (what matters) 🔎</a></li>
+<li class="toc-item toc-level-2"><a href="#typical-formations-triangular_ruler">Typical formations 📐</a></li>
+<li class="toc-item toc-level-3"><a href="#small-menu-recommendation">“Small menu” recommendation</a></li>
+<li class="toc-item toc-level-2"><a href="#qb-operation-timing--progressions-stopwatch">QB operation (timing + progressions) ⏱️</a></li>
+<li class="toc-item toc-level-3"><a href="#splits-alignment-and-why-it-changes-everything-safety_pin">Splits, alignment, and why it changes everything 🧷</a></li>
+<li class="toc-item toc-level-3"><a href="#what-wide-splits-do-for-you">What wide splits do for you</a></li>
+<li class="toc-item toc-level-3"><a href="#the-trade-off">The trade-off</a></li>
+<li class="toc-item toc-level-2"><a href="#core-pass-game-families--concept-menu-gear">Core pass game families / concept menu ⚙️</a></li>
+<li class="toc-item toc-level-3"><a href="#1-inside-zone--split-flow-veer-feel">1) Inside zone / split flow (“veer” feel)</a></li>
+<li class="toc-item toc-level-3"><a href="#2-access-throws-free-yards-checkered_flag">2) Access throws (free yards) 🏁</a></li>
+<li class="toc-item toc-level-3"><a href="#3-screens-perimeter-run-game-bubbles">3) Screens (perimeter run game) 🫧</a></li>
+<li class="toc-item toc-level-3"><a href="#4-rpo-tags-if-present-brain">4) RPO tags (if present) 🧠</a></li>
+<li class="toc-item toc-level-3"><a href="#5-vertical-shots-the-shoot-collision">5) Vertical shots (the “shoot”) 💥</a></li>
+<li class="toc-item toc-level-2"><a href="#defensive-looks-and-your-counters-shield">Defensive looks and your counters 🛡️</a></li>
+<li class="toc-item toc-level-2"><a href="#building-your-veer-and-shoot-call-sheet-practical-cfb26-plan-card_index_dividers">Building your Veer and Shoot call sheet (practical CFB26 plan) 🗂️</a></li>
+<li class="toc-item toc-level-3"><a href="#1st-and-10-stay-efficient">1st and 10 (stay efficient)</a></li>
+<li class="toc-item toc-level-3"><a href="#2nd-and-short-take-a-shot-collision">2nd and short (take a shot) 💥</a></li>
+<li class="toc-item toc-level-3"><a href="#2nd-and-long-get-back-on-schedule">2nd and long (get back on schedule)</a></li>
+<li class="toc-item toc-level-3"><a href="#3rd-down">3rd down</a></li>
+<li class="toc-item toc-level-3"><a href="#red-zone-inside-20-bricks">Red zone (inside 20) 🧱</a></li>
+<li class="toc-item toc-level-3"><a href="#two-minute-stopwatch">Two-minute ⏱️</a></li>
+<li class="toc-item toc-level-2"><a href="#pace-note-stopwatch">Pace note ⏱️</a></li>
+<li class="toc-item toc-level-3"><a href="#when-to-go-fast">When to go fast</a></li>
+<li class="toc-item toc-level-3"><a href="#when-to-slow-down">When to slow down</a></li>
+<li class="toc-item toc-level-2"><a href="#sequencing-how-veer-and-shoot-stays-efficient-repeat">Sequencing (how Veer and Shoot stays efficient) 🔁</a></li>
+<li class="toc-item toc-level-3"><a href="#loop-a-run-first">Loop A: run-first</a></li>
+<li class="toc-item toc-level-3"><a href="#loop-b-screen-first">Loop B: screen-first</a></li>
+<li class="toc-item toc-level-2"><a href="#pre-snap-plan-audibles--box-count--motion-video_game">Pre-snap plan (audibles + box count + motion) 🎮</a></li>
+<li class="toc-item toc-level-2"><a href="#weekly-install-plan-books">Weekly install plan 📚</a></li>
+<li class="toc-item toc-level-3"><a href="#week-1-inside-zone--one-access-throw">Week 1: inside zone + one access throw</a></li>
+<li class="toc-item toc-level-3"><a href="#week-2-add-one-screen">Week 2: add one screen</a></li>
+<li class="toc-item toc-level-3"><a href="#week-3-add-one-rpo-if-present">Week 3: add one RPO (if present)</a></li>
+<li class="toc-item toc-level-3"><a href="#week-4-add-one-shot">Week 4: add one shot</a></li>
+<li class="toc-item toc-level-2"><a href="#troubleshooting-fire_extinguisher">Troubleshooting 🧯</a></li>
+<li class="toc-item toc-level-3"><a href="#problem-my-access-throws-get-jumped">Problem: “My access throws get jumped.”</a></li>
+<li class="toc-item toc-level-3"><a href="#problem-i-cant-run-inside-zone">Problem: “I can’t run inside zone.”</a></li>
+<li class="toc-item toc-level-3"><a href="#problem-tempo-makes-me-go-3-and-out">Problem: “Tempo makes me go 3-and-out.”</a></li>
+<li class="toc-item toc-level-2"><a href="#roster-building-priorities-bricks">Roster building priorities 🧱</a></li>
+<li class="toc-item toc-level-3"><a href="#priority-list">Priority list</a></li>
+<li class="toc-item toc-level-3"><a href="#nice-to-have">“Nice to have”</a></li>
+<li class="toc-item toc-level-2"><a href="#situational-packages-what-to-favorite-star">Situational packages (what to favorite) ⭐</a></li>
+<li class="toc-item toc-level-2"><a href="#in-game-execution-notes-video_game">In-game execution notes 🎮</a></li>
+<li class="toc-item toc-level-3"><a href="#practice-mode-routine-10-minutes-weight_lifting">Practice-mode routine (10 minutes) 🏋️</a></li>
+<li class="toc-item toc-level-3"><a href="#shot-call-triggers-when-to-take-the-shoot-throw-fireworks">Shot-call triggers (when to take the “shoot” throw) 🎆</a></li>
+<li class="toc-item toc-level-2"><a href="#sample-15-play-opening-script-copypaste-idea-pencil">Sample 15-play opening script (copy/paste idea) 📝</a></li>
+<li class="toc-item toc-level-2"><a href="#post-game-metrics-did-i-run-it-right-bar_chart">Post-Game Metrics (Did I run it right?) 📊</a></li>
+<li class="toc-item toc-level-2"><a href="#dynasty-recruiting-guide-mortar_board">Dynasty Recruiting Guide 🎓</a></li>
+<li class="toc-item toc-level-2"><a href="#teams-to-check-first-in-cfb26-real-world-scheme-fit-mag">Teams to check first in CFB26 (real-world scheme fit) 🔍</a></li>
+<li class="toc-item toc-level-2"><a href="#nfl-analogs-closest-cousins-football">NFL analogs (closest cousins) 🏈</a></li>
+<li class="toc-item toc-level-2"><a href="#teams-in-cfb26-that-use-a-veer-and-shoot-playbook-fill-this-in-stadium">Teams in CFB26 that use a Veer and Shoot playbook (fill this in) 🏟️</a></li>
+<li class="toc-item toc-level-2"><a href="#minimal-glossary-pushpin">Minimal glossary 📌</a></li>
+</ul>
+      </aside>
+      <article class="guide-card">
+        <div class="content">
+          <h1 id="veer-and-shoot-rocket-cfb26-playbook-style">Veer and Shoot 🚀 (CFB26 Playbook Style)</h1>
+<p>Author: Dave Voyles</p>
+<p><a href="index.html">← Back to Index</a></p>
+<div class="callout tip">
+<p><strong>How to use this guide in CFB26</strong></p>
+<ul>
+<li>Build a small “core menu”: 2 runs + 4 passes + 1 shot</li>
+<li>Set audibles: 1 light-box run, 1 blitz answer, 1 man beater, 1 zone beater, 1 shot</li>
+<li>Use the opening script to identify coverage + box counts early</li>
+</ul>
+</div>
+<h2 id="quick-definition-brain">Quick definition 🧠</h2>
+<p>Veer and Shoot is a <strong>wide-split, tempo-friendly spread offense</strong> that tries to:</p>
+<ul>
+<li>↔︎️ force defenses to declare numbers and leverage with <strong>extreme spacing</strong></li>
+<li>🏃 run “veer” (inside zone / split-flow looks) into light boxes</li>
+<li>🎯 throw <strong>quick access passes</strong> (now screens, hitches, quick outs) when defenders widen</li>
+<li>💣 hit vertical shots when safeties cheat</li>
+</ul>
+<pre class="code-block text"><code>WR (Far out)                                   WR (Far out)
+           SB        OL        SB
+        (Slot)                (Slot)
+                     QB
+                     RB</code></pre>
+<p>In real football it’s often associated with <strong>ultra-wide WR splits</strong>, fast pace, and simple, repeatable reads that create “easy yards” over and over.</p>
+<h2 id="the-identity-one-sentence-dart">The identity (one sentence) 🎯</h2>
+<p><strong>Spread the defense to the sideline, take the free yards immediately, and gas them with tempo until a vertical shot breaks the game open.</strong></p>
+<hr />
+<h2 id="pros-white_check_mark-and-cons-warning">Pros ✅ and cons ⚠️</h2>
+<pre class="code-block diff"><code><span class="diff-line diff-add">+ PRO: Clear pre-snap answers (spacing = information).</span>
+<span class="diff-line diff-add">+ PRO: Tempo leverage (prevents subs, creates chaos).</span>
+<span class="diff-line diff-add">+ PRO: Explosive potential (one missed tackle = TD).</span>
+<span class="diff-line diff-add">+ PRO: Easy to teach/call (small menu).</span>
+<span class="diff-line diff-add">+ PRO: Hides average OL (ball comes out fast).</span>
+<span class="diff-line diff-context"></span>
+<span class="diff-line diff-del">- CON: Can feel too horizontal (need to shot vertically).</span>
+<span class="diff-line diff-del">- CON: Negative plays kill drives (must stay on schedule).</span>
+<span class="diff-line diff-del">- CON: Needs WR blocking (perimeter game is run game).</span>
+<span class="diff-line diff-del">- CON: Quick decision fatigue (late throws = INT).</span>
+<span class="diff-line diff-del">- CON: Defenses can rally and tackle in space.</span></code></pre>
+<hr />
+<h2 id="typical-personnel-whos-on-the-field-jigsaw">Typical personnel (who’s on the field) 🧩</h2>
+<p>Most Veer and Shoot looks are built from:</p>
+<ul>
+<li><strong>10 personnel</strong> (1 RB, 0 TE, 4 WR): maximum spacing</li>
+<li><strong>11 personnel</strong> (1 RB, 1 TE, 3 WR): adds a seam/flat element and protection help</li>
+</ul>
+<h3 id="personnel-cheat-table">Personnel cheat table</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>Personnel</strong></th>
+<th><strong>On-field</strong></th>
+<th><strong>Why you’d use it in Veer and Shoot</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>10</td>
+<td>1 RB / 4 WR</td>
+<td>Widest spacing, best for screens + access throws</td>
+</tr>
+<tr>
+<td>11</td>
+<td>1 RB / 1 TE / 3 WR</td>
+<td>Better protection; TE seams and RPO tags</td>
+</tr>
+<tr>
+<td>20</td>
+<td>2 RB / 3 WR</td>
+<td>“Pony” mismatch package; good for option/RPO variants</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="role-archetypes-what-matters-mag_right">Role archetypes (what matters) 🔎</h3>
+<ul>
+<li><strong>QB:</strong> quick processor, accurate short, calm vs pressure; arm strength helps for vertical shots.</li>
+<li><strong>RB:</strong> one-cut runner + acceleration; must be comfortable catching and pass protecting.</li>
+<li><strong>WRs:</strong> hands + RAC + willingness to block; at least one true vertical threat.</li>
+<li><strong>Slot(s):</strong> option/choice capable (if your playbook has them) and reliable on quick game.</li>
+<li><strong>TE (if used):</strong> seam threat and edge helper.</li>
+</ul>
+<hr />
+<h2 id="typical-formations-triangular_ruler">Typical formations 📐</h2>
+<p>In EA-style playbooks, Veer and Shoot shows up as:</p>
+<ul>
+<li>Gun Spread / Wide (often with very wide splits)</li>
+<li>Gun Doubles (2x2)</li>
+<li>Gun Trips</li>
+<li>Empty variants (situational)</li>
+</ul>
+<h3 id="small-menu-recommendation">“Small menu” recommendation</h3>
+<p>To keep the system consistent, pick:</p>
+<ul>
+<li><strong>Major:</strong> Gun Spread/Wide + Gun Doubles</li>
+<li><strong>Minor:</strong> Trips + Empty (3rd down / 2-minute)</li>
+</ul>
+<hr />
+<h2 id="qb-operation-timing--progressions-stopwatch">QB operation (timing + progressions) ⏱️</h2>
+<p>Veer and Shoot QB play is about playing <strong>fast</strong> off a small number of repeatable keys:</p>
+<ul>
+<li>access is either free or it isn’t (decide instantly)</li>
+<li>inside zone is the “veer” punish when the box is light</li>
+<li>shots happen when safeties cheat or defenders start triggering downhill</li>
+</ul>
+<h3 id="splits-alignment-and-why-it-changes-everything-safety_pin">Splits, alignment, and why it changes everything 🧷</h3>
+<p>One of the defining “feel” features of Veer and Shoot is <strong>how wide the offense aligns</strong>.</p>
+<h3 id="what-wide-splits-do-for-you">What wide splits do for you</h3>
+<ul>
+<li>They <strong>remove bodies from the box</strong> (defenders have to widen to respect access throws).</li>
+<li>They create cleaner, easier-to-see <strong>run lanes</strong> for inside zone.</li>
+<li>They make coverage rules harder for defenses (match coverage communication gets stressed).</li>
+</ul>
+<h3 id="the-trade-off">The trade-off</h3>
+<ul>
+<li>Wide splits can make some route breaks feel longer.</li>
+<li>If you hold the ball waiting for a “pretty” window, pressure arrives.</li>
+</ul>
+<p><strong>Coaching point:</strong> wide splits are a promise to play fast. If you want to hold the ball and progress 1–2–3 slowly, you’re drifting into a different style.</p>
+<hr />
+<h2 id="core-pass-game-families--concept-menu-gear">Core pass game families / concept menu ⚙️</h2>
+<p>The Veer and Shoot is about repeating a small set of concepts until the defense overreacts.</p>
+<h3 id="1-inside-zone--split-flow-veer-feel">1) Inside zone / split flow (“veer” feel)</h3>
+<p><strong>Goal:</strong> punish light boxes created by wide splits.</p>
+<p><strong>When to call:</strong></p>
+<ul>
+<li>vs two-high shells</li>
+<li>anytime the box count is light</li>
+</ul>
+<p><strong>Coaching point:</strong> be patient and cut backside if the front side is muddy.</p>
+<h3 id="2-access-throws-free-yards-checkered_flag">2) Access throws (free yards) 🏁</h3>
+<p>These are the “take it if they give it” passes:</p>
+<ul>
+<li>hitch/now</li>
+<li>quick out</li>
+<li>quick smoke</li>
+</ul>
+<p><strong>Read:</strong> corner cushion + alignment.</p>
+<pre class="code-block diff"><code><span class="diff-line diff-add">+ GREEN:  Corner Off (6+ yds) -&gt; THROW the Hitch/Now</span>
+<span class="diff-line diff-del">- RED:    Corner Press/Cloud  -&gt; HAND OFF inside</span></code></pre>
+<ul>
+<li>If the corner is off and bailing: take the hitch/now.</li>
+<li>If the corner squats hard: you need a counter (double-move or run).</li>
+</ul>
+<h3 id="3-screens-perimeter-run-game-bubbles">3) Screens (perimeter run game) 🫧</h3>
+<ul>
+<li>bubble/now screen</li>
+<li>tunnel screen</li>
+</ul>
+<p><strong>Why they matter:</strong> they force overhang defenders to widen, which makes inside zone easier.</p>
+<h3 id="4-rpo-tags-if-present-brain">4) RPO tags (if present) 🧠</h3>
+<p>Common tags:</p>
+<ul>
+<li>bubble</li>
+<li>glance/slant</li>
+<li>stick/spot</li>
+</ul>
+<p><strong>Conflict defender:</strong> often the apex/overhang.</p>
+<p>If he fits run: throw behind him. If he widens: hand it off.</p>
+<h3 id="5-vertical-shots-the-shoot-collision">5) Vertical shots (the “shoot”) 💥</h3>
+<p>You need a small shot menu so defenses can’t just rally to the flat all day.</p>
+<p>Common vertical families:</p>
+<ul>
+<li>seams / four verts variants</li>
+<li>post</li>
+<li>switch vertical</li>
+</ul>
+<p><strong>When to call (on schedule):</strong></p>
+<ul>
+<li>2nd &amp; short</li>
+<li>after two consecutive access completions</li>
+<li>after a long run when safeties start creeping</li>
+</ul>
+<hr />
+<h2 id="defensive-looks-and-your-counters-shield">Defensive looks and your counters 🛡️</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>What you see</strong></th>
+<th><strong>What it’s trying to do</strong></th>
+<th><strong>Your best answers</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Two-high, light box</td>
+<td>Invite run, rally to throws</td>
+<td>Inside zone; screens; patient access throws</td>
+</tr>
+<tr>
+<td>Single-high, heavy box</td>
+<td>Stop run, force tight throws</td>
+<td>Quick access throws; RPO glance; shots if protected</td>
+</tr>
+<tr>
+<td>Press man</td>
+<td>Disrupt timing</td>
+<td>Stack/bunch if available; tunnel screens; crossers</td>
+</tr>
+<tr>
+<td>Heavy blitz</td>
+<td>Speed up QB</td>
+<td>Screens, quick game, RB swing/flat, max protect shot</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="building-your-veer-and-shoot-call-sheet-practical-cfb26-plan-card_index_dividers">Building your Veer and Shoot call sheet (practical CFB26 plan) 🗂️</h2>
+<h3 id="1st-and-10-stay-efficient">1st and 10 (stay efficient)</h3>
+<ul>
+<li>inside zone</li>
+<li>hitch/now (if cushion)</li>
+<li>bubble/now screen</li>
+<li>RPO bubble/glance (if in your book)</li>
+</ul>
+<h3 id="2nd-and-short-take-a-shot-collision">2nd and short (take a shot) 💥</h3>
+<ul>
+<li>seams / four verts</li>
+<li>post</li>
+<li>switch vertical</li>
+</ul>
+<h3 id="2nd-and-long-get-back-on-schedule">2nd and long (get back on schedule)</h3>
+<ul>
+<li>screen</li>
+<li>quick out/hitch</li>
+<li>inside zone if the box is still light</li>
+</ul>
+<h3 id="3rd-down">3rd down</h3>
+<ul>
+<li>3rd &amp; 1–2: inside zone, quick hitch, QB keep (if available)</li>
+<li>3rd &amp; 3–6: access throw + concept that stretches flats (stick/spacing)</li>
+<li>3rd &amp; 7+: seams/verts with a checkdown, or a crosser concept if included</li>
+</ul>
+<h3 id="red-zone-inside-20-bricks">Red zone (inside 20) 🧱</h3>
+<p>The field compresses. Shift from “space” to “leverage.”</p>
+<ul>
+<li>smash (corner/hitch)</li>
+<li>bunch/stack rubs (if available)</li>
+<li>quick slants with leverage</li>
+<li>inside zone if the defense spreads out too far</li>
+</ul>
+<h3 id="two-minute-stopwatch">Two-minute ⏱️</h3>
+<ul>
+<li>quick outs to the boundary</li>
+<li>seams when safeties widen</li>
+<li>screens if you can get out of bounds</li>
+</ul>
+<hr />
+<h2 id="pace-note-stopwatch">Pace note ⏱️</h2>
+<p>Tempo is a weapon, but only if you protect yourself from chaos.</p>
+<h3 id="when-to-go-fast">When to go fast</h3>
+<ul>
+<li>after a first down on an access throw</li>
+<li>after a successful inside zone</li>
+<li>when the defense is stuck in a bad personnel group</li>
+</ul>
+<h3 id="when-to-slow-down">When to slow down</h3>
+<ul>
+<li>after a penalty</li>
+<li>after a tackle for loss</li>
+<li>after a near-interception</li>
+</ul>
+<p><strong>Rule of thumb:</strong> tempo until a negative play happens, then reset.</p>
+<hr />
+<h2 id="sequencing-how-veer-and-shoot-stays-efficient-repeat">Sequencing (how Veer and Shoot stays efficient) 🔁</h2>
+<p>When you’re not sure what to call, Veer and Shoot should fall back to a simple loop.</p>
+<h3 id="loop-a-run-first">Loop A: run-first</h3>
+<ol type="1">
+<li>Inside zone</li>
+<li>Access throw (hitch/now) if cushion, otherwise inside zone again</li>
+</ol>
+<h3 id="loop-b-screen-first">Loop B: screen-first</h3>
+<ol type="1">
+<li>Bubble/now screen</li>
+<li>Inside zone (because overhang defenders widened)</li>
+</ol>
+<p>The point isn’t that these are your only plays—it’s that your base identity always has a stable answer.</p>
+<hr />
+<h2 id="pre-snap-plan-audibles--box-count--motion-video_game">Pre-snap plan (audibles + box count + motion) 🎮</h2>
+<p>Suggested audibles:</p>
+<ol type="1">
+<li>Inside zone (light box)</li>
+<li>Hitch/now (free access)</li>
+<li>Bubble/now screen (perimeter)</li>
+<li>RPO glance (LB conflict punish)</li>
+<li>Seams/verts (shot)</li>
+</ol>
+<p>Pre-snap checklist:</p>
+<ul>
+<li>Count the box.</li>
+<li>Check corner cushion.</li>
+<li>Identify the conflict defender.</li>
+</ul>
+<hr />
+<h2 id="weekly-install-plan-books">Weekly install plan 📚</h2>
+<h3 id="week-1-inside-zone--one-access-throw">Week 1: inside zone + one access throw</h3>
+<ul>
+<li>inside zone</li>
+<li>hitch/now</li>
+</ul>
+<h3 id="week-2-add-one-screen">Week 2: add one screen</h3>
+<ul>
+<li>bubble/now or tunnel</li>
+</ul>
+<h3 id="week-3-add-one-rpo-if-present">Week 3: add one RPO (if present)</h3>
+<ul>
+<li>bubble or glance</li>
+</ul>
+<h3 id="week-4-add-one-shot">Week 4: add one shot</h3>
+<ul>
+<li>seams/verts variant</li>
+</ul>
+<p>The goal is repetition. Veer and Shoot gets deadly when you stop thinking and start reacting.</p>
+<hr />
+<h2 id="troubleshooting-fire_extinguisher">Troubleshooting 🧯</h2>
+<h3 id="problem-my-access-throws-get-jumped">Problem: “My access throws get jumped.”</h3>
+<p>Fix:</p>
+<ul>
+<li>stop throwing late; access throws must be instant</li>
+<li>mix in inside zone more often</li>
+<li>add a tunnel screen or a shot concept after two quick completions</li>
+</ul>
+<h3 id="problem-i-cant-run-inside-zone">Problem: “I can’t run inside zone.”</h3>
+<p>Fix:</p>
+<ul>
+<li>call more screens to widen overhang defenders</li>
+<li>check your box count (don’t run into heavy boxes)</li>
+<li>use a constraint run (counter/split zone) if available</li>
+</ul>
+<h3 id="problem-tempo-makes-me-go-3-and-out">Problem: “Tempo makes me go 3-and-out.”</h3>
+<p>Fix:</p>
+<ul>
+<li>tempo only on your best two concepts (inside zone + access)</li>
+<li>slow down after negative plays</li>
+</ul>
+<hr />
+<h2 id="roster-building-priorities-bricks">Roster building priorities 🧱</h2>
+<p>If you’re building a Dynasty roster for Veer and Shoot, these are usually the highest-value traits.</p>
+<h3 id="priority-list">Priority list</h3>
+<ol type="1">
+<li><strong>QB short accuracy + quick release</strong> (access throws must be instant)</li>
+<li><strong>WR hands + RAC</strong> (screens and quick game are constant)</li>
+<li><strong>WR blocking willingness</strong> (perimeter run game is real)</li>
+<li><strong>RB acceleration + vision</strong> (one-cut zone runner)</li>
+<li><strong>OL agility</strong> (zone steps and getting to second level)</li>
+</ol>
+<h3 id="nice-to-have">“Nice to have”</h3>
+<ul>
+<li>One WR with true top-end speed to force safety depth</li>
+<li>A TE who can seam-stretch (if you use 11 personnel)</li>
+</ul>
+<hr />
+<h2 id="situational-packages-what-to-favorite-star">Situational packages (what to favorite) ⭐</h2>
+<p>If you only keep 12–16 plays favorited, pick them by situation.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>Situation</strong></th>
+<th><strong>Calls to favorite</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Early downs</td>
+<td>inside zone; hitch/now; bubble/now; RPO bubble/glance</td>
+</tr>
+<tr>
+<td>Medium (2nd/3rd &amp; 4–6)</td>
+<td>stick/spacing; tunnel screen; quick out</td>
+</tr>
+<tr>
+<td>Long (3rd &amp; 7+)</td>
+<td>seams/verts with checkdown; crosser concept (if available)</td>
+</tr>
+<tr>
+<td>Red zone</td>
+<td>smash; rub concept; quick slant with leverage; inside zone</td>
+</tr>
+<tr>
+<td>Blitz answers</td>
+<td>RB swing/flat; quick hitch; screen</td>
+</tr>
+</tbody>
+</table></div>
+<p>This keeps your calls consistent and makes tempo safer because you’re not scrolling and guessing.</p>
+<hr />
+<h2 id="in-game-execution-notes-video_game">In-game execution notes 🎮</h2>
+<h3 id="practice-mode-routine-10-minutes-weight_lifting">Practice-mode routine (10 minutes) 🏋️</h3>
+<p>If you want the scheme to feel automatic:</p>
+<ol type="1">
+<li>Run inside zone 10 reps and focus on cutback lanes.</li>
+<li>Throw 10 access throws (hitch/now) and focus on releasing the ball instantly.</li>
+<li>Call 5 screens and focus on WR blocking angles.</li>
+<li>Call your favorite seams/verts shot 5 times to learn the timing.</li>
+</ol>
+<p>If you do this once per “week” in Dynasty, the offense will start to feel like muscle memory.</p>
+<hr />
+<h3 id="shot-call-triggers-when-to-take-the-shoot-throw-fireworks">Shot-call triggers (when to take the “shoot” throw) 🎆</h3>
+<p>Veer and Shoot becomes unstoppable when you stop forcing shots and start taking them <strong>only when the defense tells you it’s time</strong>.</p>
+<p>Great triggers:</p>
+<ul>
+<li>Safeties creeping down after multiple access completions</li>
+<li>Corners squatting on hitches/now</li>
+<li>Overhang defenders widening hard to screens (seams open behind them)</li>
+</ul>
+<p>If you don’t see a trigger, keep stacking efficient plays. The explosive usually arrives because the defense gets impatient.</p>
+<hr />
+<h2 id="sample-15-play-opening-script-copypaste-idea-pencil">Sample 15-play opening script (copy/paste idea) 📝</h2>
+<p>The Veer and Shoot script is designed to identify how the defense aligns to your extreme splits and tempo.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th style="text-align: center;"><strong>Play #</strong></th>
+<th><strong>Situation / Note</strong></th>
+<th><strong>Concept / Call</strong></th>
+<th><strong>Why?</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td>Scripted Opener (Fast)</td>
+<td><strong>Inside Zone (RPO Bubble)</strong></td>
+<td>🟢 See if they empty the box to cover WRs</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td>Tempo Shot</td>
+<td><strong>Deep Choice (Go/Post)</strong></td>
+<td>🔴 Test CB discipline immediately</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td>Run: Base</td>
+<td><strong>Power Read / GT Counter</strong></td>
+<td>🟢 Physical running into light boxes</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td>Quick Screen</td>
+<td><strong>Bubble / Tunnel Screen</strong></td>
+<td>🟡 Force perimeter tackling</td>
+</tr>
+<tr>
+<td style="text-align: center;">5</td>
+<td>RPO Staple</td>
+<td><strong>Glance / Slant RPO</strong></td>
+<td>🟢 Punish aggressive LBs</td>
+</tr>
+<tr>
+<td style="text-align: center;">6</td>
+<td>Deep Shot</td>
+<td><strong>Switch Verticals</strong></td>
+<td>🔴 Confusion in the secondary</td>
+</tr>
+<tr>
+<td style="text-align: center;">7</td>
+<td>Constraint Play</td>
+<td><strong>QB Draw / designed run</strong></td>
+<td>🟡 Keep the DL honest</td>
+</tr>
+<tr>
+<td style="text-align: center;">8</td>
+<td>Intermediate</td>
+<td><strong>Dig / deep crossing</strong></td>
+<td>🟡 Occupy the middle vacuum</td>
+</tr>
+<tr>
+<td style="text-align: center;">9</td>
+<td>Tempo: Gas</td>
+<td><strong>No-Huddle Same Play</strong></td>
+<td>🟢 Tire out their big men</td>
+</tr>
+<tr>
+<td style="text-align: center;">10</td>
+<td>Run: Exploitation</td>
+<td><strong>Zone Read</strong></td>
+<td>🟢 Read the unblocked edge</td>
+</tr>
+<tr>
+<td style="text-align: center;">11</td>
+<td>Perimeter Shot</td>
+<td><strong>Fade / Back Shoulder</strong></td>
+<td>🔴 Isolation on the wide side</td>
+</tr>
+<tr>
+<td style="text-align: center;">12</td>
+<td>Screen: Slow</td>
+<td><strong>HB Slip Screen</strong></td>
+<td>🟡 Catch aggressive rushers napping</td>
+</tr>
+<tr>
+<td style="text-align: center;">13</td>
+<td>Red Zone: High</td>
+<td><strong>Fade / Jump Ball</strong></td>
+<td>🔴 Use height/catch radius</td>
+</tr>
+<tr>
+<td style="text-align: center;">14</td>
+<td>Red Zone: Low</td>
+<td><strong>Shovel Option</strong></td>
+<td>🟡 Goal line misdirection</td>
+</tr>
+<tr>
+<td style="text-align: center;">15</td>
+<td>Goal Line</td>
+<td><strong>QB Power</strong></td>
+<td>🟢 11-on-11 football</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="post-game-metrics-did-i-run-it-right-bar_chart">Post-Game Metrics (Did I run it right?) 📊</h2>
+<p>If you played a true Veer and Shoot game, your stats should look like this:</p>
+<ul>
+<li><strong>Total Plays:</strong> &gt; 80 (Tempo creates more possessions)</li>
+<li><strong>Big Plays (20+ yds):</strong> &gt; 5 (Explosive offense)</li>
+<li><strong>Rushing Yards:</strong> &gt; 200 (Spread to run)</li>
+<li><strong>Avg Depth of Target:</strong> High (Vertical passing)</li>
+</ul>
+<h2 id="dynasty-recruiting-guide-mortar_board">Dynasty Recruiting Guide 🎓</h2>
+<p>If you run the Veer and Shoot, prioritize these archetypes:</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th style="text-align: left;"><strong>Position</strong></th>
+<th><strong>Archetype / Key Stats</strong></th>
+<th><strong>Why?</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>QB</strong></td>
+<td><strong>Strong Arm</strong> (THP, DAC)</td>
+<td>🧠 Must drive the ball outside the numbers.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>HB</strong></td>
+<td><strong>Elusive Back</strong> (SPD, ACC, COD)</td>
+<td>🏃 Operates in space. One missed tackle = TD.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>TE</strong></td>
+<td><strong>Vertical Threat</strong> (SPD, CTH)</td>
+<td>🧲 Often a glorified big slot receiver.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>WR</strong></td>
+<td><strong>Deep Threat</strong> (SPD, ACC, RLS)</td>
+<td>🧤 SPEED. If they can't run by a corner, they sit.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>OL</strong></td>
+<td><strong>Agile</strong> (AGI, PBF, RBK)</td>
+<td>🧱 Wide splits mean wider rush angles. Need feet.</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="teams-to-check-first-in-cfb26-real-world-scheme-fit-mag">Teams to check first in CFB26 (real-world scheme fit) 🔍</h2>
+<p>Veer and Shoot is most often associated with wide splits, tempo, and access throws.</p>
+<p>Start here and <strong>verify in-game</strong>:</p>
+<ul>
+<li>Tennessee (Heupel)</li>
+<li>UCF (Heupel-era)</li>
+<li>Baylor (Briles-tree concepts)</li>
+<li>Houston (tempo spread influence)</li>
+</ul>
+<h2 id="nfl-analogs-closest-cousins-football">NFL analogs (closest cousins) 🏈</h2>
+<p>The NFL rarely runs a true Veer and Shoot, but several teams use <strong>wide splits + quick access</strong> concepts that can feel similar.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>NFL team (varies by year)</strong></th>
+<th><strong>What matches the vibe</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Miami Dolphins</td>
+<td>Wide splits / spacing stress + quick throws</td>
+</tr>
+<tr>
+<td>Los Angeles Rams</td>
+<td>Spacing + condensed-to-wide presentation, quick game</td>
+</tr>
+<tr>
+<td>Cincinnati Bengals</td>
+<td>Spread spacing + shot timing</td>
+</tr>
+<tr>
+<td>Kansas City Chiefs</td>
+<td>Space creation + quick answers</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="teams-in-cfb26-that-use-a-veer-and-shoot-playbook-fill-this-in-stadium">Teams in CFB26 that use a Veer and Shoot playbook (fill this in) 🏟️</h2>
+<p>Use this as a living table you update as you confirm playbook assignments in-game.</p>
+<!-- markdownlint-disable MD033 -->
+
+<details>
+<summary>Show editable teams table</summary>
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th><strong>Team</strong></th>
+<th><strong>In-game offensive playbook name</strong></th>
+<th><strong>Notes (wide splits? tempo? favorite screens/shots?)</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+</details>
+<!-- markdownlint-enable MD033 -->
+
+<hr />
+<h2 id="minimal-glossary-pushpin">Minimal glossary 📌</h2>
+<ul>
+<li><strong>Access throw:</strong> immediate throw to a WR with cushion (hitch/now/out).</li>
+<li><strong>Veer (modern usage):</strong> inside zone / split-flow family that punishes light boxes.</li>
+<li><strong>Shoot:</strong> vertical emphasis (seams/posts) that punishes safeties cheating.</li>
+<li><strong>Wide splits:</strong> WR alignments near the sideline to stretch coverage.</li>
+</ul>
+        </div>
+        <nav class="scheme-nav" aria-label="Scheme navigation">
+      <a class="scheme-link prev" href="spread.html">← Spread</a>
+      <a class="scheme-link center" href="index.html">All Schemes</a>
+      <a class="scheme-link next" href="west-coast.html">West Coast →</a>
+    </nav>
+      </article>
+    </div>
+  </main>
+</body>
+</html>

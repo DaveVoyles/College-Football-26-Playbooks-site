@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CFB26 WebGL Coverage Viewer</title>
+  <link rel="stylesheet" href="../assets/styles/site-nav.css" />
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("clawpilotTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --cp-bg: #f7f4ef;
+      --cp-bg-elevated: #fcfbf8;
+      --cp-surface: #ffffff;
+      --cp-surface-soft: #f5f5f5;
+      --cp-border: #dedede;
+      --cp-border-strong: #919191;
+      --cp-text: #242424;
+      --cp-text-muted: #5c5c5c;
+      --cp-text-soft: #6f6f6f;
+      --cp-accent: #b11f4b;
+      --cp-accent-hover: #9a1a41;
+      --cp-accent-soft: rgba(177, 31, 75, 0.08);
+      --cp-accent-fg: #ffffff;
+      --cp-success: #16a34a;
+      --cp-danger: #dc2626;
+      --cp-warning: #f59e0b;
+      --cp-link: #0078d4;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+      --cp-overlay: rgba(255, 255, 255, 0.8);
+      --cp-panel: rgba(255, 255, 255, 0.86);
+      --cp-panel-strong: rgba(255, 255, 255, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.55);
+      --cp-highlight: rgba(177, 31, 75, 0.12);
+    }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --cp-bg: #3d3b3a;
+      --cp-bg-elevated: #343231;
+      --cp-surface: #292929;
+      --cp-surface-soft: #2e2e2e;
+      --cp-border: #474747;
+      --cp-border-strong: #5f5f5f;
+      --cp-text: #dedede;
+      --cp-text-muted: #919191;
+      --cp-text-soft: #b0b0b0;
+      --cp-accent: #fd8ea1;
+      --cp-accent-hover: #fb7b91;
+      --cp-accent-soft: rgba(253, 142, 161, 0.14);
+      --cp-accent-fg: #1a1a1a;
+      --cp-success: #4ade80;
+      --cp-danger: #f87171;
+      --cp-warning: #fbbf24;
+      --cp-link: #4da6ff;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+      --cp-overlay: rgba(41, 41, 41, 0.88);
+      --cp-panel: rgba(41, 41, 41, 0.72);
+      --cp-panel-strong: rgba(41, 41, 41, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.04);
+      --cp-highlight: rgba(253, 142, 161, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+    }
+
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: var(--cp-bg);
+      color: var(--cp-text);
+      font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    a {
+      color: var(--cp-link);
+    }
+
+    .app-shell {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      padding-top: 3.7rem;
+    }
+
+    #scene-root {
+      width: 100%;
+      height: 100%;
+    }
+
+    #scene-root canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 4.6rem 1rem 1rem;
+      pointer-events: none;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .panel {
+      width: min(22rem, 100%);
+      pointer-events: auto;
+      border: 1px solid var(--cp-border);
+      border-radius: 16px;
+      background: var(--cp-panel);
+      backdrop-filter: blur(14px);
+      padding: 1rem;
+    }
+
+    .panel h1,
+    .panel h2,
+    .panel h3,
+    .panel p {
+      margin-top: 0;
+    }
+
+    .eyebrow {
+      margin-bottom: 0.35rem;
+      color: var(--cp-text-muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .control-row {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    select {
+      width: 100%;
+      min-height: 2.75rem;
+      border-radius: 0.625rem;
+      border: 1px solid var(--cp-border);
+      background: var(--cp-surface);
+      color: var(--cp-text);
+      padding: 0.65rem 0.8rem;
+      font: inherit;
+    }
+
+    .meta-list,
+    .legend,
+    .defender-details {
+      display: grid;
+      gap: 0.65rem;
+    }
+
+    .meta-card,
+    .legend-item,
+    .detail-card {
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      background: var(--cp-surface);
+      padding: 0.75rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      color: var(--cp-text-muted);
+      font-size: 0.95rem;
+    }
+
+    .swatch {
+      width: 0.85rem;
+      height: 0.85rem;
+      border-radius: 999px;
+      border: 1px solid var(--cp-border-strong);
+      flex: none;
+    }
+
+    .detail-card strong,
+    .meta-card strong {
+      display: block;
+      margin-bottom: 0.2rem;
+      color: var(--cp-text);
+    }
+
+    .hint {
+      color: var(--cp-text-soft);
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      background: var(--cp-accent-soft);
+      color: var(--cp-accent);
+      padding: 0.25rem 0.65rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .divider {
+      height: 1px;
+      margin: 0.85rem 0;
+      background: var(--cp-border);
+    }
+
+    @media (max-width: 960px) {
+      body {
+        overflow: auto;
+      }
+
+      .app-shell {
+        height: auto;
+        min-height: 100vh;
+      }
+
+      #scene-root {
+        height: 70vh;
+      }
+
+      .overlay {
+        position: static;
+        display: grid;
+        gap: 1rem;
+        padding: 1rem;
+        margin-top: -5rem;
+      }
+
+      .panel {
+        width: 100%;
+      }
+    }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.167.1/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.167.1/examples/jsm/"
+      }
+    }
+  </script>
+  <script defer src="../assets/scripts/site-nav.js"></script>
+</head>
+<body data-nav-root="..">
+  <div class="app-shell">
+    <div id="scene-root" aria-label="3D coverage shell viewer"></div>
+    <div class="overlay">
+      <section class="panel control-row">
+        <div>
+          <div class="eyebrow">Coverage Shell Viewer</div>
+          <h1>3D coverage shell viewer</h1>
+          <p class="hint">Rotate, zoom, and click defenders to inspect assignments. Man matchups draw live to the nearest receiver.</p>
+        </div>
+        <label>
+          <span class="eyebrow">Coverage</span>
+          <select id="coverage-select"></select>
+        </label>
+        <div class="legend">
+          <div class="legend-item"><span class="swatch" style="background: var(--cp-danger);"></span>Defensive line / pressure</div>
+          <div class="legend-item"><span class="swatch" style="background: var(--cp-warning);"></span>Linebackers / safeties</div>
+          <div class="legend-item"><span class="swatch" style="background: var(--cp-link);"></span>Corners / nickel</div>
+          <div class="legend-item"><span class="swatch" style="background: var(--cp-accent);"></span>Selected defender</div>
+        </div>
+      </section>
+      <aside class="panel" id="info-panel">
+        <span class="pill" id="coverage-pill">Coverage</span>
+        <h2 id="coverage-name">Loading…</h2>
+        <div class="meta-list">
+          <div class="meta-card"><strong>Description</strong><span id="coverage-desc"></span></div>
+          <div class="meta-card"><strong>Weakness</strong><span id="coverage-weakness"></span></div>
+          <div class="meta-card"><strong>Beaters</strong><span id="coverage-beaters"></span></div>
+        </div>
+        <div class="divider"></div>
+        <div class="defender-details">
+          <div class="detail-card">
+            <strong id="defender-role">Click a defender</strong>
+            <span id="defender-assignment" class="hint">Assignments update here when you select a sphere on the field.</span>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    const coverages = {
+      "Cover 0 (Zero Blitz)": {
+        desc: "No deep safety. Pure man across the board. All-out pressure.",
+        weakness: "No deep help — 1-on-1 everywhere. Throw deep or throw hot.",
+        beaters: "Go/Fade, Slant, Screen",
+        defenders: [
+          { role: "DE", x: -2.5, z: 1, color: 0xff4444 },
+          { role: "DT", x: -0.8, z: 1, color: 0xff4444 },
+          { role: "DT", x: 0.8, z: 1, color: 0xff4444 },
+          { role: "DE", x: 2.5, z: 1, color: 0xff4444 },
+          { role: "LB", x: -1.5, z: 2, color: 0xff8800 },
+          { role: "LB", x: 1.5, z: 2, color: 0xff8800 },
+          { role: "CB", x: -5, z: 1.5, color: 0x4dabf7, man: true },
+          { role: "CB", x: 5, z: 1.5, color: 0x4dabf7, man: true },
+          { role: "NB", x: 3.5, z: 2, color: 0x4dabf7, man: true },
+          { role: "SS", x: -3.5, z: 2.5, color: 0xff8800 },
+          { role: "FS", x: 0, z: 3, color: 0xff8800 }
+        ]
+      },
+      "Cover 1 (Man Free)": {
+        desc: "1 deep safety. Man coverage underneath. Standard man look.",
+        weakness: "1 Safety deep — crossing routes rub defenders off.",
+        beaters: "Mesh, Drag, Slant, Double Moves",
+        defenders: [
+          { role: "DE", x: -2.5, z: 1, color: 0xff4444 },
+          { role: "DT", x: -0.8, z: 1, color: 0xff4444 },
+          { role: "DT", x: 0.8, z: 1, color: 0xff4444 },
+          { role: "DE", x: 2.5, z: 1, color: 0xff4444 },
+          { role: "LB", x: -1.5, z: 2.5, color: 0xff8800 },
+          { role: "LB", x: 0, z: 2.5, color: 0xff8800 },
+          { role: "LB", x: 1.5, z: 2.5, color: 0xff8800 },
+          { role: "CB", x: -5, z: 1.5, color: 0x4dabf7, man: true },
+          { role: "CB", x: 5, z: 1.5, color: 0x4dabf7, man: true },
+          { role: "NB", x: 3, z: 2, color: 0x4dabf7, man: true },
+          { role: "FS", x: 0, z: 8, color: 0xffd166 }
+        ]
+      },
+      "Cover 2 (Zone)": {
+        desc: "2 deep safeties split the field. 5 underneath zones.",
+        weakness: "Deep sidelines (honey hole) and deep middle between safeties.",
+        beaters: "Smash/Corner, Fade, Post",
+        defenders: [
+          { role: "DE", x: -2.5, z: 1, color: 0xff4444 },
+          { role: "DT", x: -0.8, z: 1, color: 0xff4444 },
+          { role: "DT", x: 0.8, z: 1, color: 0xff4444 },
+          { role: "DE", x: 2.5, z: 1, color: 0xff4444 },
+          { role: "LB", x: -2, z: 3, color: 0xff8800 },
+          { role: "LB", x: 0, z: 3, color: 0xff8800 },
+          { role: "LB", x: 2, z: 3, color: 0xff8800 },
+          { role: "CB", x: -5, z: 2, color: 0x4dabf7 },
+          { role: "CB", x: 5, z: 2, color: 0x4dabf7 },
+          { role: "SS", x: -3, z: 8, color: 0xffd166 },
+          { role: "FS", x: 3, z: 8, color: 0xffd166 }
+        ],
+        zones: [
+          { x: -3, z: 8, radius: 3.5, color: 0xffd166 },
+          { x: 3, z: 8, radius: 3.5, color: 0xffd166 }
+        ]
+      },
+      "Cover 3 (Zone)": {
+        desc: "3 deep defenders split field into thirds. 4 underneath.",
+        weakness: "Seams (hashes) and flats.",
+        beaters: "4 Verts (Seams), Curl-Flat, Flood",
+        defenders: [
+          { role: "DE", x: -2.5, z: 1, color: 0xff4444 },
+          { role: "DT", x: -0.8, z: 1, color: 0xff4444 },
+          { role: "DT", x: 0.8, z: 1, color: 0xff4444 },
+          { role: "DE", x: 2.5, z: 1, color: 0xff4444 },
+          { role: "LB", x: -1.5, z: 3, color: 0xff8800 },
+          { role: "LB", x: 0, z: 3, color: 0xff8800 },
+          { role: "LB", x: 1.5, z: 3, color: 0xff8800 },
+          { role: "CB", x: -4, z: 8, color: 0x4dabf7 },
+          { role: "CB", x: 4, z: 8, color: 0x4dabf7 },
+          { role: "SS", x: 2, z: 3, color: 0xff8800 },
+          { role: "FS", x: 0, z: 9, color: 0xffd166 }
+        ],
+        zones: [
+          { x: -4, z: 8, radius: 3, color: 0x4dabf7 },
+          { x: 0, z: 9, radius: 3, color: 0xffd166 },
+          { x: 4, z: 8, radius: 3, color: 0x4dabf7 }
+        ]
+      },
+      "Cover 4 (Quarters)": {
+        desc: "4 deep defenders each take a quarter of the field.",
+        weakness: "Underneath — tons of space for 10-yard stop routes.",
+        beaters: "Digs, Curls, Stick, Draw Run",
+        defenders: [
+          { role: "DE", x: -2.5, z: 1, color: 0xff4444 },
+          { role: "DT", x: -0.8, z: 1, color: 0xff4444 },
+          { role: "DT", x: 0.8, z: 1, color: 0xff4444 },
+          { role: "DE", x: 2.5, z: 1, color: 0xff4444 },
+          { role: "LB", x: -1, z: 3, color: 0xff8800 },
+          { role: "LB", x: 1, z: 3, color: 0xff8800 },
+          { role: "LB", x: 0, z: 3.5, color: 0xff8800 },
+          { role: "CB", x: -5, z: 7, color: 0x4dabf7 },
+          { role: "CB", x: 5, z: 7, color: 0x4dabf7 },
+          { role: "SS", x: -2, z: 7.5, color: 0xffd166 },
+          { role: "FS", x: 2, z: 7.5, color: 0xffd166 }
+        ],
+        zones: [
+          { x: -5, z: 7, radius: 2.5, color: 0x4dabf7 },
+          { x: -2, z: 7.5, radius: 2.5, color: 0xffd166 },
+          { x: 2, z: 7.5, radius: 2.5, color: 0xffd166 },
+          { x: 5, z: 7, radius: 2.5, color: 0x4dabf7 }
+        ]
+      },
+      "Cover 6 (Quarter-Quarter-Half)": {
+        desc: "Cover 4 to one side, Cover 2 to the other. Hybrid zone.",
+        weakness: "Weak side flat and deep middle.",
+        beaters: "Flood (field side), Post-Dig",
+        defenders: [
+          { role: "DE", x: -2.5, z: 1, color: 0xff4444 },
+          { role: "DT", x: -0.8, z: 1, color: 0xff4444 },
+          { role: "DT", x: 0.8, z: 1, color: 0xff4444 },
+          { role: "DE", x: 2.5, z: 1, color: 0xff4444 },
+          { role: "LB", x: -1, z: 3, color: 0xff8800 },
+          { role: "LB", x: 1, z: 3, color: 0xff8800 },
+          { role: "LB", x: 0, z: 3.5, color: 0xff8800 },
+          { role: "CB", x: -5, z: 2, color: 0x4dabf7 },
+          { role: "CB", x: 5, z: 7, color: 0x4dabf7 },
+          { role: "SS", x: -3, z: 8, color: 0xffd166 },
+          { role: "FS", x: 2, z: 7.5, color: 0xffd166 }
+        ],
+        zones: [
+          { x: -3, z: 8, radius: 3, color: 0xffd166 },
+          { x: 5, z: 7, radius: 2.5, color: 0x4dabf7 },
+          { x: 2, z: 7.5, radius: 2.5, color: 0xffd166 }
+        ]
+      }
+    };
+
+    const offensivePlayers = [
+      { role: 'LT', x: -2, z: -0.2, color: 0x888888 },
+      { role: 'LG', x: -1, z: -0.2, color: 0x888888 },
+      { role: 'C', x: 0, z: -0.2, color: 0x888888 },
+      { role: 'RG', x: 1, z: -0.2, color: 0x888888 },
+      { role: 'RT', x: 2, z: -0.2, color: 0x888888 },
+      { role: 'QB', x: 0, z: -1.8, color: 0xffd166 },
+      { role: 'RB', x: -1.3, z: -3, color: 0x4dabf7 },
+      { role: 'X', x: -8, z: -0.8, color: 0xef476f, receiver: true },
+      { role: 'H', x: -3.5, z: -0.8, color: 0xef476f, receiver: true },
+      { role: 'Y', x: 3.5, z: -0.8, color: 0xef476f, receiver: true },
+      { role: 'Z', x: 8, z: -0.8, color: 0xef476f, receiver: true }
+    ];
+
+    const sceneRoot = document.getElementById('scene-root');
+    const select = document.getElementById('coverage-select');
+    const coverageNameEl = document.getElementById('coverage-name');
+    const coverageDescEl = document.getElementById('coverage-desc');
+    const coverageWeaknessEl = document.getElementById('coverage-weakness');
+    const coverageBeatersEl = document.getElementById('coverage-beaters');
+    const coveragePillEl = document.getElementById('coverage-pill');
+    const defenderRoleEl = document.getElementById('defender-role');
+    const defenderAssignmentEl = document.getElementById('defender-assignment');
+
+    const theme = getThemeColors();
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(theme.bgElevated);
+    scene.fog = new THREE.Fog(theme.bg, 24, 58);
+
+    const camera = new THREE.PerspectiveCamera(45, sceneRoot.clientWidth / sceneRoot.clientHeight, 0.1, 100);
+    camera.position.set(0, 23, 9.5);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(sceneRoot.clientWidth, sceneRoot.clientHeight);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    sceneRoot.appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.target.set(0, 0, 4);
+    controls.minDistance = 10;
+    controls.maxDistance = 30;
+    controls.maxPolarAngle = Math.PI / 2.15;
+    controls.minPolarAngle = 0.22;
+
+    scene.add(new THREE.HemisphereLight(theme.surface, theme.bg, 1.15));
+    const sun = new THREE.DirectionalLight(0xffffff, 1.2);
+    sun.position.set(7, 14, 10);
+    scene.add(sun);
+
+    const field = new THREE.Mesh(
+      new THREE.PlaneGeometry(24, 44),
+      new THREE.MeshStandardMaterial({ color: 0x1f7a43, roughness: 0.92, metalness: 0.02 }),
+    );
+    field.rotation.x = -Math.PI / 2;
+    scene.add(field);
+
+    const los = new THREE.Mesh(
+      new THREE.BoxGeometry(24, 0.03, 0.22),
+      new THREE.MeshBasicMaterial({ color: 0xffffff }),
+    );
+    los.position.set(0, 0.03, 0);
+    scene.add(los);
+
+    const offenseGroup = new THREE.Group();
+    const receiverTargets = [];
+    scene.add(offenseGroup);
+
+    offensivePlayers.forEach((player) => {
+      const sphere = new THREE.Mesh(
+        new THREE.SphereGeometry(player.receiver ? 0.3 : 0.34, 24, 24),
+        new THREE.MeshStandardMaterial({ color: player.color, roughness: 0.32, metalness: 0.15 }),
+      );
+      const pos = toWorld(player);
+      sphere.position.copy(pos);
+      offenseGroup.add(sphere);
+      if (player.receiver) {
+        receiverTargets.push({ ...player, position: pos.clone() });
+      }
+    });
+
+    const defenderSlots = Array.from({ length: 11 }, (_, index) => {
+      const mesh = new THREE.Mesh(
+        new THREE.SphereGeometry(0.38, 32, 32),
+        new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x000000, roughness: 0.24, metalness: 0.1 }),
+      );
+      mesh.castShadow = false;
+      mesh.userData.slot = index;
+      mesh.userData.target = new THREE.Vector3();
+      mesh.userData.assignment = '';
+      mesh.userData.defaultColor = 0xffffff;
+      mesh.visible = false;
+      scene.add(mesh);
+      return mesh;
+    });
+
+    const zoneSlots = Array.from({ length: 4 }, () => {
+      const zone = new THREE.Mesh(
+        new THREE.CylinderGeometry(1, 1, 0.12, 48),
+        new THREE.MeshStandardMaterial({ transparent: true, opacity: 0.15, roughness: 0.4, metalness: 0.05 }),
+      );
+      zone.position.y = 0.06;
+      zone.visible = false;
+      zone.userData.target = new THREE.Vector3();
+      zone.userData.targetRadius = 0;
+      scene.add(zone);
+      return zone;
+    });
+
+    const manLines = Array.from({ length: 4 }, () => {
+      const geometry = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]);
+      const line = new THREE.Line(
+        geometry,
+        new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.55 }),
+      );
+      line.visible = false;
+      scene.add(line);
+      return line;
+    });
+
+    const raycaster = new THREE.Raycaster();
+    const pointer = new THREE.Vector2();
+    let activeCoverageName = '';
+    let selectedSlot = null;
+    let lastTap = 0;
+
+    Object.keys(coverages).forEach((name) => {
+      const option = document.createElement('option');
+      option.value = name;
+      option.textContent = name;
+      select.append(option);
+    });
+
+    select.addEventListener('change', () => {
+      selectedSlot = null;
+      applyCoverage(select.value);
+    });
+
+    renderer.domElement.addEventListener('pointerdown', (event) => {
+      const now = performance.now();
+      if (now - lastTap < 150) return;
+      lastTap = now;
+      const rect = renderer.domElement.getBoundingClientRect();
+      pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+      raycaster.setFromCamera(pointer, camera);
+      const hits = raycaster.intersectObjects(defenderSlots.filter((mesh) => mesh.visible));
+      if (!hits.length) {
+        selectedSlot = null;
+        refreshInfo();
+        return;
+      }
+      selectedSlot = hits[0].object.userData.slot;
+      refreshInfo();
+    });
+
+    applyCoverage(Object.keys(coverages)[0], true);
+
+    window.addEventListener('resize', onResize);
+
+    const clock = new THREE.Clock();
+    function animate() {
+      const delta = clock.getDelta();
+      const pulse = 0.5 + Math.sin(clock.elapsedTime * 1.8) * 0.15;
+      defenderSlots.forEach((mesh) => {
+        if (!mesh.visible) return;
+        mesh.position.lerp(mesh.userData.target, Math.min(1, delta * 5.2));
+        mesh.material.emissive.setHex(mesh.userData.slot === selectedSlot ? theme.accentNumber : mesh.userData.defaultColor);
+        mesh.material.emissiveIntensity = mesh.userData.slot === selectedSlot ? 0.48 + pulse : 0.08;
+        mesh.scale.setScalar(mesh.userData.slot === selectedSlot ? 1.14 : 1);
+      });
+
+      zoneSlots.forEach((zone) => {
+        if (!zone.visible && zone.userData.targetRadius === 0) return;
+        zone.position.lerp(zone.userData.target, Math.min(1, delta * 5));
+        const radius = THREE.MathUtils.lerp(zone.scale.x || 0.001, zone.userData.targetRadius || 0.001, Math.min(1, delta * 5));
+        zone.scale.set(radius, 1, radius);
+        zone.visible = radius > 0.05;
+      });
+
+      updateManLines();
+      controls.update();
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    function applyCoverage(name, immediate = false) {
+      activeCoverageName = name;
+      const coverage = coverages[name];
+      const assignments = assignReceivers(coverage.defenders.filter((defender) => defender.man));
+      select.value = name;
+
+      coverageNameEl.textContent = name;
+      coverageDescEl.textContent = coverage.desc;
+      coverageWeaknessEl.textContent = coverage.weakness;
+      coverageBeatersEl.textContent = coverage.beaters;
+      coveragePillEl.textContent = name.includes('Zone') || name.includes('Quarters') || name.includes('Quarter') ? 'Zone shell' : 'Man shell';
+
+      defenderSlots.forEach((mesh, index) => {
+        const defender = coverage.defenders[index];
+        if (!defender) {
+          mesh.visible = false;
+          return;
+        }
+        mesh.visible = true;
+        mesh.material.color.setHex(defender.color);
+        mesh.userData.defaultColor = defender.color;
+        mesh.userData.defender = defender;
+        mesh.userData.assignment = describeAssignment(defender, assignments.get(defender) || null);
+        mesh.userData.target.copy(toWorld(defender));
+        if (immediate) {
+          mesh.position.copy(mesh.userData.target);
+        }
+      });
+
+      zoneSlots.forEach((zone, index) => {
+        const data = coverage.zones?.[index];
+        if (!data) {
+          zone.userData.targetRadius = 0;
+          return;
+        }
+        zone.material.color.setHex(data.color);
+        zone.userData.target.copy(new THREE.Vector3(data.x * 1.35, 0.06, data.z * 1.35));
+        zone.userData.targetRadius = data.radius * 1.35;
+        if (immediate) {
+          zone.position.copy(zone.userData.target);
+          zone.scale.set(zone.userData.targetRadius, 1, zone.userData.targetRadius);
+          zone.visible = true;
+        }
+      });
+
+      if (!coverage.zones?.length) {
+        zoneSlots.forEach((zone) => {
+          zone.visible = false;
+          zone.scale.set(0.001, 1, 0.001);
+        });
+      }
+
+      refreshInfo();
+      updateManLines();
+    }
+
+    function assignReceivers(manDefenders) {
+      const assignments = new Map();
+      const remaining = [...receiverTargets];
+      manDefenders.forEach((defender) => {
+        if (!remaining.length) return;
+        let bestIndex = 0;
+        let bestDistance = Infinity;
+        remaining.forEach((receiver, index) => {
+          const dx = defender.x - receiver.x;
+          const dz = defender.z - receiver.z;
+          const distance = dx * dx + dz * dz;
+          if (distance < bestDistance) {
+            bestDistance = distance;
+            bestIndex = index;
+          }
+        });
+        assignments.set(defender, remaining.splice(bestIndex, 1)[0]);
+      });
+      return assignments;
+    }
+
+    function describeAssignment(defender, receiver) {
+      if (defender.man && receiver) {
+        return `${defender.role} is locked in man coverage on ${receiver.role}. Stay attached through the stem and contest the break point.`;
+      }
+      if (defender.role === 'DE' || defender.role === 'DT') {
+        return `${defender.role} is part of the rush lane. Attack the pocket, squeeze escape space, and force the ball out.`;
+      }
+      if (activeCoverageName === 'Cover 0 (Zero Blitz)' && (defender.role === 'LB' || defender.role === 'SS' || defender.role === 'FS')) {
+        return `${defender.role} adds to the pressure package. Trigger downhill fast and punish any hesitation from the quarterback.`;
+      }
+      if (defender.role === 'FS' && defender.z >= 7.5) {
+        return `${defender.role} is the deep safety help. Protect the post and overlap anything that threatens vertically.`;
+      }
+      if ((defender.role === 'SS' || defender.role === 'FS' || defender.role === 'CB') && defender.z >= 6.5) {
+        return `${defender.role} owns a deep zone landmark in the shell. Stay on top and midpoint vertical routes.`;
+      }
+      if (defender.role === 'CB') {
+        return `${defender.role} is squatting underneath outside. Reroute the release and clamp throws breaking toward the sideline.`;
+      }
+      return `${defender.role} is handling an underneath hook/curl window. Expand under crossers, then rally downhill to the throw.`;
+    }
+
+    function refreshInfo() {
+      if (selectedSlot === null || !defenderSlots[selectedSlot]?.visible) {
+        defenderRoleEl.textContent = 'Click a defender';
+        defenderAssignmentEl.textContent = 'Assignments update here when you select a sphere on the field.';
+        return;
+      }
+      const defender = defenderSlots[selectedSlot].userData.defender;
+      defenderRoleEl.textContent = `${defender.role} assignment`;
+      defenderAssignmentEl.textContent = defenderSlots[selectedSlot].userData.assignment;
+    }
+
+    function updateManLines() {
+      const coverage = coverages[activeCoverageName];
+      const assignments = assignReceivers(coverage.defenders.filter((defender) => defender.man));
+      let lineIndex = 0;
+      defenderSlots.forEach((mesh) => {
+        const defender = mesh.userData.defender;
+        if (!mesh.visible || !defender?.man) return;
+        const receiver = assignments.get(defender);
+        if (!receiver) return;
+        const line = manLines[lineIndex++];
+        line.visible = true;
+        line.material.color.set(mesh.userData.slot === selectedSlot ? theme.accentNumber : defender.color);
+        const points = [mesh.position.clone(), receiver.position.clone()];
+        line.geometry.dispose();
+        line.geometry = new THREE.BufferGeometry().setFromPoints(points);
+      });
+      manLines.slice(lineIndex).forEach((line) => {
+        line.visible = false;
+      });
+    }
+
+    function toWorld(position) {
+      return new THREE.Vector3(position.x * 1.35, 0.4, position.z * 1.35);
+    }
+
+    function onResize() {
+      const width = sceneRoot.clientWidth;
+      const height = sceneRoot.clientHeight;
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    }
+
+    function getThemeColors() {
+      const styles = getComputedStyle(document.documentElement);
+      const color = (name) => styles.getPropertyValue(name).trim();
+      const toNumber = (value) => Number.parseInt(value.replace('#', ''), 16);
+      return {
+        bg: color('--cp-bg'),
+        bgElevated: color('--cp-bg-elevated'),
+        surface: color('--cp-surface'),
+        accentNumber: toNumber(color('--cp-accent'))
+      };
+    }
+  </script>
+</body>
+</html>

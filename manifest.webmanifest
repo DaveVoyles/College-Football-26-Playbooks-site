@@ -1,0 +1,18 @@
+{
+  "name": "CFB26 Playbook Library",
+  "short_name": "CFB26",
+  "description": "Interactive playbook guide for EA Sports College Football 2026 with 3D WebGL visualizations.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0d1b2a",
+  "theme_color": "#2d6a4f",
+  "icons": [
+    {
+      "src": "assets/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
