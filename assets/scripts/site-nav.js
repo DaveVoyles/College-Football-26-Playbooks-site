@@ -28,6 +28,10 @@
         { href: `${root}/visualizations/webgl-formations.html`, label: 'Formations' },
         { href: `${root}/visualizations/webgl-route-tree.html`, label: 'Route Tree' },
         { href: `${root}/visualizations/webgl-coverage.html`, label: 'Coverage Shells' },
+        { href: `${root}/visualizations/webgl-play-concepts.html`, label: 'Play Concepts' },
+        { href: `${root}/visualizations/webgl-blitz.html`, label: 'Blitz & Pressure' },
+        { href: `${root}/visualizations/webgl-run-plays.html`, label: 'Run Plays' },
+        { href: `${root}/visualizations/webgl-pre-snap.html`, label: 'Pre-Snap Trainer' },
       ],
     },
   ];

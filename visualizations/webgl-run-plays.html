@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CFB26 WebGL Run Play Viewer</title>
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("clawpilotTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <link rel="stylesheet" href="../assets/styles/site-nav.css" />
+  <style>
+    :root {
+      color-scheme: light;
+      --cp-bg: #f7f4ef;
+      --cp-bg-elevated: #fcfbf8;
+      --cp-surface: #ffffff;
+      --cp-surface-soft: #f5f5f5;
+      --cp-border: #dedede;
+      --cp-border-strong: #919191;
+      --cp-text: #242424;
+      --cp-text-muted: #5c5c5c;
+      --cp-text-soft: #6f6f6f;
+      --cp-accent: #b11f4b;
+      --cp-accent-hover: #9a1a41;
+      --cp-accent-soft: rgba(177, 31, 75, 0.08);
+      --cp-accent-fg: #ffffff;
+      --cp-success: #16a34a;
+      --cp-danger: #dc2626;
+      --cp-warning: #f59e0b;
+      --cp-link: #0078d4;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+      --cp-overlay: rgba(255, 255, 255, 0.8);
+      --cp-panel: rgba(255, 255, 255, 0.86);
+      --cp-panel-strong: rgba(255, 255, 255, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.55);
+      --cp-highlight: rgba(177, 31, 75, 0.12);
+    }
+
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --cp-bg: #3d3b3a;
+      --cp-bg-elevated: #343231;
+      --cp-surface: #292929;
+      --cp-surface-soft: #2e2e2e;
+      --cp-border: #474747;
+      --cp-border-strong: #5f5f5f;
+      --cp-text: #dedede;
+      --cp-text-muted: #919191;
+      --cp-text-soft: #b0b0b0;
+      --cp-accent: #fd8ea1;
+      --cp-accent-hover: #fb7b91;
+      --cp-accent-soft: rgba(253, 142, 161, 0.14);
+      --cp-accent-fg: #1a1a1a;
+      --cp-success: #4ade80;
+      --cp-danger: #f87171;
+      --cp-warning: #fbbf24;
+      --cp-link: #4da6ff;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+      --cp-overlay: rgba(41, 41, 41, 0.88);
+      --cp-panel: rgba(41, 41, 41, 0.72);
+      --cp-panel-strong: rgba(41, 41, 41, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.04);
+      --cp-highlight: rgba(253, 142, 161, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+    }
+
+    body {
+      overflow: hidden;
+      background: var(--cp-bg);
+      color: var(--cp-text);
+      font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    button,
+    select {
+      font: inherit;
+    }
+
+    .page-shell {
+      position: relative;
+      height: 100vh;
+      padding-top: calc(var(--site-nav-height, 3.5rem) + 0.5rem);
+    }
+
+    .scene-shell,
+    .scene-canvas,
+    .label-layer {
+      position: absolute;
+      inset: 0;
+    }
+
+    .scene-shell {
+      inset: calc(var(--site-nav-height, 3.5rem) + 0.5rem) 0 0;
+      background:
+        radial-gradient(circle at top, var(--cp-sheen), transparent 40%),
+        linear-gradient(180deg, var(--cp-bg-elevated), var(--cp-bg));
+    }
+
+    .scene-canvas canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .label-layer {
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .player-label {
+      position: absolute;
+      left: 0;
+      top: 0;
+      padding: 0.2rem 0.45rem;
+      border-radius: 999px;
+      border: 1px solid var(--cp-border);
+      background: var(--cp-panel-strong);
+      color: var(--cp-text);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.14);
+      transform: translate(-50%, -130%);
+    }
+
+    .player-label.offense {
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .player-label.defense {
+      opacity: 0.92;
+    }
+
+    .overlay {
+      position: absolute;
+      z-index: 5;
+      display: grid;
+      gap: 1rem;
+      pointer-events: none;
+      inset: calc(var(--site-nav-height, 3.5rem) + 1rem) 1rem 1rem 1rem;
+      grid-template-columns: minmax(17rem, 23rem) minmax(17rem, 25rem);
+      align-content: start;
+      justify-content: space-between;
+    }
+
+    .panel {
+      pointer-events: auto;
+      padding: 1rem;
+      border-radius: 16px;
+      border: 1px solid var(--cp-border);
+      background: var(--cp-panel);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.14);
+    }
+
+    .panel h1,
+    .panel h2,
+    .panel p {
+      margin: 0;
+    }
+
+    .controls,
+    .info-panel {
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    .eyebrow {
+      margin-bottom: 0.45rem;
+      color: var(--cp-text-muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .helper,
+    .detail-text,
+    .meta-card span,
+    .legend-item,
+    .status-text {
+      color: var(--cp-text-soft);
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    .controls select {
+      width: 100%;
+      padding: 0.85rem 0.95rem;
+      border-radius: 0.625rem;
+      border: 1px solid var(--cp-border);
+      background: var(--cp-surface);
+      color: var(--cp-text);
+    }
+
+    .button-row,
+    .toggle-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+    }
+
+    .button-row button,
+    .toggle-row button {
+      min-height: 2.7rem;
+      padding: 0.7rem 1rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
+    }
+
+    .button-row button:hover,
+    .toggle-row button:hover {
+      transform: translateY(-1px);
+    }
+
+    .button-primary {
+      background: var(--cp-accent);
+      color: var(--cp-accent-fg);
+      box-shadow: var(--cp-shadow);
+    }
+
+    .button-primary:hover {
+      background: var(--cp-accent-hover);
+    }
+
+    .button-secondary,
+    .toggle-row button {
+      background: var(--cp-surface);
+      color: var(--cp-text);
+      border-color: var(--cp-border);
+    }
+
+    .toggle-row button.active {
+      background: var(--cp-accent-soft);
+      color: var(--cp-accent);
+      border-color: color-mix(in srgb, var(--cp-accent) 55%, var(--cp-border));
+    }
+
+    .toggle-row button:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+      transform: none;
+    }
+
+    .legend {
+      display: grid;
+      gap: 0.55rem;
+    }
+
+    .legend-item,
+    .meta-card,
+    .detail-card {
+      padding: 0.72rem 0.78rem;
+      border-radius: 0.75rem;
+      border: 1px solid var(--cp-border);
+      background: var(--cp-surface);
+    }
+
+    .legend-item {
+      display: flex;
+      gap: 0.65rem;
+      align-items: center;
+    }
+
+    .swatch {
+      width: 0.92rem;
+      height: 0.92rem;
+      border-radius: 999px;
+      flex: none;
+      border: 1px solid var(--cp-border-strong);
+    }
+
+    .title-row {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .scheme-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.35rem 0.65rem;
+      border-radius: 999px;
+      background: var(--cp-accent-soft);
+      color: var(--cp-accent);
+      font-weight: 700;
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+
+    .meta-list {
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    .meta-card strong,
+    .detail-card strong {
+      display: block;
+      margin-bottom: 0.25rem;
+      color: var(--cp-text);
+    }
+
+    .status-text {
+      min-height: 1.5rem;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--cp-border);
+    }
+
+    @media (max-width: 960px) {
+      body {
+        overflow: auto;
+      }
+
+      .page-shell {
+        height: auto;
+        min-height: 100vh;
+      }
+
+      .scene-shell {
+        position: relative;
+        height: 70vh;
+        inset: auto;
+      }
+
+      .overlay {
+        position: static;
+        inset: auto;
+        grid-template-columns: 1fr;
+        padding: 1rem;
+        margin-top: -4.5rem;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .panel {
+        padding: 0.9rem;
+      }
+
+      .button-row button,
+      .toggle-row button {
+        flex: 1 1 auto;
+      }
+    }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.167.1/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.167.1/examples/jsm/"
+      }
+    }
+  </script>
+  <script defer src="../assets/scripts/site-nav.js"></script>
+</head>
+<body data-nav-root="..">
+  <div class="page-shell">
+    <div class="scene-shell">
+      <div id="scene" class="scene-canvas" aria-label="3D run play viewer"></div>
+      <div id="labels" class="label-layer" aria-hidden="true"></div>
+    </div>
+
+    <div class="overlay">
+      <section class="panel controls">
+        <div>
+          <div class="eyebrow">Run Play Viewer</div>
+          <h1>3D Run Play Viewer</h1>
+        </div>
+        <label>
+          <span class="helper">Pick a run scheme to load the blocking map, lane, and backfield track.</span>
+          <select id="schemeSelect" aria-label="Choose a run scheme"></select>
+        </label>
+        <div class="button-row">
+          <button id="runButton" class="button-primary" type="button">▶ Run Play</button>
+          <button id="resetButton" class="button-secondary" type="button">↺ Reset</button>
+        </div>
+        <div id="readControls" class="toggle-row" hidden>
+          <button id="giveButton" class="active" type="button">Give</button>
+          <button id="keepButton" type="button" disabled>Keep</button>
+        </div>
+        <div id="statusText" class="status-text">Choose a concept, then run the play to watch the lane develop.</div>
+        <div class="legend">
+          <div class="legend-item"><span class="swatch" style="background:#9ca3af"></span>Offense + line calls</div>
+          <div class="legend-item"><span class="swatch" style="background:#ef4444"></span>Static 4-3 front defenders</div>
+          <div class="legend-item"><span class="swatch" style="background:#22c55e"></span>Glowing running lane</div>
+          <div class="legend-item"><span class="swatch" style="background:#fbbf24"></span>Puller arc / gap action</div>
+        </div>
+        <p class="helper">Drag to orbit, scroll to zoom, and click any lineman to inspect his current assignment.</p>
+      </section>
+
+      <aside class="panel info-panel">
+        <div class="title-row">
+          <div>
+            <div class="eyebrow">Scheme profile</div>
+            <h2 id="schemeTitle">Inside Zone</h2>
+          </div>
+          <span id="schemeBadge" class="scheme-pill">Zone</span>
+        </div>
+        <div class="meta-list">
+          <div class="meta-card"><strong>📋 Description</strong><span id="schemeDesc"></span></div>
+          <div class="meta-card"><strong>🔧 Blocking Rule</strong><span id="schemeRule"></span></div>
+          <div class="meta-card"><strong>📅 When to Call</strong><span id="schemeWhen"></span></div>
+          <div class="meta-card"><strong>👁️ Key Read</strong><span id="schemeRead"></span></div>
+        </div>
+        <div class="divider"></div>
+        <div class="detail-card">
+          <strong id="assignmentTitle">👆 Click a lineman</strong>
+          <div id="assignmentText" class="detail-text">Assignments update here when you select LT, LG, C, RG, or RT on the field.</div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    const OFFENSE = [
+      { role: 'LT', x: -2, z: -0.2, color: 0x9ca3af, radius: 0.32, labelType: 'offense' },
+      { role: 'LG', x: -1, z: -0.2, color: 0x9ca3af, radius: 0.32, labelType: 'offense' },
+      { role: 'C', x: 0, z: -0.2, color: 0x9ca3af, radius: 0.32, labelType: 'offense' },
+      { role: 'RG', x: 1, z: -0.2, color: 0x9ca3af, radius: 0.32, labelType: 'offense' },
+      { role: 'RT', x: 2, z: -0.2, color: 0x9ca3af, radius: 0.32, labelType: 'offense' },
+      { role: 'QB', x: 0, z: -1.8, color: 0xffd166, radius: 0.34, labelType: 'offense' },
+      { role: 'RB', x: -1.3, z: -3, color: 0x4dabf7, radius: 0.34, labelType: 'offense' },
+      { role: 'X', x: -8, z: -0.8, color: 0xef476f, radius: 0.3, labelType: 'offense' },
+      { role: 'H', x: -3.5, z: -0.8, color: 0xef476f, radius: 0.3, labelType: 'offense' },
+      { role: 'Y', x: 3.5, z: -0.8, color: 0xef476f, radius: 0.3, labelType: 'offense' },
+      { role: 'Z', x: 8, z: -0.8, color: 0xef476f, radius: 0.3, labelType: 'offense' },
+    ];
+
+    const DEFENSE = [
+      { role: 'DE', x: -2.5, z: 1, color: 0xef4444 },
+      { role: 'DT', x: -0.8, z: 1, color: 0xef4444 },
+      { role: 'DT', x: 0.8, z: 1, color: 0xef4444 },
+      { role: 'DE', x: 2.5, z: 1, color: 0xef4444 },
+      { role: 'OLB', x: -2, z: 2.5, color: 0xf59e0b },
+      { role: 'MLB', x: 0, z: 2.5, color: 0xf59e0b },
+      { role: 'OLB', x: 2, z: 2.5, color: 0xf59e0b },
+      { role: 'CB', x: -5, z: 1.5, color: 0x60a5fa },
+      { role: 'CB', x: 5, z: 1.5, color: 0x60a5fa },
+      { role: 'SS', x: -2, z: 7, color: 0xfbbf24 },
+      { role: 'FS', x: 2, z: 7, color: 0xfbbf24 },
+    ];
+
+    const RUN_SCHEMES = {
+      'Inside Zone': {
+        family: 'Zone',
+        desc: 'The offensive line blocks in unison to one side, creating a cutback lane. The RB reads the first uncovered DL and cuts.',
+        blockingRule: 'Everyone steps playside. Covered linemen block their man. Uncovered linemen combo to LB level.',
+        whenToCall: 'Light box (5-6 defenders in box). Spread formations to create gaps.',
+        keyRead: 'RB reads the backside DT (3-technique). If he flows over the top, cut back. If he stays, press the designed hole.',
+        formation: 'Standard',
+        blocks: [
+          { from: 'LT', target: { x: -2.3, z: 0.8 }, desc: 'Reach block DE' },
+          { from: 'LG', target: { x: -1.2, z: 0.8 }, desc: 'Combo DT to LB' },
+          { from: 'C', target: { x: -0.2, z: 0.8 }, desc: 'Combo NT to LB' },
+          { from: 'RG', target: { x: 0.8, z: 1.2 }, desc: 'Climb to MLB' },
+          { from: 'RT', target: { x: 1.8, z: 0.8 }, desc: 'Seal DE' },
+        ],
+        rbPath: [{ x: -0.5, z: -1.5 }, { x: -0.3, z: 0 }, { x: -0.8, z: 2 }, { x: -1, z: 5 }],
+        laneX: -0.8,
+        laneDir: 'left',
+      },
+      'Outside Zone (Stretch)': {
+        family: 'Zone',
+        desc: 'OL reaches to the outside, stretching the defense horizontally. RB aims for the edge but can cut back if the defense overflows.',
+        blockingRule: 'Reach block everything. Get your head playside. Create horizontal movement.',
+        whenToCall: 'When edge defenders are slow or the defense has poor pursuit angles.',
+        keyRead: 'RB reads the DE/edge defender. If he gets reached, press outside. If he squeezes, cut back underneath.',
+        formation: 'Standard',
+        blocks: [
+          { from: 'LT', target: { x: -3, z: 0.5 }, desc: 'Reach DE outside' },
+          { from: 'LG', target: { x: -2, z: 0.5 }, desc: 'Reach DT' },
+          { from: 'C', target: { x: -1, z: 0.5 }, desc: 'Reach to backside' },
+          { from: 'RG', target: { x: 0, z: 1 }, desc: 'Pull/hinge' },
+          { from: 'RT', target: { x: 1, z: 1 }, desc: 'Hinge protect backside' },
+        ],
+        rbPath: [{ x: -1, z: -1.5 }, { x: -2, z: -0.5 }, { x: -3.5, z: 0.5 }, { x: -4.5, z: 3 }, { x: -4, z: 6 }],
+        laneX: -3.5,
+        laneDir: 'left',
+      },
+      Power: {
+        family: 'Gap',
+        desc: 'A lead concept where the puller wraps into the hole and the front side caves the defense inward.',
+        blockingRule: 'Down blocks toward the play. Pulling guard leads through the hole. FB/TE kicks out DE.',
+        whenToCall: 'Short yardage, goal line, or when you need 3-4 tough yards.',
+        keyRead: 'RB follows the pulling guard. Read the kick-out block — if DE gets kicked out, go inside. If DE squeezes, bounce outside.',
+        formation: 'Standard',
+        blocks: [
+          { from: 'LT', target: { x: -2.3, z: 0.8 }, desc: 'Down block' },
+          { from: 'LG', target: { x: -1.2, z: 0.8 }, desc: 'Down block DT' },
+          { from: 'C', target: { x: 0, z: 0.8 }, desc: 'Block back on NT' },
+          { from: 'RG', target: { x: -1.5, z: 1.5 }, desc: 'Pull and lead through hole', pull: true },
+          { from: 'RT', target: { x: 1.8, z: 0.8 }, desc: 'Seal DE' },
+        ],
+        rbPath: [{ x: 0, z: -1.8 }, { x: -0.5, z: -0.5 }, { x: -1.2, z: 1 }, { x: -1.5, z: 4 }],
+        laneX: -1.2,
+        laneDir: 'left',
+      },
+      Counter: {
+        family: 'Misdirection',
+        desc: 'Misdirection run. RB takes a false step opposite the play direction, then cuts back. Pulling guard and tackle lead.',
+        blockingRule: 'Two pullers (usually guard + tackle from backside). Down blocks playside. Misdirection step.',
+        whenToCall: 'When the defense is keying on your zone runs and over-pursuing.',
+        keyRead: 'RB sells the fake step, then follows two pullers through the backside hole.',
+        formation: 'Standard',
+        blocks: [
+          { from: 'LT', target: { x: -2.3, z: 0.8 }, desc: 'Down block' },
+          { from: 'LG', target: { x: -1.2, z: 0.8 }, desc: 'Down block' },
+          { from: 'C', target: { x: 0, z: 0.8 }, desc: 'Block back' },
+          { from: 'RG', target: { x: -2, z: 1.5 }, desc: 'Pull, kick out DE', pull: true },
+          { from: 'RT', target: { x: -1, z: 2 }, desc: 'Pull, lead through hole', pull: true },
+        ],
+        rbPath: [{ x: 0.5, z: -1.5 }, { x: 1, z: -1 }, { x: 0, z: 0 }, { x: -1.5, z: 1.5 }, { x: -1.8, z: 4 }],
+        laneX: -1.5,
+        laneDir: 'left',
+      },
+      Draw: {
+        family: 'Misdirection',
+        desc: 'Fake pass play that turns into a run. OL pass sets initially, then fires out to block. RB sells pass protection, then takes the handoff.',
+        blockingRule: 'Pass set for 1 count, then fire out and run block. Sell the pass.',
+        whenToCall: 'Aggressive pass rush or heavy blitz. Makes the defense pay for pinning their ears back.',
+        keyRead: 'RB waits a beat (sell the pass), then hits the lane that opens as DL rush upfield past their gaps.',
+        formation: 'Standard',
+        blocks: [
+          { from: 'LT', target: { x: -2, z: 0.3 }, desc: 'Pass set, then seal' },
+          { from: 'LG', target: { x: -0.8, z: 0.5 }, desc: 'Pass set, then combo' },
+          { from: 'C', target: { x: 0.2, z: 0.5 }, desc: 'Pass set, then block' },
+          { from: 'RG', target: { x: 1, z: 0.5 }, desc: 'Pass set, then combo' },
+          { from: 'RT', target: { x: 2, z: 0.3 }, desc: 'Pass set, then seal' },
+        ],
+        rbPath: [{ x: 0, z: -2.5 }, { x: 0, z: -2 }, { x: 0, z: -1 }, { x: 0.2, z: 1 }, { x: 0.3, z: 4 }],
+        laneX: 0,
+        laneDir: 'center',
+      },
+      'Read Option': {
+        family: 'Option',
+        desc: 'QB reads the unblocked DE. If DE crashes on RB, QB keeps. If DE stays home, QB gives to RB.',
+        blockingRule: 'Leave the read key (DE) unblocked. Block everything else. Zone scheme inside.',
+        whenToCall: 'When the DE is aggressive or undisciplined. Forces a numbers advantage.',
+        keyRead: 'QB reads the backside DE after the snap. DE crashes → keep and run to the edge. DE stays → give to RB inside.',
+        formation: 'Standard',
+        blocks: [
+          { from: 'LT', target: { x: -2.3, z: 0.8 }, desc: 'Reach block' },
+          { from: 'LG', target: { x: -1.2, z: 0.8 }, desc: 'Combo to LB' },
+          { from: 'C', target: { x: -0.2, z: 0.8 }, desc: 'Combo to LB' },
+          { from: 'RG', target: { x: 0.8, z: 1 }, desc: 'Climb to LB' },
+          { from: 'RT', target: { x: 2.5, z: 0.5 }, desc: 'Leave DE unblocked (read key)', read: true },
+        ],
+        rbPath: [{ x: -0.5, z: -1.5 }, { x: -0.3, z: 0 }, { x: -0.5, z: 1.5 }, { x: -0.8, z: 4 }],
+        qbKeepPath: [{ x: 0, z: -1.8 }, { x: 1, z: -1 }, { x: 2.5, z: 0 }, { x: 3.5, z: 2 }, { x: 4, z: 5 }],
+        laneX: -0.5,
+        laneDir: 'left',
+        hasQBRead: true,
+      },
+    };
+
+    const sceneHost = document.getElementById('scene');
+    const labelLayer = document.getElementById('labels');
+    const schemeSelect = document.getElementById('schemeSelect');
+    const runButton = document.getElementById('runButton');
+    const resetButton = document.getElementById('resetButton');
+    const readControls = document.getElementById('readControls');
+    const giveButton = document.getElementById('giveButton');
+    const keepButton = document.getElementById('keepButton');
+    const statusText = document.getElementById('statusText');
+    const schemeTitle = document.getElementById('schemeTitle');
+    const schemeBadge = document.getElementById('schemeBadge');
+    const schemeDesc = document.getElementById('schemeDesc');
+    const schemeRule = document.getElementById('schemeRule');
+    const schemeWhen = document.getElementById('schemeWhen');
+    const schemeRead = document.getElementById('schemeRead');
+    const assignmentTitle = document.getElementById('assignmentTitle');
+    const assignmentText = document.getElementById('assignmentText');
+
+    Object.keys(RUN_SCHEMES).forEach((name) => {
+      const option = document.createElement('option');
+      option.value = name;
+      option.textContent = name;
+      schemeSelect.append(option);
+    });
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    sceneHost.append(renderer.domElement);
+
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.Fog(0x113b1d, 18, 40);
+
+    const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+    camera.position.set(0, 18, 10);
+    camera.lookAt(0, 0, 1.6);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.target.set(0, 0, 1.2);
+    controls.enableDamping = true;
+    controls.minDistance = 10;
+    controls.maxDistance = 28;
+    controls.maxPolarAngle = Math.PI / 2.08;
+    controls.minPolarAngle = 0.18;
+
+    scene.add(new THREE.AmbientLight(0xffffff, 1.1));
+    const sun = new THREE.DirectionalLight(0xffffff, 1.55);
+    sun.position.set(7, 14, 9);
+    scene.add(sun);
+
+    const makeFieldTexture = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 1024;
+      canvas.height = 1664;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#206c36';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.strokeStyle = 'rgba(255,255,255,0.22)';
+      ctx.lineWidth = 8;
+      ctx.strokeRect(56, 56, canvas.width - 112, canvas.height - 112);
+
+      for (let i = 0; i <= 10; i += 1) {
+        const y = 110 + ((canvas.height - 220) / 10) * i;
+        ctx.strokeStyle = i === 5 ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.18)';
+        ctx.lineWidth = i === 5 ? 10 : 4;
+        ctx.beginPath();
+        ctx.moveTo(88, y);
+        ctx.lineTo(canvas.width - 88, y);
+        ctx.stroke();
+      }
+
+      for (let i = 0; i < 18; i += 1) {
+        const x = 88 + ((canvas.width - 176) / 17) * i;
+        ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(x, 110);
+        ctx.lineTo(x, canvas.height - 110);
+        ctx.stroke();
+      }
+
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.colorSpace = THREE.SRGBColorSpace;
+      return texture;
+    };
+
+    const field = new THREE.Mesh(
+      new THREE.PlaneGeometry(24, 44),
+      new THREE.MeshStandardMaterial({ map: makeFieldTexture(), roughness: 0.95, metalness: 0.02 })
+    );
+    field.rotation.x = -Math.PI / 2;
+    scene.add(field);
+
+    const fieldBorder = new THREE.LineSegments(
+      new THREE.EdgesGeometry(new THREE.PlaneGeometry(24, 44)),
+      new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.18 })
+    );
+    fieldBorder.rotation.x = -Math.PI / 2;
+    fieldBorder.position.y = 0.01;
+    scene.add(fieldBorder);
+
+    const los = new THREE.Mesh(
+      new THREE.BoxGeometry(24, 0.03, 0.22),
+      new THREE.MeshBasicMaterial({ color: 0xffffff })
+    );
+    los.position.set(0, 0.03, 0);
+    scene.add(los);
+
+    const arrowGroup = new THREE.Group();
+    const pathGroup = new THREE.Group();
+    const laneGroup = new THREE.Group();
+    scene.add(arrowGroup, pathGroup, laneGroup);
+
+    const allMeshes = [];
+    const labels = [];
+    const offenseMeshes = new Map();
+    const defenseMeshes = [];
+    const lineRoles = ['LT', 'LG', 'C', 'RG', 'RT'];
+
+    const makeLabel = (text, type) => {
+      const label = document.createElement('div');
+      label.className = `player-label ${type}`;
+      label.textContent = text;
+      labelLayer.append(label);
+      labels.push(label);
+      return label;
+    };
+
+    OFFENSE.forEach((player) => {
+      const mesh = new THREE.Mesh(
+        new THREE.SphereGeometry(player.radius, 28, 28),
+        new THREE.MeshStandardMaterial({ color: player.color, roughness: 0.35, metalness: 0.14, emissive: 0x000000 })
+      );
+      mesh.position.set(player.x, player.radius, player.z);
+      mesh.userData = {
+        role: player.role,
+        radius: player.radius,
+        base: new THREE.Vector3(player.x, player.radius, player.z),
+        currentAssignment: '',
+        isLine: lineRoles.includes(player.role),
+        defaultColor: player.color,
+      };
+      offenseMeshes.set(player.role, mesh);
+      allMeshes.push(mesh);
+      scene.add(mesh);
+      mesh.userData.label = makeLabel(player.role, player.labelType);
+    });
+
+    DEFENSE.forEach((player) => {
+      const mesh = new THREE.Mesh(
+        new THREE.SphereGeometry(0.46, 32, 32),
+        new THREE.MeshStandardMaterial({ color: player.color, roughness: 0.28, metalness: 0.08 })
+      );
+      mesh.position.set(player.x, 0.46, player.z);
+      mesh.userData = { role: player.role, radius: 0.46, base: new THREE.Vector3(player.x, 0.46, player.z) };
+      defenseMeshes.push(mesh);
+      allMeshes.push(mesh);
+      scene.add(mesh);
+      mesh.userData.label = makeLabel(player.role, 'defense');
+    });
+
+    const raycaster = new THREE.Raycaster();
+    const pointer = new THREE.Vector2();
+    const vector = new THREE.Vector3();
+    const clock = new THREE.Clock();
+
+    let currentSchemeName = 'Inside Zone';
+    let selectedBranch = 'give';
+    let selectedLineman = null;
+    let animationState = null;
+    let pulseTime = 0;
+    let readOptionUnlocked = false;
+    const currentVisuals = {
+      laneMesh: null,
+      activeLine: null,
+      altLine: null,
+      keepLine: null,
+      giveLine: null,
+      arrows: [],
+      blockCurves: new Map(),
+    };
+
+    function toFlatVector(point, y = 0.08) {
+      return new THREE.Vector3(point.x, y, point.z);
+    }
+
+    function clearGroup(group) {
+      while (group.children.length) {
+        const child = group.children.pop();
+        child.geometry?.dispose?.();
+        if (Array.isArray(child.material)) {
+          child.material.forEach((material) => material.dispose?.());
+        } else {
+          child.material?.dispose?.();
+        }
+        group.remove(child);
+      }
+    }
+
+    function makeLine(points, color, opacity = 0.9) {
+      const geometry = new THREE.BufferGeometry().setFromPoints(points);
+      const material = new THREE.LineBasicMaterial({ color, transparent: true, opacity });
+      return new THREE.Line(geometry, material);
+    }
+
+    function makeArrow(points, color, opacity = 0.92) {
+      const line = makeLine(points, color, opacity);
+      const end = points[points.length - 1];
+      const prev = points[points.length - 2] || points[0];
+      const direction = new THREE.Vector3().subVectors(end, prev).normalize();
+      const head = new THREE.Mesh(
+        new THREE.ConeGeometry(0.12, 0.4, 18),
+        new THREE.MeshBasicMaterial({ color, transparent: true, opacity })
+      );
+      head.position.copy(end);
+      head.position.y += 0.05;
+      head.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction);
+      const group = new THREE.Group();
+      group.add(line, head);
+      return group;
+    }
+
+    function makePullCurve(start, end) {
+      return new THREE.CatmullRomCurve3([
+        new THREE.Vector3(start.x, 0.34, start.z),
+        new THREE.Vector3(start.x - 0.1, 0.34, start.z - 0.95),
+        new THREE.Vector3((start.x + end.x) / 2, 0.34, 0.55),
+        new THREE.Vector3(end.x, 0.34, end.z),
+      ]);
+    }
+
+    function buildArrowsForScheme(name) {
+      clearGroup(arrowGroup);
+      currentVisuals.blockCurves.clear();
+      const scheme = RUN_SCHEMES[name];
+      scheme.blocks.forEach((block) => {
+        const mesh = offenseMeshes.get(block.from);
+        if (!mesh) return;
+        const start = mesh.userData.base;
+        const end = new THREE.Vector3(block.target.x, mesh.userData.radius, block.target.z);
+        let arrow;
+        if (block.pull) {
+          const curve = makePullCurve(start, end);
+          currentVisuals.blockCurves.set(block.from, curve);
+          arrow = makeArrow(curve.getPoints(40).map((point) => point.clone().setY(0.1)), 0xfbbf24, 0.95);
+        } else {
+          const points = [
+            new THREE.Vector3(start.x, 0.1, start.z + 0.22),
+            new THREE.Vector3(block.target.x, 0.1, block.target.z),
+          ];
+          arrow = makeArrow(points, block.read ? 0x38bdf8 : 0xf8fafc, block.read ? 0.68 : 0.88);
+        }
+        arrowGroup.add(arrow);
+      });
+    }
+
+    function makeTubePath(points, color, radius, opacity) {
+      const vectors = points.map((point) => toFlatVector(point, 0.09));
+      const curve = new THREE.CatmullRomCurve3(vectors);
+      const mesh = new THREE.Mesh(
+        new THREE.TubeGeometry(curve, 96, radius, 16, false),
+        new THREE.MeshBasicMaterial({ color, transparent: true, opacity })
+      );
+      return { curve, mesh };
+    }
+
+    function buildLaneForScheme(name) {
+      clearGroup(pathGroup);
+      clearGroup(laneGroup);
+      currentVisuals.activeLine = null;
+      currentVisuals.altLine = null;
+      currentVisuals.keepLine = null;
+      currentVisuals.giveLine = null;
+      currentVisuals.laneMesh = null;
+
+      const scheme = RUN_SCHEMES[name];
+      const activePath = scheme.hasQBRead && selectedBranch === 'keep' ? scheme.qbKeepPath : scheme.rbPath;
+      const lane = makeTubePath(activePath, 0x22c55e, 0.34, 0.38);
+      currentVisuals.laneMesh = lane.mesh;
+      laneGroup.add(lane.mesh);
+
+      const activeLine = makeLine(activePath.map((point) => toFlatVector(point, 0.13)), 0x86efac, 0.95);
+      pathGroup.add(activeLine);
+      currentVisuals.activeLine = activeLine;
+
+      if (scheme.hasQBRead) {
+        currentVisuals.giveLine = makeLine(scheme.rbPath.map((point) => toFlatVector(point, 0.12)), 0x38bdf8, selectedBranch === 'give' ? 0.95 : 0.4);
+        currentVisuals.keepLine = makeLine(scheme.qbKeepPath.map((point) => toFlatVector(point, 0.12)), 0xfbbf24, selectedBranch === 'keep' ? 0.95 : 0.4);
+        pathGroup.add(currentVisuals.giveLine, currentVisuals.keepLine);
+      }
+    }
+
+    function updateInfo() {
+      const scheme = RUN_SCHEMES[currentSchemeName];
+      schemeTitle.textContent = currentSchemeName;
+      schemeBadge.textContent = scheme.family;
+      schemeDesc.textContent = scheme.desc;
+      schemeRule.textContent = scheme.blockingRule;
+      schemeWhen.textContent = scheme.whenToCall;
+      schemeRead.textContent = scheme.keyRead;
+      schemeSelect.value = currentSchemeName;
+      readControls.hidden = !scheme.hasQBRead;
+      giveButton.classList.toggle('active', selectedBranch === 'give');
+      keepButton.classList.toggle('active', selectedBranch === 'keep');
+      keepButton.disabled = scheme.hasQBRead ? !readOptionUnlocked : true;
+      if (!selectedLineman) {
+        assignmentTitle.textContent = '👆 Click a lineman';
+        assignmentText.textContent = 'Assignments update here when you select LT, LG, C, RG, or RT on the field.';
+      } else {
+        const mesh = offenseMeshes.get(selectedLineman);
+        assignmentTitle.textContent = `${selectedLineman} assignment`;
+        assignmentText.textContent = mesh?.userData.currentAssignment || 'Assignment unavailable.';
+      }
+    }
+
+    function updateAssignments() {
+      const scheme = RUN_SCHEMES[currentSchemeName];
+      lineRoles.forEach((role) => {
+        const mesh = offenseMeshes.get(role);
+        const block = scheme.blocks.find((item) => item.from === role);
+        if (!mesh || !block) return;
+        mesh.userData.currentAssignment = block.read
+          ? `${block.desc}. Show the read key but do not block him pre-snap.`
+          : `${block.desc}. Target landmark: x ${block.target.x.toFixed(1)}, z ${block.target.z.toFixed(1)}.`;
+      });
+    }
+
+    function setStatus(message) {
+      statusText.textContent = message;
+    }
+
+    function resetPositions() {
+      OFFENSE.forEach((player) => {
+        const mesh = offenseMeshes.get(player.role);
+        mesh.position.copy(mesh.userData.base);
+      });
+      DEFENSE.forEach((player, index) => {
+        defenseMeshes[index].position.copy(defenseMeshes[index].userData.base);
+      });
+    }
+
+    function configureScheme(name, keepReadUnlock = false) {
+      currentSchemeName = name;
+      if (!RUN_SCHEMES[name].hasQBRead) {
+        selectedBranch = 'give';
+      }
+      if (!keepReadUnlock) {
+        readOptionUnlocked = false;
+      }
+      animationState = null;
+      resetPositions();
+      buildArrowsForScheme(name);
+      buildLaneForScheme(name);
+      updateAssignments();
+      updateInfo();
+      const branchLabel = RUN_SCHEMES[name].hasQBRead && selectedBranch === 'keep' ? 'QB keep' : 'RB give';
+      setStatus(`${name} loaded. Active path: ${branchLabel}.`);
+    }
+
+    function makeBallCurve(points, height = 0.34) {
+      return new THREE.CatmullRomCurve3(points.map((point) => new THREE.Vector3(point.x, height, point.z)));
+    }
+
+    function beginPlay() {
+      const scheme = RUN_SCHEMES[currentSchemeName];
+      animationState = {
+        start: performance.now(),
+        duration: 3000,
+        schemeName: currentSchemeName,
+        branch: selectedBranch,
+        ballCurve: makeBallCurve(selectedBranch === 'keep' && scheme.hasQBRead ? scheme.qbKeepPath : scheme.rbPath),
+        rbCurve: makeBallCurve(scheme.rbPath),
+        qbCurve: scheme.qbKeepPath ? makeBallCurve(scheme.qbKeepPath) : null,
+      };
+      setStatus(`Running ${currentSchemeName}${scheme.hasQBRead ? ` — ${selectedBranch === 'keep' ? 'QB keep' : 'RB give'}` : ''}.`);
+    }
+
+    function finishPlay() {
+      const scheme = RUN_SCHEMES[currentSchemeName];
+      if (scheme.hasQBRead) {
+        readOptionUnlocked = true;
+        keepButton.disabled = false;
+        setStatus('Read Option complete. Toggle Give vs Keep to compare the decision point.');
+      } else {
+        setStatus(`${currentSchemeName} finished. Reset to replay the lane and blocks.`);
+      }
+      animationState = null;
+      updateInfo();
+    }
+
+    schemeSelect.addEventListener('change', (event) => {
+      selectedLineman = null;
+      configureScheme(event.target.value);
+    });
+
+    runButton.addEventListener('click', () => {
+      configureScheme(currentSchemeName, readOptionUnlocked);
+      beginPlay();
+    });
+
+    resetButton.addEventListener('click', () => {
+      animationState = null;
+      configureScheme(currentSchemeName, readOptionUnlocked);
+      setStatus('Play reset. Use orbit controls or run the concept again.');
+    });
+
+    giveButton.addEventListener('click', () => {
+      selectedBranch = 'give';
+      configureScheme(currentSchemeName, readOptionUnlocked);
+    });
+
+    keepButton.addEventListener('click', () => {
+      if (keepButton.disabled) return;
+      selectedBranch = 'keep';
+      configureScheme(currentSchemeName, readOptionUnlocked);
+    });
+
+    renderer.domElement.addEventListener('pointerdown', (event) => {
+      const rect = renderer.domElement.getBoundingClientRect();
+      pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+      raycaster.setFromCamera(pointer, camera);
+      const candidates = lineRoles.map((role) => offenseMeshes.get(role));
+      const hits = raycaster.intersectObjects(candidates);
+      selectedLineman = hits.length ? hits[0].object.userData.role : null;
+      updateInfo();
+    });
+
+    function resize() {
+      const width = sceneHost.clientWidth;
+      const height = sceneHost.clientHeight;
+      renderer.setSize(width, height, false);
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+    }
+
+    function updateLabels() {
+      const width = sceneHost.clientWidth;
+      const height = sceneHost.clientHeight;
+      allMeshes.forEach((mesh) => {
+        vector.copy(mesh.position);
+        vector.y += mesh.userData.radius + 0.18;
+        vector.project(camera);
+        const visible = vector.z > -1 && vector.z < 1;
+        mesh.userData.label.style.display = visible ? 'block' : 'none';
+        mesh.userData.label.style.transform = `translate(-50%, -130%) translate(${(vector.x * 0.5 + 0.5) * width}px, ${(-vector.y * 0.5 + 0.5) * height}px)`;
+      });
+    }
+
+    function animatePlay(delta) {
+      if (!animationState || animationState.schemeName !== currentSchemeName) return;
+      const elapsed = performance.now() - animationState.start;
+      const progress = Math.min(elapsed / animationState.duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const scheme = RUN_SCHEMES[currentSchemeName];
+
+      scheme.blocks.forEach((block) => {
+        const mesh = offenseMeshes.get(block.from);
+        const start = mesh.userData.base;
+        const end = new THREE.Vector3(block.target.x, mesh.userData.radius, block.target.z);
+        if (block.read) {
+          mesh.position.x = THREE.MathUtils.lerp(start.x, start.x + 0.15, eased * 0.25);
+          mesh.position.z = THREE.MathUtils.lerp(start.z, start.z + 0.12, eased * 0.25);
+        } else if (block.pull) {
+          const curve = currentVisuals.blockCurves.get(block.from);
+          const point = curve.getPoint(Math.min(1, eased * 0.98));
+          mesh.position.copy(point);
+        } else {
+          mesh.position.x = THREE.MathUtils.lerp(start.x, end.x, eased * 0.82);
+          mesh.position.z = THREE.MathUtils.lerp(start.z, end.z, eased * 0.82);
+        }
+      });
+
+      const rb = offenseMeshes.get('RB');
+      const qb = offenseMeshes.get('QB');
+      if (scheme.hasQBRead && animationState.branch === 'keep') {
+        qb.position.copy(animationState.qbCurve.getPointAt(eased));
+        const fakeRbProgress = Math.min(0.46, eased * 0.58);
+        rb.position.copy(animationState.rbCurve.getPointAt(fakeRbProgress));
+      } else {
+        rb.position.copy(animationState.rbCurve.getPointAt(eased));
+        const meshPoint = new THREE.Vector3(0, qb.userData.radius, -0.8);
+        qb.position.lerpVectors(qb.userData.base, meshPoint, Math.min(0.5, eased * 0.65));
+      }
+
+      if (progress >= 1) {
+        finishPlay();
+      }
+    }
+
+    function animateHighlights(delta) {
+      pulseTime += delta;
+      const pulse = 0.55 + Math.sin(pulseTime * 2.2) * 0.18;
+      lineRoles.forEach((role) => {
+        const mesh = offenseMeshes.get(role);
+        if (!mesh) return;
+        const selected = role === selectedLineman;
+        mesh.material.emissive.setHex(selected ? 0x93c5fd : 0x000000);
+        mesh.material.emissiveIntensity = selected ? 0.4 + pulse : 0;
+        mesh.scale.setScalar(selected ? 1.12 : 1);
+      });
+
+      if (currentVisuals.laneMesh) {
+        currentVisuals.laneMesh.material.opacity = 0.28 + pulse * 0.18;
+      }
+      if (currentVisuals.activeLine) {
+        currentVisuals.activeLine.material.opacity = 0.72 + pulse * 0.18;
+      }
+      if (currentVisuals.giveLine && currentVisuals.keepLine) {
+        currentVisuals.giveLine.material.opacity = selectedBranch === 'give' ? 0.8 + pulse * 0.1 : 0.35;
+        currentVisuals.keepLine.material.opacity = selectedBranch === 'keep' ? 0.8 + pulse * 0.1 : 0.35;
+      }
+    }
+
+    function tick() {
+      requestAnimationFrame(tick);
+      const delta = clock.getDelta();
+      animatePlay(delta);
+      animateHighlights(delta);
+      controls.update();
+      updateLabels();
+      renderer.render(scene, camera);
+    }
+
+    window.addEventListener('resize', resize);
+
+    resize();
+    configureScheme(currentSchemeName);
+    tick();
+  </script>
+</body>
+</html>

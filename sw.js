@@ -1,4 +1,4 @@
-const CACHE_NAME = "cfb26-playbook-v1";
+const CACHE_NAME = "cfb26-playbook-v2";
 const OFFLINE_URL = "./offline.html";
 const PRECACHE_PATHS = [
   "./",
@@ -17,6 +17,10 @@ const PRECACHE_PATHS = [
   "./visualizations/webgl-formations.html",
   "./visualizations/webgl-route-tree.html",
   "./visualizations/webgl-coverage.html",
+  "./visualizations/webgl-play-concepts.html",
+  "./visualizations/webgl-blitz.html",
+  "./visualizations/webgl-run-plays.html",
+  "./visualizations/webgl-pre-snap.html",
   "./assets/icons/icon.svg",
   "./assets/scripts/site-nav.js",
   "./assets/scripts/theme.js",

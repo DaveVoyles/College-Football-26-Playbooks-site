@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3D Blitz &amp; Pressure Viewer</title>
+  <link rel="stylesheet" href="../assets/styles/site-nav.css" />
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("clawpilotTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --cp-bg: #f7f4ef;
+      --cp-bg-elevated: #fcfbf8;
+      --cp-surface: #ffffff;
+      --cp-surface-soft: #f5f5f5;
+      --cp-border: #dedede;
+      --cp-border-strong: #919191;
+      --cp-text: #242424;
+      --cp-text-muted: #5c5c5c;
+      --cp-text-soft: #6f6f6f;
+      --cp-accent: #b11f4b;
+      --cp-accent-hover: #9a1a41;
+      --cp-accent-soft: rgba(177, 31, 75, 0.08);
+      --cp-accent-fg: #ffffff;
+      --cp-success: #16a34a;
+      --cp-danger: #dc2626;
+      --cp-warning: #f59e0b;
+      --cp-link: #0078d4;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+      --cp-overlay: rgba(255, 255, 255, 0.8);
+      --cp-panel: rgba(255, 255, 255, 0.86);
+      --cp-panel-strong: rgba(255, 255, 255, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.55);
+      --cp-highlight: rgba(177, 31, 75, 0.12);
+    }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --cp-bg: #3d3b3a;
+      --cp-bg-elevated: #343231;
+      --cp-surface: #292929;
+      --cp-surface-soft: #2e2e2e;
+      --cp-border: #474747;
+      --cp-border-strong: #5f5f5f;
+      --cp-text: #dedede;
+      --cp-text-muted: #919191;
+      --cp-text-soft: #b0b0b0;
+      --cp-accent: #fd8ea1;
+      --cp-accent-hover: #fb7b91;
+      --cp-accent-soft: rgba(253, 142, 161, 0.14);
+      --cp-accent-fg: #1a1a1a;
+      --cp-success: #4ade80;
+      --cp-danger: #f87171;
+      --cp-warning: #fbbf24;
+      --cp-link: #4da6ff;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+      --cp-overlay: rgba(41, 41, 41, 0.88);
+      --cp-panel: rgba(41, 41, 41, 0.72);
+      --cp-panel-strong: rgba(41, 41, 41, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.04);
+      --cp-highlight: rgba(253, 142, 161, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      background: var(--cp-bg);
+      color: var(--cp-text);
+      font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow: hidden;
+    }
+
+    button,
+    select {
+      font: inherit;
+    }
+
+    .app-shell {
+      position: relative;
+      height: 100vh;
+      padding-top: calc(var(--site-nav-height, 3.5rem) + 0.5rem);
+    }
+
+    .scene-shell,
+    #scene-root {
+      position: absolute;
+      inset: calc(var(--site-nav-height, 3.5rem) + 0.5rem) 0 0;
+    }
+
+    .scene-shell {
+      background:
+        radial-gradient(circle at top, var(--cp-sheen), transparent 42%),
+        linear-gradient(180deg, var(--cp-bg-elevated), var(--cp-bg));
+    }
+
+    #scene-root canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .overlay {
+      position: absolute;
+      z-index: 5;
+      inset: calc(var(--site-nav-height, 3.5rem) + 1rem) 1rem 1rem 1rem;
+      display: grid;
+      grid-template-columns: minmax(18rem, 24rem) minmax(20rem, 26rem);
+      justify-content: space-between;
+      align-content: start;
+      gap: 1rem;
+      pointer-events: none;
+    }
+
+    .stack {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .panel {
+      pointer-events: auto;
+      border: 1px solid var(--cp-border);
+      border-radius: 16px;
+      background: var(--cp-panel);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--cp-shadow);
+      padding: 1rem;
+    }
+
+    .panel h1,
+    .panel h2,
+    .panel p {
+      margin: 0;
+    }
+
+    .eyebrow {
+      margin-bottom: 0.45rem;
+      color: var(--cp-text-muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .hero-copy {
+      color: var(--cp-text-soft);
+      font-size: 0.94rem;
+      line-height: 1.55;
+      margin-top: 0.75rem;
+    }
+
+    .controls,
+    .legend,
+    .meta-list,
+    .defender-details {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    label {
+      display: grid;
+      gap: 0.45rem;
+    }
+
+    select,
+    .button {
+      min-height: 2.9rem;
+      border-radius: 0.625rem;
+      border: 1px solid var(--cp-border);
+      padding: 0.72rem 0.9rem;
+    }
+
+    select {
+      background: var(--cp-surface);
+      color: var(--cp-text);
+    }
+
+    .button-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+
+    .button {
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+    }
+
+    .button.primary {
+      border-color: var(--cp-accent);
+      background: var(--cp-accent);
+      color: var(--cp-accent-fg);
+    }
+
+    .button.primary:hover {
+      background: var(--cp-accent-hover);
+    }
+
+    .button.secondary {
+      background: var(--cp-surface);
+      color: var(--cp-text);
+    }
+
+    .button.secondary:hover {
+      border-color: var(--cp-border-strong);
+      background: var(--cp-surface-soft);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.32rem 0.7rem;
+      border-radius: 999px;
+      background: var(--cp-accent-soft);
+      color: var(--cp-accent);
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .legend-item,
+    .meta-card,
+    .detail-card {
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      background: var(--cp-surface);
+      padding: 0.8rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      color: var(--cp-text-soft);
+      font-size: 0.9rem;
+    }
+
+    .swatch {
+      width: 0.9rem;
+      height: 0.9rem;
+      border-radius: 999px;
+      border: 1px solid var(--cp-border-strong);
+      background: var(--cp-surface);
+      flex: none;
+    }
+
+    .swatch.rush {
+      background: var(--cp-danger);
+    }
+
+    .swatch.blitz {
+      background: var(--cp-warning);
+    }
+
+    .swatch.drop {
+      background: var(--cp-link);
+    }
+
+    .swatch.hot {
+      background: var(--cp-success);
+    }
+
+    .meta-card strong,
+    .detail-card strong {
+      display: block;
+      margin-bottom: 0.28rem;
+      color: var(--cp-text);
+    }
+
+    .meta-card span,
+    .detail-card span,
+    .inline-note {
+      color: var(--cp-text-soft);
+      line-height: 1.5;
+      font-size: 0.92rem;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--cp-border);
+      margin: 0.9rem 0;
+    }
+
+    .title-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.9rem;
+      align-items: flex-start;
+      margin-bottom: 0.9rem;
+    }
+
+    .title-row h2 {
+      font-size: 1.5rem;
+      line-height: 1.15;
+    }
+
+    .assignment-help {
+      margin-top: 0.55rem;
+      color: var(--cp-text-muted);
+      font-size: 0.82rem;
+    }
+
+    @media (max-width: 980px) {
+      body {
+        overflow: auto;
+      }
+
+      .app-shell {
+        height: auto;
+        min-height: 100vh;
+      }
+
+      .scene-shell,
+      #scene-root {
+        position: relative;
+        inset: auto;
+        height: 68vh;
+      }
+
+      .overlay {
+        position: static;
+        grid-template-columns: 1fr;
+        padding: 1rem;
+      }
+    }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.167.1/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.167.1/examples/jsm/"
+      }
+    }
+  </script>
+  <script defer src="../assets/scripts/site-nav.js"></script>
+</head>
+<body data-nav-root="..">
+  <div class="app-shell">
+    <div class="scene-shell">
+      <div id="scene-root" aria-label="3D blitz and pressure viewer"></div>
+    </div>
+
+    <div class="overlay">
+      <div class="stack">
+        <section class="panel controls">
+          <div>
+            <div class="eyebrow">Blitz &amp; Pressure Viewer</div>
+            <h1>3D blitz &amp; pressure viewer</h1>
+            <p class="hero-copy">Choose a pressure package, rotate the front, then send the rush to watch lanes attack the pocket, gap fits light up, and the hot window pulse where the QB should throw.</p>
+          </div>
+
+          <label>
+            <span class="eyebrow">Blitz package</span>
+            <select id="blitz-select"></select>
+          </label>
+
+          <div class="button-row">
+            <button class="button primary" id="send-btn" type="button">▶ Send Blitz</button>
+            <button class="button secondary" id="reset-btn" type="button">↺ Reset</button>
+          </div>
+
+          <div class="legend">
+            <div class="legend-item"><span class="swatch rush"></span>Rush lanes and pressure trails</div>
+            <div class="legend-item"><span class="swatch blitz"></span>Second-level blitzer glow</div>
+            <div class="legend-item"><span class="swatch drop"></span>Dropper path in zone blitz</div>
+            <div class="legend-item"><span class="swatch hot"></span>Hot route throw window</div>
+          </div>
+        </section>
+      </div>
+
+      <aside class="stack">
+        <section class="panel">
+          <span class="pill" id="rush-pill">Rush</span>
+          <div class="title-row">
+            <div>
+              <div class="eyebrow">Pressure package</div>
+              <h2 id="blitz-name">Loading…</h2>
+            </div>
+          </div>
+
+          <div class="meta-list">
+            <div class="meta-card"><strong>📋 Description</strong><span id="blitz-desc"></span></div>
+            <div class="meta-card"><strong>🔥 Hot Read</strong><span id="blitz-hot"></span></div>
+            <div class="meta-card"><strong>❌ Vulnerability</strong><span id="blitz-vulnerability"></span></div>
+            <div class="meta-card"><strong>🏈 Coverage behind the blitz</strong><span id="blitz-coverage"></span></div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="defender-details">
+            <div class="detail-card">
+              <strong id="defender-role">👆 Click a defender to see their assignment</strong>
+              <span id="defender-assignment">Assignments update here after you select a defender in the 3D scene.</span>
+            </div>
+          </div>
+          <div class="assignment-help">Gap labels mark mirrored A/B/C/D fits across the line. Dashed man lines tie defenders to their nearest receiver.</div>
+        </section>
+      </aside>
+    </div>
+  </div>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    const blitzPackages = {
+      "A-Gap Blitz (Mike Fire)": {
+        desc: "MLB shoots the A-gap between center and guard. Quick interior pressure forces the QB to throw hot.",
+        hotRead: "Slant or quick hitch to the outside. Ball must be out in under 2 seconds.",
+        vulnerability: "Quick passing game neutralizes it. Draw plays exploit vacated LB area.",
+        coverage: "Cover 1 behind — man underneath, 1 deep safety",
+        hotSpot: { x: -6.7, z: -0.9, radius: 1.2, label: 'HOT' },
+        defenders: [
+          { role: "DE", x: -2.5, z: 1, rushes: true, rushTarget: { x: -2, z: -1 } },
+          { role: "DT", x: -0.8, z: 1, rushes: true, rushTarget: { x: -0.5, z: -1 } },
+          { role: "DT", x: 0.8, z: 1, rushes: true, rushTarget: { x: 0.5, z: -1 } },
+          { role: "DE", x: 2.5, z: 1, rushes: true, rushTarget: { x: 2, z: -1 } },
+          { role: "MLB", x: 0, z: 2.5, rushes: true, rushTarget: { x: 0.3, z: -1.5 }, blitzer: true },
+          { role: "OLB", x: -2, z: 2.5 },
+          { role: "CB", x: -5, z: 1.5, man: true },
+          { role: "CB", x: 5, z: 1.5, man: true },
+          { role: "NB", x: 3.5, z: 2, man: true },
+          { role: "SS", x: -3.5, z: 3 },
+          { role: "FS", x: 0, z: 8 }
+        ]
+      },
+      "Edge Blitz (Sam/Will Fire)": {
+        desc: "OLB or safety rushes off the edge outside the offensive tackle. Speed rush creates contain pressure.",
+        hotRead: "Screen pass or quick out route to the blitz side — the flat is vacated.",
+        vulnerability: "Tight end chips or RB picks up the edge rusher. Play-action can freeze the defense.",
+        coverage: "5-man pressure with man leverage underneath and middle-field help",
+        hotSpot: { x: 5.8, z: -0.8, radius: 1.15, label: 'HOT' },
+        defenders: [
+          { role: "DE", x: -2.5, z: 1, rushes: true, rushTarget: { x: -2.2, z: -1 } },
+          { role: "DT", x: -0.8, z: 1, rushes: true, rushTarget: { x: -0.5, z: -1 } },
+          { role: "DT", x: 0.8, z: 1, rushes: true, rushTarget: { x: 0.5, z: -1 } },
+          { role: "DE", x: 2.5, z: 1, rushes: true, rushTarget: { x: 2.2, z: -1 } },
+          { role: "OLB", x: 3.5, z: 1.5, rushes: true, rushTarget: { x: 3, z: -1.5 }, blitzer: true },
+          { role: "MLB", x: 0, z: 2.5 },
+          { role: "CB", x: -5, z: 1.5, man: true },
+          { role: "CB", x: 5, z: 1.5, man: true },
+          { role: "NB", x: -3, z: 2, man: true },
+          { role: "SS", x: 2, z: 4 },
+          { role: "FS", x: 0, z: 8 }
+        ]
+      },
+      "Fire Zone (3-deep, 3-under, 5 rush)": {
+        desc: "5 rushers with 3 underneath zone droppers and 3 deep zone defenders. Simulates heavy pressure while maintaining zone coverage.",
+        hotRead: "Find the void left by the zone dropper. Sit routes and digs land in open space.",
+        vulnerability: "Quick timing routes to the zones vacated by blitzers. TEs in seams.",
+        coverage: "3-deep, 3-under zone behind a 5-man rush",
+        hotSpot: { x: -1.1, z: 3.8, radius: 1.45, label: 'HOT' },
+        defenders: [
+          { role: "DE", x: -2.5, z: 1, rushes: true, rushTarget: { x: -2, z: -1 } },
+          { role: "DT", x: -0.8, z: 1, rushes: true, rushTarget: { x: -0.3, z: -1.2 } },
+          { role: "DT", x: 0.8, z: 1, rushes: true, rushTarget: { x: 0.3, z: -1.2 } },
+          { role: "DE", x: 2.5, z: 1, rushes: true, rushTarget: { x: 2, z: -1 } },
+          { role: "SS", x: -2, z: 2.5, rushes: true, rushTarget: { x: -1.5, z: -1 }, blitzer: true },
+          { role: "MLB", x: 0, z: 3 },
+          { role: "OLB", x: 2, z: 3 },
+          { role: "CB", x: -5, z: 2 },
+          { role: "CB", x: 4, z: 8 },
+          { role: "NB", x: -4, z: 8 },
+          { role: "FS", x: 0, z: 9 }
+        ]
+      },
+      "Zone Blitz (OLB drops, DL stunts)": {
+        desc: "A defensive lineman drops into coverage while a LB or safety blitzes. Confuses OL pass protection rules.",
+        hotRead: "The DL dropping creates an unexpected zone. Look for the void where the DL vacated.",
+        vulnerability: "If the QB identifies the stunt, the blitzer has a long way to go.",
+        coverage: "Simulated pressure with a dropping end replacing the vacated hook/flat window",
+        hotSpot: { x: -3.7, z: 3.1, radius: 1.25, label: 'HOT' },
+        defenders: [
+          { role: "DE", x: -2.5, z: 1, rushes: false, drops: true, dropTarget: { x: -3.5, z: 3 } },
+          { role: "DT", x: -0.8, z: 1, rushes: true, rushTarget: { x: -0.3, z: -1 } },
+          { role: "DT", x: 0.8, z: 1, rushes: true, rushTarget: { x: 0.3, z: -1 } },
+          { role: "DE", x: 2.5, z: 1, rushes: true, rushTarget: { x: 2, z: -1 } },
+          { role: "OLB", x: -2, z: 2.5, rushes: true, rushTarget: { x: -1.8, z: -1.2 }, blitzer: true },
+          { role: "MLB", x: 0, z: 2.5 },
+          { role: "OLB", x: 2, z: 2.5 },
+          { role: "CB", x: -5, z: 1.5 },
+          { role: "CB", x: 5, z: 1.5 },
+          { role: "SS", x: -2, z: 7 },
+          { role: "FS", x: 2, z: 7 }
+        ]
+      },
+      "Cover 0 All-Out (Zero Blitz Max)": {
+        desc: "Maximum pressure — every non-coverage defender blitzes. No deep safety. Pure man coverage with 6-7 rushers.",
+        hotRead: "Ball MUST come out immediately. Slant, screen, or go route. No time for anything else.",
+        vulnerability: "If the OL picks it up, receivers are 1-on-1 with no safety help. Big play potential.",
+        coverage: "Cover 0 — no deep post safety, pure man with maximum heat",
+        hotSpot: { x: 4.2, z: -0.8, radius: 1.2, label: 'HOT' },
+        defenders: [
+          { role: "DE", x: -2.5, z: 1, rushes: true, rushTarget: { x: -2, z: -1.5 } },
+          { role: "DT", x: -0.8, z: 1, rushes: true, rushTarget: { x: -0.3, z: -1.5 } },
+          { role: "DT", x: 0.8, z: 1, rushes: true, rushTarget: { x: 0.3, z: -1.5 } },
+          { role: "DE", x: 2.5, z: 1, rushes: true, rushTarget: { x: 2, z: -1.5 } },
+          { role: "MLB", x: 0, z: 2, rushes: true, rushTarget: { x: 0, z: -1.5 }, blitzer: true },
+          { role: "OLB", x: -1.5, z: 2, rushes: true, rushTarget: { x: -1, z: -1.5 }, blitzer: true },
+          { role: "SS", x: 2, z: 2, rushes: true, rushTarget: { x: 1, z: -1.5 }, blitzer: true },
+          { role: "CB", x: -5, z: 1.5, man: true },
+          { role: "CB", x: 5, z: 1.5, man: true },
+          { role: "NB", x: 3.5, z: 2, man: true },
+          { role: "FS", x: -3, z: 2.5, man: true }
+        ]
+      }
+    };
+
+    const offensivePlayers = [
+      { role: 'LT', x: -2, z: -0.2, colorKey: 'borderStrong' },
+      { role: 'LG', x: -1, z: -0.2, colorKey: 'borderStrong' },
+      { role: 'C', x: 0, z: -0.2, colorKey: 'borderStrong' },
+      { role: 'RG', x: 1, z: -0.2, colorKey: 'borderStrong' },
+      { role: 'RT', x: 2, z: -0.2, colorKey: 'borderStrong' },
+      { role: 'QB', x: 0, z: -1.8, colorKey: 'warning' },
+      { role: 'RB', x: -1.3, z: -3, colorKey: 'link' },
+      { role: 'X', x: -8, z: -0.8, colorKey: 'accent', receiver: true },
+      { role: 'H', x: -3.5, z: -0.8, colorKey: 'accent', receiver: true },
+      { role: 'Y', x: 3.5, z: -0.8, colorKey: 'accent', receiver: true },
+      { role: 'Z', x: 8, z: -0.8, colorKey: 'accent', receiver: true }
+    ];
+
+    const gapMarkers = [
+      { text: 'D', x: -4, z: 0.95 },
+      { text: 'C', x: -2.95, z: 0.95 },
+      { text: 'B', x: -1.5, z: 0.95 },
+      { text: 'A', x: -0.5, z: 0.95 },
+      { text: 'A', x: 0.5, z: 0.95 },
+      { text: 'B', x: 1.5, z: 0.95 },
+      { text: 'C', x: 2.95, z: 0.95 },
+      { text: 'D', x: 4, z: 0.95 }
+    ];
+
+    const sceneRoot = document.getElementById('scene-root');
+    const blitzSelect = document.getElementById('blitz-select');
+    const sendBtn = document.getElementById('send-btn');
+    const resetBtn = document.getElementById('reset-btn');
+    const blitzNameEl = document.getElementById('blitz-name');
+    const rushPillEl = document.getElementById('rush-pill');
+    const blitzDescEl = document.getElementById('blitz-desc');
+    const blitzHotEl = document.getElementById('blitz-hot');
+    const blitzVulnerabilityEl = document.getElementById('blitz-vulnerability');
+    const blitzCoverageEl = document.getElementById('blitz-coverage');
+    const defenderRoleEl = document.getElementById('defender-role');
+    const defenderAssignmentEl = document.getElementById('defender-assignment');
+
+    const SCALE = 1.35;
+    const MOVE_DURATION = 2;
+    const pointer = new THREE.Vector2();
+    const raycaster = new THREE.Raycaster();
+
+    const theme = getThemeColors();
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(theme.bgElevated);
+    scene.fog = new THREE.Fog(theme.bg, 20, 58);
+
+    const camera = new THREE.PerspectiveCamera(45, sceneRoot.clientWidth / sceneRoot.clientHeight, 0.1, 100);
+    camera.position.set(0, 23, 11);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(sceneRoot.clientWidth, sceneRoot.clientHeight);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    sceneRoot.appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.target.set(0, 0, 3.2);
+    controls.minDistance = 10;
+    controls.maxDistance = 30;
+    controls.minPolarAngle = 0.25;
+    controls.maxPolarAngle = Math.PI / 2.1;
+
+    scene.add(new THREE.HemisphereLight(theme.surface, theme.bg, 1.15));
+    const sun = new THREE.DirectionalLight(theme.surface, 1.55);
+    sun.position.set(8, 15, 9);
+    scene.add(sun);
+
+    const field = new THREE.Mesh(
+      new THREE.PlaneGeometry(25, 46),
+      new THREE.MeshStandardMaterial({ color: theme.success, roughness: 0.94, metalness: 0.02 })
+    );
+    field.rotation.x = -Math.PI / 2;
+    scene.add(field);
+
+    const los = new THREE.Mesh(
+      new THREE.BoxGeometry(24.5, 0.04, 0.22),
+      new THREE.MeshStandardMaterial({ color: theme.surface, emissive: theme.surface, emissiveIntensity: 0.08 })
+    );
+    los.position.set(0, 0.03, 0);
+    scene.add(los);
+
+    const hashMarks = new THREE.Group();
+    scene.add(hashMarks);
+    [-10, -5, 5, 10].forEach((z) => {
+      [-7.2, -5.8, 5.8, 7.2].forEach((x) => {
+        const mark = new THREE.Mesh(
+          new THREE.BoxGeometry(0.18, 0.02, 0.85),
+          new THREE.MeshStandardMaterial({ color: theme.surface, emissive: theme.surface, emissiveIntensity: 0.03 })
+        );
+        mark.position.set(x, 0.02, z);
+        hashMarks.add(mark);
+      });
+    });
+
+    const offenseGroup = new THREE.Group();
+    const receiverTargets = [];
+    scene.add(offenseGroup);
+
+    offensivePlayers.forEach((player) => {
+      const radius = player.receiver ? 0.3 : 0.34;
+      const mesh = new THREE.Mesh(
+        new THREE.SphereGeometry(radius, 24, 24),
+        new THREE.MeshStandardMaterial({
+          color: theme[player.colorKey],
+          emissive: theme[player.colorKey],
+          emissiveIntensity: player.role === 'QB' ? 0.12 : 0.04,
+          roughness: 0.3,
+          metalness: 0.12
+        })
+      );
+      const pos = toWorld(player);
+      mesh.position.copy(pos);
+      offenseGroup.add(mesh);
+      if (player.receiver) {
+        receiverTargets.push({ ...player, position: pos.clone() });
+      }
+    });
+
+    const gapLabelSprites = gapMarkers.map((marker) => {
+      const sprite = createTextSprite(marker.text, { background: theme.panelStrong, color: theme.text, border: theme.borderStrong, scale: 1.35 });
+      sprite.position.set(marker.x * SCALE, 0.28, marker.z * SCALE);
+      scene.add(sprite);
+      return sprite;
+    });
+
+    const hotWindowGroup = new THREE.Group();
+    hotWindowGroup.position.y = 0.06;
+    scene.add(hotWindowGroup);
+
+    const hotCore = new THREE.Mesh(
+      new THREE.CylinderGeometry(1, 1, 0.12, 48),
+      new THREE.MeshStandardMaterial({ color: theme.success, emissive: theme.success, emissiveIntensity: 0.32, transparent: true, opacity: 0.28, roughness: 0.4 })
+    );
+    hotWindowGroup.add(hotCore);
+
+    const hotRing = new THREE.Mesh(
+      new THREE.RingGeometry(1.06, 1.36, 56),
+      new THREE.MeshBasicMaterial({ color: theme.success, transparent: true, opacity: 0.6, side: THREE.DoubleSide })
+    );
+    hotRing.rotation.x = -Math.PI / 2;
+    hotWindowGroup.add(hotRing);
+
+    const hotLabel = createTextSprite('HOT', { background: theme.successCss, color: theme.surfaceCss, border: theme.successCss, scale: 1.5 });
+    hotLabel.position.y = 0.5;
+    hotWindowGroup.add(hotLabel);
+
+    const defenderSlots = Array.from({ length: 11 }, (_, index) => {
+      const mesh = new THREE.Mesh(
+        new THREE.SphereGeometry(0.46, 32, 32),
+        new THREE.MeshStandardMaterial({ color: theme.surface, emissive: theme.surface, emissiveIntensity: 0.05, roughness: 0.24, metalness: 0.08 })
+      );
+      mesh.visible = false;
+      mesh.userData.slot = index;
+      mesh.userData.base = new THREE.Vector3();
+      mesh.userData.target = new THREE.Vector3();
+      mesh.userData.assignment = '';
+      mesh.userData.color = theme.surface;
+      scene.add(mesh);
+      return mesh;
+    });
+
+    const trailHelpers = Array.from({ length: 11 }, () => {
+      const helper = new THREE.ArrowHelper(new THREE.Vector3(0, 0, -1), new THREE.Vector3(), 0.001, theme.danger, 0.7, 0.35);
+      helper.visible = false;
+      scene.add(helper);
+      return helper;
+    });
+
+    const manLines = Array.from({ length: 5 }, () => {
+      const geometry = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]);
+      const line = new THREE.Line(
+        geometry,
+        new THREE.LineDashedMaterial({ color: theme.textMuted, dashSize: 0.55, gapSize: 0.35, transparent: true, opacity: 0.85 })
+      );
+      line.visible = false;
+      scene.add(line);
+      return line;
+    });
+
+    let activePackageName = '';
+    let selectedSlot = null;
+    let motionActive = false;
+    let motionElapsed = 0;
+
+    Object.keys(blitzPackages).forEach((name) => {
+      const option = document.createElement('option');
+      option.value = name;
+      option.textContent = name;
+      blitzSelect.append(option);
+    });
+
+    blitzSelect.addEventListener('change', () => {
+      selectedSlot = null;
+      applyPackage(blitzSelect.value, true);
+    });
+
+    sendBtn.addEventListener('click', () => {
+      resetAnimationState(true);
+      motionActive = true;
+      motionElapsed = 0;
+    });
+
+    resetBtn.addEventListener('click', () => {
+      resetAnimationState(true);
+      refreshInfo();
+    });
+
+    renderer.domElement.addEventListener('pointerdown', (event) => {
+      const rect = renderer.domElement.getBoundingClientRect();
+      pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+      raycaster.setFromCamera(pointer, camera);
+      const hits = raycaster.intersectObjects(defenderSlots.filter((mesh) => mesh.visible));
+      if (!hits.length) {
+        selectedSlot = null;
+        refreshInfo();
+        return;
+      }
+      selectedSlot = hits[0].object.userData.slot;
+      refreshInfo();
+    });
+
+    applyPackage(Object.keys(blitzPackages)[0], true);
+    window.addEventListener('resize', onResize);
+
+    const clock = new THREE.Clock();
+    function animate() {
+      const delta = clock.getDelta();
+      const elapsed = clock.elapsedTime;
+      const blink = 0.5 + Math.sin(elapsed * 4.2) * 0.5;
+      const hotPulse = 1 + Math.sin(elapsed * 3.1) * 0.08;
+
+      if (motionActive) {
+        motionElapsed = Math.min(MOVE_DURATION, motionElapsed + delta);
+        if (motionElapsed >= MOVE_DURATION) {
+          motionActive = false;
+        }
+      }
+
+      const progress = easeOutCubic(motionElapsed / MOVE_DURATION);
+      const coverage = blitzPackages[activePackageName];
+
+      defenderSlots.forEach((mesh, index) => {
+        if (!mesh.visible) return;
+        const defender = coverage.defenders[index];
+        const destination = getDestination(defender);
+        mesh.position.lerpVectors(mesh.userData.base, destination, motionActive || motionElapsed > 0 ? progress : 0);
+
+        const isSelected = selectedSlot === index;
+        if (isSelected) {
+          mesh.material.color.setHex(theme.link);
+          mesh.material.emissive.setHex(theme.link);
+          mesh.material.emissiveIntensity = 0.45 + blink * 0.5;
+          mesh.scale.setScalar(1.16);
+        } else if (defender.blitzer) {
+          mesh.material.color.setHex(theme.warning);
+          mesh.material.emissive.setHex(theme.warning);
+          mesh.material.emissiveIntensity = 0.18 + blink * 0.42;
+          mesh.scale.setScalar(1 + blink * 0.05);
+        } else {
+          mesh.material.color.setHex(mesh.userData.color);
+          mesh.material.emissive.setHex(mesh.userData.color);
+          mesh.material.emissiveIntensity = defender.drops ? 0.16 : 0.08;
+          mesh.scale.setScalar(1);
+        }
+
+        updateTrail(index, defender, progress);
+      });
+
+      const hotScale = hotWindowGroup.userData.radius ?? 1;
+      hotCore.scale.set(hotScale * hotPulse, 1, hotScale * hotPulse);
+      hotRing.scale.set(hotScale * (1 + blink * 0.06), hotScale * (1 + blink * 0.06), 1);
+      hotCore.material.opacity = 0.2 + blink * 0.12;
+      hotRing.material.opacity = 0.45 + blink * 0.22;
+      hotCore.material.emissiveIntensity = 0.22 + blink * 0.35;
+      hotLabel.material.opacity = 0.88;
+
+      updateManLines();
+      controls.update();
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    function applyPackage(name, immediate = false) {
+      activePackageName = name;
+      const coverage = blitzPackages[name];
+      const rushCount = coverage.defenders.filter((defender) => defender.rushes).length;
+      const assignments = assignReceivers(coverage.defenders.filter((defender) => defender.man));
+      blitzSelect.value = name;
+      blitzNameEl.textContent = name;
+      rushPillEl.textContent = `${rushCount} Rush`;
+      blitzDescEl.textContent = coverage.desc;
+      blitzHotEl.textContent = coverage.hotRead;
+      blitzVulnerabilityEl.textContent = coverage.vulnerability;
+      blitzCoverageEl.textContent = coverage.coverage;
+
+      const hotSpot = coverage.hotSpot;
+      hotWindowGroup.position.set(hotSpot.x * SCALE, 0.06, hotSpot.z * SCALE);
+      hotWindowGroup.userData.radius = hotSpot.radius * SCALE;
+      hotCore.scale.set(hotWindowGroup.userData.radius, 1, hotWindowGroup.userData.radius);
+      hotRing.scale.set(hotWindowGroup.userData.radius, hotWindowGroup.userData.radius, 1);
+      hotLabel.position.set(0, 0.5, 0);
+
+      defenderSlots.forEach((mesh, index) => {
+        const defender = coverage.defenders[index];
+        if (!defender) {
+          mesh.visible = false;
+          trailHelpers[index].visible = false;
+          return;
+        }
+        mesh.visible = true;
+        mesh.userData.defender = defender;
+        mesh.userData.base.copy(toWorld(defender));
+        mesh.userData.target.copy(getDestination(defender));
+        mesh.userData.color = getDefenderColor(defender);
+        mesh.userData.assignment = describeAssignment(defender, assignments.get(defender) || null);
+        if (immediate) {
+          mesh.position.copy(mesh.userData.base);
+        }
+      });
+
+      resetAnimationState(immediate);
+      refreshInfo();
+      updateManLines();
+    }
+
+    function resetAnimationState(forcePositions = false) {
+      motionActive = false;
+      motionElapsed = 0;
+      defenderSlots.forEach((mesh, index) => {
+        if (!mesh.visible) return;
+        if (forcePositions) {
+          mesh.position.copy(mesh.userData.base);
+        }
+        trailHelpers[index].visible = false;
+      });
+    }
+
+    function getDefenderColor(defender) {
+      if (defender.role === 'CB' || defender.role === 'NB') return theme.link;
+      if (defender.role === 'FS' || defender.role === 'SS') return theme.warning;
+      if (defender.role.includes('LB')) return theme.warning;
+      return theme.danger;
+    }
+
+    function getDestination(defender) {
+      if (defender.rushes && defender.rushTarget) return toWorld(defender.rushTarget);
+      if (defender.drops && defender.dropTarget) return toWorld(defender.dropTarget);
+      return toWorld(defender);
+    }
+
+    function updateTrail(index, defender, progress) {
+      const helper = trailHelpers[index];
+      if (!defender.rushes && !defender.drops) {
+        helper.visible = false;
+        return;
+      }
+      const start = defenderSlots[index].userData.base;
+      const end = defenderSlots[index].position;
+      const vector = new THREE.Vector3().subVectors(end, start);
+      const length = vector.length();
+      if (length < 0.2) {
+        helper.visible = false;
+        return;
+      }
+      helper.setColor(new THREE.Color(defender.drops ? theme.link : theme.danger));
+      helper.position.copy(start);
+      helper.setDirection(vector.clone().normalize());
+      helper.setLength(length, 0.7, 0.35);
+      helper.visible = progress > 0.02;
+    }
+
+    function assignReceivers(manDefenders) {
+      const assignments = new Map();
+      const remaining = [...receiverTargets];
+      manDefenders.forEach((defender) => {
+        if (!remaining.length) return;
+        let bestIndex = 0;
+        let bestDistance = Number.POSITIVE_INFINITY;
+        remaining.forEach((receiver, index) => {
+          const dx = defender.x - receiver.x;
+          const dz = defender.z - receiver.z;
+          const distance = dx * dx + dz * dz;
+          if (distance < bestDistance) {
+            bestDistance = distance;
+            bestIndex = index;
+          }
+        });
+        assignments.set(defender, remaining.splice(bestIndex, 1)[0]);
+      });
+      return assignments;
+    }
+
+    function describeAssignment(defender, receiver) {
+      if (defender.man && receiver) {
+        return `${defender.role} carries ${receiver.role} in man coverage. Stay attached through the release and squeeze any quick throw before the rush arrives.`;
+      }
+      if (defender.drops) {
+        return `${defender.role} is bluffing pressure, then dropping into the ${describeDropArea(defender.dropTarget)}. He is the trap player replacing the vacated zone.`;
+      }
+      if (defender.rushes) {
+        const lane = describeLane(defender.rushTarget);
+        if (defender.blitzer) {
+          return `${defender.role} is the featured blitzer attacking the ${lane}. Trigger downhill on the snap and force an immediate hot throw.`;
+        }
+        return `${defender.role} is part of the core rush, driving the ${lane} to squeeze the pocket and keep the quarterback from climbing.`;
+      }
+      if (defender.role === 'FS' && defender.z >= 7) {
+        return `${defender.role} stays on top as the deepest defender. Protect the post and erase any vertical shot that survives the pressure.`;
+      }
+      if (defender.role === 'SS' && defender.z >= 6.5) {
+        return `${defender.role} rotates over the top and caps the seam. Rally downhill if the quarterback hits the checkdown.`;
+      }
+      if (defender.role === 'CB') {
+        return `${defender.role} is staying outside-in on the release. Protect the sideline leverage and keep the quick game in front.`;
+      }
+      return `${defender.role} is reading the quarterback and settling into the underneath window behind the rush.`;
+    }
+
+    function describeLane(target) {
+      if (!target) return 'pressure lane';
+      const absX = Math.abs(target.x);
+      const side = target.x < 0 ? 'left' : 'right';
+      if (absX <= 0.75) return `${side} A-gap`;
+      if (absX <= 1.55) return `${side} B-gap`;
+      if (absX <= 2.6) return `${side} C-gap`;
+      return `${side} D-gap`; 
+    }
+
+    function describeDropArea(target) {
+      if (!target) return 'hook area';
+      if (Math.abs(target.x) > 2.8) return 'flat/curl window';
+      return 'hook/curl window';
+    }
+
+    function refreshInfo() {
+      if (selectedSlot === null || !defenderSlots[selectedSlot]?.visible) {
+        defenderRoleEl.textContent = '👆 Click a defender to see their assignment';
+        defenderAssignmentEl.textContent = 'Assignments update here after you select a defender in the 3D scene.';
+        return;
+      }
+      const defender = defenderSlots[selectedSlot].userData.defender;
+      defenderRoleEl.textContent = `🛡️ ${defender.role} assignment`;
+      defenderAssignmentEl.textContent = defenderSlots[selectedSlot].userData.assignment;
+    }
+
+    function updateManLines() {
+      const coverage = blitzPackages[activePackageName];
+      const assignments = assignReceivers(coverage.defenders.filter((defender) => defender.man));
+      let lineIndex = 0;
+      defenderSlots.forEach((mesh) => {
+        const defender = mesh.userData.defender;
+        if (!mesh.visible || !defender?.man) return;
+        const receiver = assignments.get(defender);
+        if (!receiver) return;
+        const line = manLines[lineIndex++];
+        line.visible = true;
+        line.material.color.setHex(selectedSlot === mesh.userData.slot ? theme.link : theme.textMuted);
+        line.geometry.dispose();
+        line.geometry = new THREE.BufferGeometry().setFromPoints([mesh.position.clone(), receiver.position.clone()]);
+        line.computeLineDistances();
+      });
+      manLines.slice(lineIndex).forEach((line) => {
+        line.visible = false;
+      });
+    }
+
+    function createTextSprite(text, options) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 256;
+      canvas.height = 128;
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      roundRect(ctx, 8, 12, 240, 104, 28);
+      ctx.fillStyle = options.background;
+      ctx.fill();
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = options.border;
+      ctx.stroke();
+      ctx.fillStyle = options.color;
+      ctx.font = '700 56px "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, canvas.width / 2, canvas.height / 2 + 2);
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.colorSpace = THREE.SRGBColorSpace;
+      const material = new THREE.SpriteMaterial({ map: texture, transparent: true });
+      const sprite = new THREE.Sprite(material);
+      sprite.scale.set(options.scale ?? 1.2, (options.scale ?? 1.2) * 0.5, 1);
+      return sprite;
+    }
+
+    function roundRect(ctx, x, y, width, height, radius) {
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + width - radius, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+      ctx.lineTo(x + width, y + height - radius);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+      ctx.lineTo(x + radius, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+    }
+
+    function toWorld(position) {
+      return new THREE.Vector3(position.x * SCALE, 0.4, position.z * SCALE);
+    }
+
+    function onResize() {
+      const width = sceneRoot.clientWidth;
+      const height = sceneRoot.clientHeight;
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    }
+
+    function easeOutCubic(value) {
+      return 1 - Math.pow(1 - Math.min(Math.max(value, 0), 1), 3);
+    }
+
+    function getThemeColors() {
+      const styles = getComputedStyle(document.documentElement);
+      const color = (name) => styles.getPropertyValue(name).trim();
+      const toNumber = (value) => Number.parseInt(value.replace('#', ''), 16);
+      return {
+        bg: color('--cp-bg'),
+        bgElevated: color('--cp-bg-elevated'),
+        surface: toNumber(color('--cp-surface')),
+        surfaceCss: color('--cp-surface'),
+        panelStrong: color('--cp-panel-strong'),
+        text: color('--cp-text'),
+        textMuted: toNumber(color('--cp-text-muted')),
+        borderStrong: color('--cp-border-strong'),
+        border: toNumber(color('--cp-border')),
+        accent: toNumber(color('--cp-accent')),
+        success: toNumber(color('--cp-success')),
+        successCss: color('--cp-success'),
+        danger: toNumber(color('--cp-danger')),
+        warning: toNumber(color('--cp-warning')),
+        link: toNumber(color('--cp-link'))
+      };
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CFB26 Pre-Snap Read Trainer</title>
+  <link rel="stylesheet" href="../assets/styles/site-nav.css" />
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("clawpilotTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --cp-bg: #f7f4ef;
+      --cp-bg-elevated: #fcfbf8;
+      --cp-surface: #ffffff;
+      --cp-surface-soft: #f5f5f5;
+      --cp-border: #dedede;
+      --cp-border-strong: #919191;
+      --cp-text: #242424;
+      --cp-text-muted: #5c5c5c;
+      --cp-text-soft: #6f6f6f;
+      --cp-accent: #b11f4b;
+      --cp-accent-hover: #9a1a41;
+      --cp-accent-soft: rgba(177, 31, 75, 0.08);
+      --cp-accent-fg: #ffffff;
+      --cp-success: #16a34a;
+      --cp-danger: #dc2626;
+      --cp-warning: #f59e0b;
+      --cp-link: #0078d4;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+      --cp-overlay: rgba(255, 255, 255, 0.8);
+      --cp-panel: rgba(255, 255, 255, 0.86);
+      --cp-panel-strong: rgba(255, 255, 255, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.55);
+      --cp-highlight: rgba(177, 31, 75, 0.12);
+    }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --cp-bg: #3d3b3a;
+      --cp-bg-elevated: #343231;
+      --cp-surface: #292929;
+      --cp-surface-soft: #2e2e2e;
+      --cp-border: #474747;
+      --cp-border-strong: #5f5f5f;
+      --cp-text: #dedede;
+      --cp-text-muted: #919191;
+      --cp-text-soft: #b0b0b0;
+      --cp-accent: #fd8ea1;
+      --cp-accent-hover: #fb7b91;
+      --cp-accent-soft: rgba(253, 142, 161, 0.14);
+      --cp-accent-fg: #1a1a1a;
+      --cp-success: #4ade80;
+      --cp-danger: #f87171;
+      --cp-warning: #fbbf24;
+      --cp-link: #4da6ff;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+      --cp-overlay: rgba(41, 41, 41, 0.88);
+      --cp-panel: rgba(41, 41, 41, 0.72);
+      --cp-panel-strong: rgba(41, 41, 41, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.04);
+      --cp-highlight: rgba(253, 142, 161, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+    }
+
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: var(--cp-bg);
+      color: var(--cp-text);
+      font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    a {
+      color: var(--cp-link);
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    .app-shell {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      padding-top: 3.7rem;
+      isolation: isolate;
+    }
+
+    #scene-root {
+      width: 100%;
+      height: 100%;
+    }
+
+    #scene-root canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .score-badge,
+    .streak-badge {
+      position: absolute;
+      top: 4.7rem;
+      z-index: 3;
+      pointer-events: none;
+      border: 1px solid var(--cp-border);
+      background: var(--cp-panel-strong);
+      color: var(--cp-text);
+      border-radius: 999px;
+      padding: 0.45rem 0.8rem;
+      box-shadow: var(--cp-shadow);
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .score-badge {
+      right: 1rem;
+    }
+
+    .streak-badge {
+      left: 50%;
+      transform: translateX(-50%);
+      display: none;
+    }
+
+    .streak-badge.active {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      color: var(--cp-warning);
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 4.6rem 1rem 1rem;
+      display: grid;
+      grid-template-columns: minmax(19rem, 24rem) minmax(0, 1fr) minmax(19rem, 24rem);
+      gap: 1rem;
+      align-items: start;
+      pointer-events: none;
+    }
+
+    .panel {
+      width: 100%;
+      pointer-events: auto;
+      border: 1px solid var(--cp-border);
+      border-radius: 16px;
+      background: var(--cp-panel);
+      backdrop-filter: blur(14px);
+      padding: 1rem;
+      box-shadow: var(--cp-shadow);
+      transition: border-color 180ms ease, transform 180ms ease, background 180ms ease;
+    }
+
+    .overlay[data-feedback="correct"] .panel {
+      border-color: var(--cp-success);
+    }
+
+    .overlay[data-feedback="wrong"] .panel {
+      border-color: var(--cp-danger);
+    }
+
+    .left-panel,
+    .right-panel {
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    .left-panel {
+      grid-column: 1;
+    }
+
+    .right-panel {
+      grid-column: 3;
+    }
+
+    .eyebrow {
+      margin: 0 0 0.35rem;
+      color: var(--cp-text-muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p,
+    ul {
+      margin-top: 0;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+    }
+
+    h2 {
+      font-size: 1.25rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .hint,
+    .subtle,
+    .meta-line {
+      color: var(--cp-text-soft);
+      line-height: 1.5;
+    }
+
+    .pill-row,
+    .score-stack,
+    .answer-grid,
+    .info-stack,
+    .legend,
+    .status-card,
+    .keys-list,
+    .audible-card {
+      display: grid;
+      gap: 0.65rem;
+    }
+
+    .score-stack,
+    .legend,
+    .status-card,
+    .audible-card,
+    .placeholder,
+    .key-item,
+    .answer-button {
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      background: var(--cp-surface);
+    }
+
+    .score-stack,
+    .legend,
+    .status-card,
+    .audible-card,
+    .placeholder {
+      padding: 0.85rem;
+    }
+
+    .score-stack strong,
+    .legend strong,
+    .status-card strong,
+    .audible-card strong {
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+
+    .legend-row,
+    .score-row,
+    .right-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      background: var(--cp-accent-soft);
+      color: var(--cp-accent);
+      padding: 0.28rem 0.68rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .answer-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .answer-button {
+      appearance: none;
+      width: 100%;
+      min-height: 3.15rem;
+      padding: 0.85rem 0.95rem;
+      text-align: left;
+      color: var(--cp-text);
+      cursor: pointer;
+      transition: transform 150ms ease, border-color 150ms ease, background 150ms ease;
+    }
+
+    .answer-button:hover:not(:disabled),
+    .answer-button:focus-visible:not(:disabled) {
+      transform: translateY(-1px);
+      border-color: var(--cp-accent);
+      background: var(--cp-accent-soft);
+      outline: none;
+    }
+
+    .answer-button:disabled {
+      cursor: default;
+      opacity: 1;
+    }
+
+    .answer-button.correct {
+      border-color: var(--cp-success);
+      background: var(--cp-success);
+      color: var(--cp-accent-fg);
+      font-weight: 700;
+    }
+
+    .answer-button.incorrect {
+      border-color: var(--cp-danger);
+      background: var(--cp-danger);
+      color: var(--cp-accent-fg);
+      font-weight: 700;
+    }
+
+    .answer-button.dimmed {
+      opacity: 0.68;
+    }
+
+    .status-card {
+      min-height: 4.75rem;
+      transition: border-color 180ms ease, background 180ms ease;
+    }
+
+    .status-card.correct {
+      border-color: var(--cp-success);
+      background: var(--cp-success);
+      color: var(--cp-accent-fg);
+    }
+
+    .status-card.incorrect {
+      border-color: var(--cp-danger);
+      background: var(--cp-danger);
+      color: var(--cp-accent-fg);
+    }
+
+    .status-card.correct .subtle,
+    .status-card.incorrect .subtle {
+      color: var(--cp-accent-fg);
+    }
+
+    .placeholder {
+      min-height: 18rem;
+      display: grid;
+      align-content: start;
+      gap: 0.8rem;
+    }
+
+    .keys-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .key-item {
+      padding: 0.85rem 0.95rem;
+      line-height: 1.45;
+    }
+
+    .next-button {
+      appearance: none;
+      border: 1px solid var(--cp-accent);
+      border-radius: 0.625rem;
+      background: var(--cp-accent);
+      color: var(--cp-accent-fg);
+      padding: 0.85rem 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 150ms ease, background 150ms ease, border-color 150ms ease;
+    }
+
+    .next-button:hover,
+    .next-button:focus-visible {
+      transform: translateY(-1px);
+      background: var(--cp-accent-hover);
+      border-color: var(--cp-accent-hover);
+      outline: none;
+    }
+
+    .next-button[hidden],
+    .hidden {
+      display: none !important;
+    }
+
+    .center-spacer {
+      pointer-events: none;
+    }
+
+    @media (max-width: 1080px) {
+      body {
+        overflow: auto;
+      }
+
+      .app-shell {
+        height: auto;
+        min-height: 100vh;
+      }
+
+      #scene-root {
+        height: 70vh;
+      }
+
+      .overlay {
+        position: static;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 1rem;
+        margin-top: -5rem;
+      }
+
+      .left-panel,
+      .right-panel,
+      .center-spacer {
+        grid-column: auto;
+      }
+
+      .score-badge,
+      .streak-badge {
+        position: static;
+        transform: none;
+        margin: 0.85rem 1rem 0;
+        display: inline-flex;
+        pointer-events: auto;
+      }
+
+      .streak-badge:not(.active) {
+        display: none;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .answer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .overlay {
+        margin-top: -3.5rem;
+      }
+    }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.167.1/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.167.1/examples/jsm/"
+      }
+    }
+  </script>
+  <script defer src="../assets/scripts/site-nav.js"></script>
+</head>
+<body data-nav-root="..">
+  <div class="app-shell">
+    <div class="score-badge" id="score-badge">📊 Score: 0 / 0</div>
+    <div class="streak-badge" id="streak-badge">🔥 <span id="streak-badge-text">1 in a row!</span></div>
+    <div id="scene-root" aria-label="3D pre-snap read trainer"></div>
+
+    <div class="overlay" id="overlay">
+      <section class="panel left-panel">
+        <div>
+          <div class="eyebrow">Coverage recognition quiz</div>
+          <h1>🧠 Pre-Snap Read Trainer</h1>
+          <p class="hint">Read the safeties, corners, and LBs. Identify the coverage.</p>
+        </div>
+
+        <div class="score-stack">
+          <div class="score-row">
+            <strong id="score-line">📊 Score: 0 / 0 (0%)</strong>
+            <span class="pill" id="scenario-pill">New rep</span>
+          </div>
+          <div class="meta-line" id="streak-line">No streak yet — stack correct reads to heat up.</div>
+        </div>
+
+        <div class="legend">
+          <div class="legend-row"><strong>Field key</strong><span class="subtle">Color groups</span></div>
+          <div class="subtle">🔴 Defensive line / pressure</div>
+          <div class="subtle">🟠 Linebackers / safeties</div>
+          <div class="subtle">🔵 Corners / nickel</div>
+          <div class="subtle">⚪ Offense is muted gray for reference only</div>
+        </div>
+
+        <div>
+          <div class="eyebrow">Question</div>
+          <h2>What coverage is this?</h2>
+        </div>
+
+        <div class="answer-grid" id="answer-grid"></div>
+
+        <div class="status-card" id="status-card">
+          <strong id="status-title">👀 Study the shell</strong>
+          <div class="subtle" id="status-text">Use the defensive spacing, especially the safeties and corner depth, before locking in an answer.</div>
+        </div>
+      </section>
+
+      <div class="center-spacer" aria-hidden="true"></div>
+
+      <aside class="panel right-panel" id="reveal-panel">
+        <div class="placeholder" id="reveal-placeholder">
+          <div>
+            <div class="eyebrow">Post-answer reveal</div>
+            <h2>Answer to unlock coaching notes</h2>
+          </div>
+          <p class="hint">After you answer, this panel reveals the correct coverage, the pre-snap keys you should have spotted, and the best audible to punish it.</p>
+        </div>
+
+        <div class="info-stack hidden" id="reveal-content">
+          <div class="right-header">
+            <div>
+              <div class="eyebrow">Coverage revealed</div>
+              <h2 id="reveal-title">Cover 3</h2>
+            </div>
+            <span class="pill" id="reveal-pill">Correct answer</span>
+          </div>
+
+          <div class="status-card" id="reveal-feedback-card">
+            <strong id="reveal-feedback-title">✅ Correct!</strong>
+            <div class="subtle" id="reveal-feedback-text">You nailed the shell.</div>
+          </div>
+
+          <div>
+            <div class="eyebrow">Pre-snap keys</div>
+            <ul class="keys-list" id="keys-list"></ul>
+          </div>
+
+          <div class="audible-card">
+            <strong>🎧 Recommended audible</strong>
+            <div class="subtle" id="audible-text"></div>
+          </div>
+
+          <button class="next-button" id="next-button" type="button">Next ▶</button>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    const scenarios = [
+      {
+        id: 'cover-0',
+        answer: 'Cover 0 (Zero Blitz)',
+        distractors: ['Cover 1 (Man Free)', 'Cover 2 (Zone)', 'Cover 3 (Zone)'],
+        keys: [
+          '👀 0 high safeties — nobody deep',
+          '🔒 Corners in press, right on WRs',
+          '🏃 LBs and safeties creeping to the LOS — blitz incoming'
+        ],
+        audible: '🗣️ Quick Slant or Screen — ball must come out NOW. Or call a Go route and test their 1-on-1.',
+        defenders: [
+          { role: 'DE', x: -2.5, z: 1 },
+          { role: 'DT', x: -0.8, z: 1 },
+          { role: 'DT', x: 0.8, z: 1 },
+          { role: 'DE', x: 2.5, z: 1 },
+          { role: 'LB', x: -1.5, z: 2 },
+          { role: 'LB', x: 1.5, z: 2 },
+          { role: 'CB', x: -5, z: 0.8 },
+          { role: 'CB', x: 5, z: 0.8 },
+          { role: 'NB', x: 3.5, z: 1.5 },
+          { role: 'SS', x: -3.5, z: 2.5 },
+          { role: 'FS', x: 0, z: 3 }
+        ]
+      },
+      {
+        id: 'cover-1',
+        answer: 'Cover 1 (Man Free)',
+        distractors: ['Cover 0 (Zero Blitz)', 'Cover 3 (Zone)', 'Cover 4 (Quarters)'],
+        keys: [
+          '👀 1 high safety — single deep defender',
+          '🔒 Corners in press man — mirroring receivers',
+          '🏃 LBs stacked at normal depth, not creeping'
+        ],
+        audible: '🗣️ Mesh or Drag concepts — crossing routes rub man defenders. Double moves can beat 1-on-1.',
+        defenders: [
+          { role: 'DE', x: -2.5, z: 1 },
+          { role: 'DT', x: -0.8, z: 1 },
+          { role: 'DT', x: 0.8, z: 1 },
+          { role: 'DE', x: 2.5, z: 1 },
+          { role: 'LB', x: -1.5, z: 2.5 },
+          { role: 'LB', x: 0, z: 2.5 },
+          { role: 'LB', x: 1.5, z: 2.5 },
+          { role: 'CB', x: -5, z: 1 },
+          { role: 'CB', x: 5, z: 1 },
+          { role: 'NB', x: 3, z: 1.5 },
+          { role: 'FS', x: 0, z: 8 }
+        ]
+      },
+      {
+        id: 'cover-2',
+        answer: 'Cover 2 (Zone)',
+        distractors: ['Cover 4 (Quarters)', 'Cover 1 (Man Free)', 'Cover 6 (Quarter-Quarter-Half)'],
+        keys: [
+          '👀 2 high safeties — splitting the deep field in half',
+          '🔒 Corners squatting in off coverage, watching the flat',
+          '🏃 3 LBs at normal depth, hook/curl zones'
+        ],
+        audible: '🗣️ Smash/Corner route — throw over the flat-defending CB. Or Post — split the two safeties.',
+        defenders: [
+          { role: 'DE', x: -2.5, z: 1 },
+          { role: 'DT', x: -0.8, z: 1 },
+          { role: 'DT', x: 0.8, z: 1 },
+          { role: 'DE', x: 2.5, z: 1 },
+          { role: 'LB', x: -2, z: 3 },
+          { role: 'LB', x: 0, z: 3 },
+          { role: 'LB', x: 2, z: 3 },
+          { role: 'CB', x: -5, z: 2 },
+          { role: 'CB', x: 5, z: 2 },
+          { role: 'SS', x: -3, z: 8 },
+          { role: 'FS', x: 3, z: 8 }
+        ]
+      },
+      {
+        id: 'cover-3',
+        answer: 'Cover 3 (Zone)',
+        distractors: ['Cover 1 (Man Free)', 'Cover 2 (Zone)', 'Cover 4 (Quarters)'],
+        keys: [
+          '👀 1 high safety (FS deep middle) — but CBs are also deep',
+          '🔒 Corners bailed to 6+ yards — they\'re taking deep thirds',
+          '🏃 SS rolled down near the box — only 1 true deep safety but 3 deep defenders total'
+        ],
+        audible: '🗣️ 4 Verts — attack the seams between the thirds. Or Curl-Flat to stretch the underneath zones.',
+        defenders: [
+          { role: 'DE', x: -2.5, z: 1 },
+          { role: 'DT', x: -0.8, z: 1 },
+          { role: 'DT', x: 0.8, z: 1 },
+          { role: 'DE', x: 2.5, z: 1 },
+          { role: 'LB', x: -1.5, z: 3 },
+          { role: 'LB', x: 0, z: 3 },
+          { role: 'LB', x: 1.5, z: 3 },
+          { role: 'CB', x: -4, z: 6 },
+          { role: 'CB', x: 4, z: 6 },
+          { role: 'SS', x: 2, z: 3 },
+          { role: 'FS', x: 0, z: 9 }
+        ]
+      },
+      {
+        id: 'cover-4',
+        answer: 'Cover 4 (Quarters)',
+        distractors: ['Cover 2 (Zone)', 'Cover 6 (Quarter-Quarter-Half)', 'Cover 3 (Zone)'],
+        keys: [
+          '👀 2 high safeties AND 2 deep corners — all 4 are deep',
+          '🔒 Everyone is bailed back, playing \"read and react\"',
+          '🏃 Only 3 underneath defenders — wide open underneath'
+        ],
+        audible: '🗣️ Digs, Curls, Stick — hit the wide-open underneath. Or just run the ball — only 6 in the box.',
+        defenders: [
+          { role: 'DE', x: -2.5, z: 1 },
+          { role: 'DT', x: -0.8, z: 1 },
+          { role: 'DT', x: 0.8, z: 1 },
+          { role: 'DE', x: 2.5, z: 1 },
+          { role: 'LB', x: -1, z: 3 },
+          { role: 'LB', x: 1, z: 3 },
+          { role: 'LB', x: 0, z: 3.5 },
+          { role: 'CB', x: -5, z: 7 },
+          { role: 'CB', x: 5, z: 7 },
+          { role: 'SS', x: -2, z: 7.5 },
+          { role: 'FS', x: 2, z: 7.5 }
+        ]
+      },
+      {
+        id: 'cover-6',
+        answer: 'Cover 6 (Quarter-Quarter-Half)',
+        distractors: ['Cover 2 (Zone)', 'Cover 4 (Quarters)', 'Cover 3 (Zone)'],
+        keys: [
+          '👀 Asymmetric! One side has CB up (Cover 2 look), other side has CB deep (Cover 4 look)',
+          '🔒 Left CB in flat zone, Right CB bailed deep — different sides playing different coverages',
+          '🏃 2 deep safeties but positioned differently — one near the hashes, one to the boundary'
+        ],
+        audible: '🗣️ Attack the Cover 2 side with Smash/Corner. Attack the Cover 4 side with Digs/Curls.',
+        defenders: [
+          { role: 'DE', x: -2.5, z: 1 },
+          { role: 'DT', x: -0.8, z: 1 },
+          { role: 'DT', x: 0.8, z: 1 },
+          { role: 'DE', x: 2.5, z: 1 },
+          { role: 'LB', x: -1, z: 3 },
+          { role: 'LB', x: 1, z: 3 },
+          { role: 'LB', x: 0, z: 3.5 },
+          { role: 'CB', x: -5, z: 2 },
+          { role: 'CB', x: 5, z: 7 },
+          { role: 'SS', x: -3, z: 8 },
+          { role: 'FS', x: 2, z: 7.5 }
+        ]
+      },
+      {
+        id: 'two-man-under',
+        answer: '2-Man Under',
+        distractors: ['Cover 2 (Zone)', 'Cover 4 (Quarters)', 'Cover 0 (Zero Blitz)'],
+        keys: [
+          '👀 2 high safeties — looks like Cover 2 at first glance',
+          '🔒 But corners are in PRESS coverage — they\'re playing man, not zone flat',
+          '🏃 This is man coverage with 2 deep safeties over the top — safest man look'
+        ],
+        audible: '🗣️ Man beaters: Mesh, Drag, Double Moves. The 2 deep safeties limit deep shots — work the middle.',
+        defenders: [
+          { role: 'DE', x: -2.5, z: 1 },
+          { role: 'DT', x: -0.8, z: 1 },
+          { role: 'DT', x: 0.8, z: 1 },
+          { role: 'DE', x: 2.5, z: 1 },
+          { role: 'LB', x: -1.5, z: 2.5 },
+          { role: 'LB', x: 0, z: 2.5 },
+          { role: 'LB', x: 1.5, z: 2.5 },
+          { role: 'CB', x: -5, z: 0.8 },
+          { role: 'CB', x: 5, z: 0.8 },
+          { role: 'SS', x: -3, z: 8 },
+          { role: 'FS', x: 3, z: 8 }
+        ]
+      },
+      {
+        id: 'dime-prevent',
+        answer: 'Dime / Prevent',
+        distractors: ['Cover 4 (Quarters)', 'Cover 2 (Zone)', 'Cover 3 (Zone)'],
+        keys: [
+          '👀 6 DBs on the field — only 1 LB',
+          '🔒 Everyone is deep — extreme prevent look',
+          '🏃 Run the ball! Only 5 in the box with extra DBs replacing LBs'
+        ],
+        audible: '🗣️ RUN THE BALL. Or short passes — curls, hitches, slants. Don\'t go deep — that\'s what they want.',
+        defenders: [
+          { role: 'DE', x: -2.5, z: 1 },
+          { role: 'DT', x: -0.8, z: 1 },
+          { role: 'DT', x: 0.8, z: 1 },
+          { role: 'DE', x: 2.5, z: 1 },
+          { role: 'NB', x: -3, z: 2 },
+          { role: 'NB', x: 3, z: 2 },
+          { role: 'LB', x: 0, z: 3 },
+          { role: 'CB', x: -5, z: 7 },
+          { role: 'CB', x: 5, z: 7 },
+          { role: 'SS', x: -2, z: 9 },
+          { role: 'FS', x: 2, z: 9 }
+        ]
+      }
+    ];
+
+    const offensivePlayers = [
+      { role: 'LT', x: -2, z: -0.2, radius: 0.34 },
+      { role: 'LG', x: -1, z: -0.2, radius: 0.34 },
+      { role: 'C', x: 0, z: -0.2, radius: 0.34 },
+      { role: 'RG', x: 1, z: -0.2, radius: 0.34 },
+      { role: 'RT', x: 2, z: -0.2, radius: 0.34 },
+      { role: 'QB', x: 0, z: -1.8, radius: 0.34 },
+      { role: 'RB', x: -1.2, z: -3, radius: 0.34 },
+      { role: 'X', x: -8, z: -0.8, radius: 0.3 },
+      { role: 'H', x: -3.5, z: -0.8, radius: 0.3 },
+      { role: 'Y', x: 3.5, z: -0.8, radius: 0.3 },
+      { role: 'Z', x: 8, z: -0.8, radius: 0.3 }
+    ];
+
+    const sceneRoot = document.getElementById('scene-root');
+    const overlay = document.getElementById('overlay');
+    const answerGrid = document.getElementById('answer-grid');
+    const scoreLine = document.getElementById('score-line');
+    const scenarioPill = document.getElementById('scenario-pill');
+    const streakLine = document.getElementById('streak-line');
+    const scoreBadge = document.getElementById('score-badge');
+    const streakBadge = document.getElementById('streak-badge');
+    const streakBadgeText = document.getElementById('streak-badge-text');
+    const statusCard = document.getElementById('status-card');
+    const statusTitle = document.getElementById('status-title');
+    const statusText = document.getElementById('status-text');
+    const revealPlaceholder = document.getElementById('reveal-placeholder');
+    const revealContent = document.getElementById('reveal-content');
+    const revealTitle = document.getElementById('reveal-title');
+    const revealPill = document.getElementById('reveal-pill');
+    const revealFeedbackCard = document.getElementById('reveal-feedback-card');
+    const revealFeedbackTitle = document.getElementById('reveal-feedback-title');
+    const revealFeedbackText = document.getElementById('reveal-feedback-text');
+    const keysList = document.getElementById('keys-list');
+    const audibleText = document.getElementById('audible-text');
+    const nextButton = document.getElementById('next-button');
+
+    const theme = getThemeColors();
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(theme.bgElevated);
+    scene.fog = new THREE.Fog(theme.bg, 24, 58);
+
+    const camera = new THREE.PerspectiveCamera(45, sceneRoot.clientWidth / sceneRoot.clientHeight, 0.1, 100);
+    camera.position.set(0, 23, 9.5);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(sceneRoot.clientWidth, sceneRoot.clientHeight);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    sceneRoot.appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.target.set(0, 0, 4);
+    controls.minDistance = 10;
+    controls.maxDistance = 30;
+    controls.maxPolarAngle = Math.PI / 2.15;
+    controls.minPolarAngle = 0.22;
+
+    scene.add(new THREE.HemisphereLight(theme.surface, theme.bg, 1.12));
+    const sun = new THREE.DirectionalLight(theme.surface, 1.18);
+    sun.position.set(7, 14, 10);
+    scene.add(sun);
+
+    const field = new THREE.Mesh(
+      new THREE.PlaneGeometry(24, 44),
+      new THREE.MeshStandardMaterial({ color: theme.success, roughness: 0.92, metalness: 0.02 }),
+    );
+    field.rotation.x = -Math.PI / 2;
+    scene.add(field);
+
+    const los = new THREE.Mesh(
+      new THREE.BoxGeometry(24, 0.03, 0.22),
+      new THREE.MeshBasicMaterial({ color: theme.surface }),
+    );
+    los.position.set(0, 0.03, 0);
+    scene.add(los);
+
+    const offenseGroup = new THREE.Group();
+    scene.add(offenseGroup);
+    offensivePlayers.forEach((player) => {
+      const sphere = new THREE.Mesh(
+        new THREE.SphereGeometry(player.radius, 24, 24),
+        new THREE.MeshStandardMaterial({ color: theme.offense, roughness: 0.42, metalness: 0.08 }),
+      );
+      sphere.position.copy(toWorld(player));
+      offenseGroup.add(sphere);
+    });
+
+    const defenderSlots = Array.from({ length: 11 }, (_, index) => {
+      const mesh = new THREE.Mesh(
+        new THREE.SphereGeometry(0.46, 32, 32),
+        new THREE.MeshStandardMaterial({ color: theme.link, emissive: 0x000000, roughness: 0.24, metalness: 0.1 }),
+      );
+      mesh.userData.slot = index;
+      mesh.userData.target = new THREE.Vector3();
+      mesh.userData.defaultColor = theme.link;
+      mesh.visible = false;
+      scene.add(mesh);
+      return mesh;
+    });
+
+    let currentScenario = null;
+    let answered = false;
+    let totalAttempts = 0;
+    let correctAnswers = 0;
+    let streak = 0;
+    const recentScenarioIds = [];
+
+    nextButton.addEventListener('click', () => loadNextScenario());
+    window.addEventListener('resize', onResize);
+
+    loadNextScenario(true);
+
+    const clock = new THREE.Clock();
+    function animate() {
+      const delta = clock.getDelta();
+      const pulse = 0.5 + Math.sin(clock.elapsedTime * 2.2) * 0.15;
+      defenderSlots.forEach((mesh) => {
+        if (!mesh.visible) return;
+        mesh.position.lerp(mesh.userData.target, Math.min(1, delta * 5.2));
+        mesh.material.color.setHex(mesh.userData.defaultColor);
+        mesh.material.emissive.setHex(mesh.userData.defaultColor);
+        mesh.material.emissiveIntensity = 0.09 + pulse * 0.08;
+      });
+      controls.update();
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    function loadNextScenario(immediate = false) {
+      currentScenario = pickScenario();
+      answered = false;
+      overlay.dataset.feedback = 'neutral';
+      statusCard.className = 'status-card';
+      revealFeedbackCard.className = 'status-card';
+      statusTitle.textContent = '👀 Study the shell';
+      statusText.textContent = 'Use the defensive spacing, especially the safeties and corner depth, before locking in an answer.';
+      revealPlaceholder.classList.remove('hidden');
+      revealContent.classList.add('hidden');
+      nextButton.hidden = true;
+      scenarioPill.textContent = 'New rep';
+
+      applyScenarioToField(currentScenario, immediate);
+      renderAnswers(currentScenario);
+      updateScoreboard();
+    }
+
+    function pickScenario() {
+      const recentLimit = Math.min(4, Math.max(2, scenarios.length - 2));
+      const eligible = scenarios.filter((scenario) => !recentScenarioIds.includes(scenario.id));
+      const pool = eligible.length ? eligible : scenarios.filter((scenario) => scenario.id !== recentScenarioIds[recentScenarioIds.length - 1]);
+      const next = pool[Math.floor(Math.random() * pool.length)];
+      recentScenarioIds.push(next.id);
+      while (recentScenarioIds.length > recentLimit) {
+        recentScenarioIds.shift();
+      }
+      return next;
+    }
+
+    function applyScenarioToField(scenario, immediate = false) {
+      defenderSlots.forEach((mesh, index) => {
+        const defender = scenario.defenders[index];
+        if (!defender) {
+          mesh.visible = false;
+          return;
+        }
+        mesh.visible = true;
+        mesh.userData.defaultColor = colorForRole(defender.role);
+        mesh.userData.target.copy(toWorld(defender));
+        mesh.material.color.setHex(mesh.userData.defaultColor);
+        if (immediate) {
+          mesh.position.copy(mesh.userData.target);
+        }
+      });
+    }
+
+    function renderAnswers(scenario) {
+      answerGrid.innerHTML = '';
+      const answers = shuffle([scenario.answer, ...scenario.distractors]);
+      answers.forEach((option) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'answer-button';
+        button.textContent = option;
+        button.addEventListener('click', () => handleAnswer(option));
+        answerGrid.append(button);
+      });
+    }
+
+    function handleAnswer(selected) {
+      if (answered || !currentScenario) return;
+      answered = true;
+      totalAttempts += 1;
+
+      const isCorrect = selected === currentScenario.answer;
+      if (isCorrect) {
+        correctAnswers += 1;
+        streak += 1;
+      } else {
+        streak = 0;
+      }
+
+      overlay.dataset.feedback = isCorrect ? 'correct' : 'wrong';
+      scenarioPill.textContent = isCorrect ? 'Correct read' : 'Missed read';
+      statusCard.className = `status-card ${isCorrect ? 'correct' : 'incorrect'}`;
+      statusTitle.textContent = isCorrect ? '✅ Correct!' : '❌ Incorrect';
+      statusText.textContent = isCorrect
+        ? 'You identified the shell before the snap.'
+        : `It was ${currentScenario.answer}. Train your eyes on the shell depth.`;
+
+      Array.from(answerGrid.children).forEach((button) => {
+        button.disabled = true;
+        const isSelected = button.textContent === selected;
+        const isAnswer = button.textContent === currentScenario.answer;
+        button.classList.toggle('correct', isAnswer);
+        button.classList.toggle('incorrect', isSelected && !isCorrect);
+        button.classList.toggle('dimmed', !isAnswer && !isSelected);
+      });
+
+      populateReveal(isCorrect, selected);
+      updateScoreboard();
+      nextButton.hidden = false;
+    }
+
+    function populateReveal(isCorrect, selected) {
+      revealPlaceholder.classList.add('hidden');
+      revealContent.classList.remove('hidden');
+      revealTitle.textContent = currentScenario.answer;
+      revealPill.textContent = isCorrect ? 'Correct answer' : 'Coverage revealed';
+      revealFeedbackCard.className = `status-card ${isCorrect ? 'correct' : 'incorrect'}`;
+      revealFeedbackTitle.textContent = isCorrect ? '✅ Correct!' : `❌ Incorrect — it was ${currentScenario.answer}`;
+      revealFeedbackText.textContent = isCorrect
+        ? 'Nice pre-snap ID. Lock in why this shell tipped it off.'
+        : `You picked ${selected}. Study the keys below and punish it next snap.`;
+
+      keysList.innerHTML = '';
+      currentScenario.keys.forEach((key) => {
+        const item = document.createElement('li');
+        item.className = 'key-item';
+        item.textContent = key;
+        keysList.append(item);
+      });
+
+      audibleText.textContent = currentScenario.audible;
+    }
+
+    function updateScoreboard() {
+      const percent = totalAttempts ? Math.round((correctAnswers / totalAttempts) * 100) : 0;
+      scoreLine.textContent = `📊 Score: ${correctAnswers} / ${totalAttempts} (${percent}%)`;
+      scoreBadge.textContent = `Score: ${correctAnswers}/${totalAttempts}`;
+
+      if (streak > 0) {
+        streakLine.textContent = `🔥 Streak: ${streak}`;
+      } else {
+        streakLine.textContent = 'No streak yet — stack correct reads to heat up.';
+      }
+
+      if (streak >= 2) {
+        streakBadge.classList.add('active');
+        streakBadgeText.textContent = `${streak} in a row!`;
+      } else {
+        streakBadge.classList.remove('active');
+      }
+    }
+
+    function colorForRole(role) {
+      if (role === 'DE' || role === 'DT') {
+        return theme.danger;
+      }
+      if (role === 'CB' || role === 'NB') {
+        return theme.link;
+      }
+      return theme.warning;
+    }
+
+    function toWorld(position) {
+      return new THREE.Vector3(position.x * 1.35, 0.4, position.z * 1.35);
+    }
+
+    function shuffle(items) {
+      const copy = [...items];
+      for (let index = copy.length - 1; index > 0; index -= 1) {
+        const swapIndex = Math.floor(Math.random() * (index + 1));
+        [copy[index], copy[swapIndex]] = [copy[swapIndex], copy[index]];
+      }
+      return copy;
+    }
+
+    function onResize() {
+      const width = sceneRoot.clientWidth;
+      const height = sceneRoot.clientHeight;
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    }
+
+    function getThemeColors() {
+      const styles = getComputedStyle(document.documentElement);
+      const color = (name) => styles.getPropertyValue(name).trim();
+      const toNumber = (value) => Number.parseInt(value.replace('#', ''), 16);
+      return {
+        bg: color('--cp-bg'),
+        bgElevated: color('--cp-bg-elevated'),
+        surface: toNumber(color('--cp-surface')),
+        offense: toNumber(color('--cp-text-muted')),
+        danger: toNumber(color('--cp-danger')),
+        warning: toNumber(color('--cp-warning')),
+        link: toNumber(color('--cp-link')),
+        success: toNumber(color('--cp-success'))
+      };
+    }
+  </script>
+</body>
+</html>

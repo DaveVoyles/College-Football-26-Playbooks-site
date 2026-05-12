@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CFB26 Play Concept Animator</title>
+  <link rel="stylesheet" href="../assets/styles/site-nav.css" />
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("clawpilotTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --cp-bg: #f7f4ef;
+      --cp-bg-elevated: #fcfbf8;
+      --cp-surface: #ffffff;
+      --cp-surface-soft: #f5f5f5;
+      --cp-border: #dedede;
+      --cp-border-strong: #919191;
+      --cp-text: #242424;
+      --cp-text-muted: #5c5c5c;
+      --cp-text-soft: #6f6f6f;
+      --cp-accent: #b11f4b;
+      --cp-accent-hover: #9a1a41;
+      --cp-accent-soft: rgba(177, 31, 75, 0.08);
+      --cp-accent-fg: #ffffff;
+      --cp-success: #16a34a;
+      --cp-danger: #dc2626;
+      --cp-warning: #f59e0b;
+      --cp-link: #0078d4;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+      --cp-overlay: rgba(255, 255, 255, 0.8);
+      --cp-panel: rgba(255, 255, 255, 0.86);
+      --cp-panel-strong: rgba(255, 255, 255, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.55);
+      --cp-highlight: rgba(177, 31, 75, 0.12);
+    }
+
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --cp-bg: #3d3b3a;
+      --cp-bg-elevated: #343231;
+      --cp-surface: #292929;
+      --cp-surface-soft: #2e2e2e;
+      --cp-border: #474747;
+      --cp-border-strong: #5f5f5f;
+      --cp-text: #dedede;
+      --cp-text-muted: #919191;
+      --cp-text-soft: #b0b0b0;
+      --cp-accent: #fd8ea1;
+      --cp-accent-hover: #fb7b91;
+      --cp-accent-soft: rgba(253, 142, 161, 0.14);
+      --cp-accent-fg: #1a1a1a;
+      --cp-success: #4ade80;
+      --cp-danger: #f87171;
+      --cp-warning: #fbbf24;
+      --cp-link: #4da6ff;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+      --cp-overlay: rgba(41, 41, 41, 0.88);
+      --cp-panel: rgba(41, 41, 41, 0.72);
+      --cp-panel-strong: rgba(41, 41, 41, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.04);
+      --cp-highlight: rgba(253, 142, 161, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      overflow: hidden;
+      background: var(--cp-bg);
+      color: var(--cp-text);
+      font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    button,
+    select {
+      font: inherit;
+    }
+
+    .page-shell {
+      position: relative;
+      height: 100vh;
+      padding-top: calc(var(--site-nav-height, 3.5rem) + 0.5rem);
+    }
+
+    .scene-shell,
+    .scene-root {
+      position: absolute;
+      inset: calc(var(--site-nav-height, 3.5rem) + 0.5rem) 0 0;
+    }
+
+    .scene-shell {
+      background:
+        radial-gradient(circle at top, var(--cp-sheen), transparent 40%),
+        linear-gradient(180deg, var(--cp-bg-elevated), var(--cp-bg));
+    }
+
+    .scene-root canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .overlay {
+      position: absolute;
+      z-index: 5;
+      inset: calc(var(--site-nav-height, 3.5rem) + 1rem) 1rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      pointer-events: none;
+    }
+
+    .panel {
+      pointer-events: auto;
+      width: min(24rem, 100%);
+      padding: 1rem;
+      border-radius: 16px;
+      border: 1px solid var(--cp-border);
+      background: var(--cp-panel);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 0 2px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.14);
+    }
+
+    .panel h1,
+    .panel h2,
+    .panel h3,
+    .panel p {
+      margin-top: 0;
+    }
+
+    .eyebrow {
+      margin-bottom: 0.4rem;
+      color: var(--cp-text-muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .title-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .helper,
+    .status-text,
+    .assignment-copy,
+    .meta-card span,
+    .coverage-note,
+    .legend-note {
+      color: var(--cp-text-soft);
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    .controls,
+    .legend,
+    .meta-list {
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .input-group {
+      display: grid;
+      gap: 0.42rem;
+    }
+
+    .input-label {
+      color: var(--cp-text-muted);
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    select {
+      width: 100%;
+      min-height: 2.9rem;
+      padding: 0.75rem 0.85rem;
+      border-radius: 0.75rem;
+      border: 1px solid var(--cp-border);
+      background: var(--cp-surface);
+      color: var(--cp-text);
+    }
+
+    .button-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+
+    button {
+      min-height: 2.9rem;
+      border: 1px solid transparent;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .primary-btn {
+      background: var(--cp-accent);
+      color: var(--cp-accent-fg);
+    }
+
+    .primary-btn:hover {
+      background: var(--cp-accent-hover);
+    }
+
+    .secondary-btn {
+      background: var(--cp-surface);
+      color: var(--cp-text);
+      border-color: var(--cp-border);
+    }
+
+    .secondary-btn:hover {
+      border-color: var(--cp-border-strong);
+      background: var(--cp-surface-soft);
+    }
+
+    .legend-item,
+    .meta-card,
+    .status-card,
+    .assignment-card {
+      padding: 0.8rem;
+      border-radius: 0.75rem;
+      border: 1px solid var(--cp-border);
+      background: var(--cp-surface);
+    }
+
+    .legend-item {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      color: var(--cp-text-muted);
+      font-size: 0.92rem;
+    }
+
+    .swatch {
+      width: 0.9rem;
+      height: 0.9rem;
+      border-radius: 999px;
+      border: 1px solid var(--cp-border-strong);
+      flex: none;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      background: var(--cp-accent-soft);
+      color: var(--cp-accent);
+    }
+
+    .pill.man {
+      background: rgba(239, 71, 111, 0.12);
+      color: #ef476f;
+    }
+
+    .pill.zone {
+      background: rgba(77, 171, 247, 0.12);
+      color: #4dabf7;
+    }
+
+    .pill.blitz {
+      background: rgba(245, 158, 11, 0.16);
+      color: var(--cp-warning);
+    }
+
+    .meta-card strong,
+    .assignment-card strong,
+    .status-card strong {
+      display: block;
+      margin-bottom: 0.25rem;
+      color: var(--cp-text);
+    }
+
+    .info-panel {
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--cp-border);
+      margin: 0.15rem 0;
+    }
+
+    .coverage-note strong {
+      color: var(--cp-text);
+    }
+
+    .route-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.25rem 0.55rem;
+      border-radius: 999px;
+      background: var(--cp-highlight);
+      color: var(--cp-text);
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    @media (max-width: 980px) {
+      body {
+        overflow: auto;
+      }
+
+      .page-shell {
+        min-height: 100vh;
+        height: auto;
+      }
+
+      .scene-shell,
+      .scene-root {
+        position: relative;
+        inset: auto;
+        height: 62vh;
+      }
+
+      .overlay {
+        position: static;
+        display: grid;
+        gap: 1rem;
+        padding: 1rem;
+        margin-top: -4rem;
+      }
+
+      .panel {
+        width: 100%;
+      }
+    }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.167.1/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.167.1/examples/jsm/"
+      }
+    }
+  </script>
+  <script defer src="../assets/scripts/site-nav.js"></script>
+</head>
+<body data-nav-root="..">
+  <div class="page-shell">
+    <div class="scene-shell"></div>
+    <div id="scene-root" class="scene-root" aria-label="3D play concept animator"></div>
+
+    <div class="overlay">
+      <section class="panel">
+        <div class="eyebrow">Play Concept Animator</div>
+        <h1>3D passing concept lab</h1>
+        <p class="helper">Choose a concept, pair it with a shell, then run the rep. Route trails build in real time and the hotspot pulses where the ball should go.</p>
+
+        <div class="controls">
+          <label class="input-group">
+            <span class="input-label">Passing concept</span>
+            <select id="concept-select"></select>
+          </label>
+
+          <label class="input-group">
+            <span class="input-label">Coverage shell</span>
+            <select id="coverage-select"></select>
+          </label>
+
+          <div class="button-row">
+            <button class="primary-btn" id="run-play-btn" type="button">▶ Run Play</button>
+            <button class="secondary-btn" id="reset-play-btn" type="button">↺ Reset</button>
+          </div>
+
+          <div class="status-card">
+            <strong>🎬 Rep status</strong>
+            <div class="status-text" id="status-text">Ready. Click a receiver any time to inspect the assignment tied to this concept.</div>
+          </div>
+
+          <div class="legend">
+            <div class="legend-item"><span class="swatch" style="background:#ef476f;"></span>🟣 Receivers / eligible targets</div>
+            <div class="legend-item"><span class="swatch" style="background:#4dabf7;"></span>🔵 Coverage defenders / deep zone help</div>
+            <div class="legend-item"><span class="swatch" style="background:#ff5d5d;"></span>🔴 Rush / front mechanics</div>
+            <div class="legend-item"><span class="swatch" style="background:#ffd166;"></span>✨ Hot window / primary throw</div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel info-panel">
+        <div class="title-row">
+          <div>
+            <span class="pill" id="concept-pill">Concept</span>
+            <h2 id="concept-name" style="margin-top:0.6rem;">Loading…</h2>
+          </div>
+          <span class="route-badge" id="matchup-badge">🛡️ Loading shell</span>
+        </div>
+
+        <div class="meta-list">
+          <div class="meta-card"><strong>📋 Description</strong><span id="concept-desc"></span></div>
+          <div class="meta-card"><strong>🎯 Key Read</strong><span id="concept-key-read"></span></div>
+          <div class="meta-card"><strong>❌ Vulnerability</strong><span id="concept-vulnerability"></span></div>
+          <div class="meta-card"><strong>🛡️ Best Against</strong><span id="concept-best-against"></span></div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="meta-card coverage-note">
+          <strong id="coverage-note-title">🧠 Shell note</strong>
+          <span id="coverage-note-copy"></span>
+        </div>
+
+        <div class="assignment-card">
+          <strong id="receiver-assignment-title">👆 Click a receiver</strong>
+          <div class="assignment-copy" id="receiver-assignment-copy">Assignments update here when you click X, H, Y, Z, or the RB on the field.</div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    const WORLD_SCALE = 1.35;
+    const ROUTE_DURATION = 3;
+    const ROUTE_SAMPLE_COUNT = 72;
+
+    const COVERAGES = {
+      'Cover 0': {
+        label: 'Cover 0 (Zero Blitz)',
+        desc: 'No deep safety. Pure man across the board with all-out pressure.',
+        weakness: 'No deep help — 1-on-1 everywhere. Throw deep or throw hot.',
+        defenders: [
+          { role: 'DE', x: -2.5, z: 1, color: 0xff4444 },
+          { role: 'DT', x: -0.8, z: 1, color: 0xff4444 },
+          { role: 'DT', x: 0.8, z: 1, color: 0xff4444 },
+          { role: 'DE', x: 2.5, z: 1, color: 0xff4444 },
+          { role: 'LB', x: -1.5, z: 2, color: 0xff8800 },
+          { role: 'LB', x: 1.5, z: 2, color: 0xff8800 },
+          { role: 'CB', x: -5, z: 1.5, color: 0x4dabf7, man: true },
+          { role: 'CB', x: 5, z: 1.5, color: 0x4dabf7, man: true },
+          { role: 'NB', x: 3.5, z: 2, color: 0x4dabf7, man: true },
+          { role: 'SS', x: -3.5, z: 2.5, color: 0xff8800, man: true },
+          { role: 'FS', x: 0, z: 3, color: 0xff8800 }
+        ]
+      },
+      'Cover 1': {
+        label: 'Cover 1 (Man Free)',
+        desc: 'One deep safety with man coverage underneath.',
+        weakness: 'Crossers and rub routes can stress the underneath man defenders.',
+        defenders: [
+          { role: 'DE', x: -2.5, z: 1, color: 0xff4444 },
+          { role: 'DT', x: -0.8, z: 1, color: 0xff4444 },
+          { role: 'DT', x: 0.8, z: 1, color: 0xff4444 },
+          { role: 'DE', x: 2.5, z: 1, color: 0xff4444 },
+          { role: 'LB', x: -1.5, z: 2.5, color: 0xff8800 },
+          { role: 'LB', x: 0, z: 2.5, color: 0xff8800 },
+          { role: 'LB', x: 1.5, z: 2.5, color: 0xff8800 },
+          { role: 'CB', x: -5, z: 1.5, color: 0x4dabf7, man: true },
+          { role: 'CB', x: 5, z: 1.5, color: 0x4dabf7, man: true },
+          { role: 'NB', x: 3, z: 2, color: 0x4dabf7, man: true },
+          { role: 'FS', x: 0, z: 8, color: 0xffd166 }
+        ]
+      },
+      'Cover 2': {
+        label: 'Cover 2 (Zone)',
+        desc: 'Two deep safeties split the field with five underneath zone players.',
+        weakness: 'Deep sideline honey holes and the deep middle between safeties.',
+        defenders: [
+          { role: 'DE', x: -2.5, z: 1, color: 0xff4444 },
+          { role: 'DT', x: -0.8, z: 1, color: 0xff4444 },
+          { role: 'DT', x: 0.8, z: 1, color: 0xff4444 },
+          { role: 'DE', x: 2.5, z: 1, color: 0xff4444 },
+          { role: 'LB', x: -2, z: 3, color: 0xff8800 },
+          { role: 'LB', x: 0, z: 3, color: 0xff8800 },
+          { role: 'LB', x: 2, z: 3, color: 0xff8800 },
+          { role: 'CB', x: -5, z: 2, color: 0x4dabf7 },
+          { role: 'CB', x: 5, z: 2, color: 0x4dabf7 },
+          { role: 'SS', x: -3, z: 8, color: 0xffd166 },
+          { role: 'FS', x: 3, z: 8, color: 0xffd166 }
+        ],
+        zones: [
+          { x: -3, z: 8, radius: 3.5, color: 0xffd166 },
+          { x: 3, z: 8, radius: 3.5, color: 0xffd166 }
+        ]
+      },
+      'Cover 3': {
+        label: 'Cover 3 (Zone)',
+        desc: 'Three deep defenders split the field into thirds with four underneath players.',
+        weakness: 'Seams between defenders and quick throws into the flats.',
+        defenders: [
+          { role: 'DE', x: -2.5, z: 1, color: 0xff4444 },
+          { role: 'DT', x: -0.8, z: 1, color: 0xff4444 },
+          { role: 'DT', x: 0.8, z: 1, color: 0xff4444 },
+          { role: 'DE', x: 2.5, z: 1, color: 0xff4444 },
+          { role: 'LB', x: -1.5, z: 3, color: 0xff8800 },
+          { role: 'LB', x: 0, z: 3, color: 0xff8800 },
+          { role: 'LB', x: 1.5, z: 3, color: 0xff8800 },
+          { role: 'CB', x: -4, z: 8, color: 0x4dabf7 },
+          { role: 'CB', x: 4, z: 8, color: 0x4dabf7 },
+          { role: 'SS', x: 2, z: 3, color: 0xff8800 },
+          { role: 'FS', x: 0, z: 9, color: 0xffd166 }
+        ],
+        zones: [
+          { x: -4, z: 8, radius: 3, color: 0x4dabf7 },
+          { x: 0, z: 9, radius: 3, color: 0xffd166 },
+          { x: 4, z: 8, radius: 3, color: 0x4dabf7 }
+        ]
+      },
+      'Cover 4': {
+        label: 'Cover 4 (Quarters)',
+        desc: 'Four deep defenders each own a quarter of the deep field.',
+        weakness: 'Soft spots underneath for hitches, sticks, curls, and digs.',
+        defenders: [
+          { role: 'DE', x: -2.5, z: 1, color: 0xff4444 },
+          { role: 'DT', x: -0.8, z: 1, color: 0xff4444 },
+          { role: 'DT', x: 0.8, z: 1, color: 0xff4444 },
+          { role: 'DE', x: 2.5, z: 1, color: 0xff4444 },
+          { role: 'LB', x: -1, z: 3, color: 0xff8800 },
+          { role: 'LB', x: 1, z: 3, color: 0xff8800 },
+          { role: 'LB', x: 0, z: 3.5, color: 0xff8800 },
+          { role: 'CB', x: -5, z: 7, color: 0x4dabf7 },
+          { role: 'CB', x: 5, z: 7, color: 0x4dabf7 },
+          { role: 'SS', x: -2, z: 7.5, color: 0xffd166 },
+          { role: 'FS', x: 2, z: 7.5, color: 0xffd166 }
+        ],
+        zones: [
+          { x: -5, z: 7, radius: 2.5, color: 0x4dabf7 },
+          { x: -2, z: 7.5, radius: 2.5, color: 0xffd166 },
+          { x: 2, z: 7.5, radius: 2.5, color: 0xffd166 },
+          { x: 5, z: 7, radius: 2.5, color: 0x4dabf7 }
+        ]
+      },
+      'Cover 6': {
+        label: 'Cover 6 (Quarter-Quarter-Half)',
+        desc: 'Quarters to one side and Cover 2 to the other — a hybrid split-safety shell.',
+        weakness: 'Weak-side flat access and stress on the deep middle overlap.',
+        defenders: [
+          { role: 'DE', x: -2.5, z: 1, color: 0xff4444 },
+          { role: 'DT', x: -0.8, z: 1, color: 0xff4444 },
+          { role: 'DT', x: 0.8, z: 1, color: 0xff4444 },
+          { role: 'DE', x: 2.5, z: 1, color: 0xff4444 },
+          { role: 'LB', x: -1, z: 3, color: 0xff8800 },
+          { role: 'LB', x: 1, z: 3, color: 0xff8800 },
+          { role: 'LB', x: 0, z: 3.5, color: 0xff8800 },
+          { role: 'CB', x: -5, z: 2, color: 0x4dabf7 },
+          { role: 'CB', x: 5, z: 7, color: 0x4dabf7 },
+          { role: 'SS', x: -3, z: 8, color: 0xffd166 },
+          { role: 'FS', x: 2, z: 7.5, color: 0xffd166 }
+        ],
+        zones: [
+          { x: -3, z: 8, radius: 3, color: 0xffd166 },
+          { x: 5, z: 7, radius: 2.5, color: 0x4dabf7 },
+          { x: 2, z: 7.5, radius: 2.5, color: 0xffd166 }
+        ]
+      }
+    };
+
+    const OFFENSIVE_PLAYERS = [
+      { role: 'LT', x: -2, z: -0.2, color: 0x888888, radius: 0.34 },
+      { role: 'LG', x: -1, z: -0.2, color: 0x888888, radius: 0.34 },
+      { role: 'C', x: 0, z: -0.2, color: 0x888888, radius: 0.34 },
+      { role: 'RG', x: 1, z: -0.2, color: 0x888888, radius: 0.34 },
+      { role: 'RT', x: 2, z: -0.2, color: 0x888888, radius: 0.34 },
+      { role: 'QB', x: 0, z: -1.8, color: 0xffd166, radius: 0.34 },
+      { role: 'RB', x: -1.3, z: -3, color: 0x4dabf7, radius: 0.34, eligible: true },
+      { role: 'X', x: -8, z: -0.8, color: 0xef476f, radius: 0.3, eligible: true },
+      { role: 'H', x: -3.5, z: -0.8, color: 0xef476f, radius: 0.3, eligible: true },
+      { role: 'Y', x: 3.5, z: -0.8, color: 0xef476f, radius: 0.3, eligible: true },
+      { role: 'Z', x: 8, z: -0.8, color: 0xef476f, radius: 0.3, eligible: true }
+    ];
+
+    const ROUTE_COLORS = {
+      X: 0xff6b6b,
+      H: 0x8b5cf6,
+      Y: 0x2ec4b6,
+      Z: 0x118ab2,
+      RB: 0xffd166
+    };
+
+    const CONCEPTS = {
+      Mesh: {
+        type: 'Man Beater',
+        desc: 'Two shallow crossing routes from opposite sides. Rub traffic forces man defenders to navigate through bodies.',
+        keyRead: 'Read the linebacker level. If they sink, throw the shallow crossers. If they jump the mesh, sit down behind them.',
+        vulnerability: 'Spot-dropping underneath zone defenders can sit on the crossing windows.',
+        bestAgainst: 'Cover 0, Cover 1',
+        primary: 'X',
+        hotspot: { x: -0.4, z: 3.2, label: 'Shallow mesh window' },
+        routes: {
+          X: { label: 'Drag left-to-right', detail: 'Win underneath and keep running away from man leverage.', points: [[-8, -0.8], [-6.6, 0.6], [-2.4, 2.4], [1.2, 3.2], [4.8, 3.5]] },
+          H: { label: 'Mesh return', detail: 'Cross the formation shallow, settle if the hook players expand.', points: [[-3.5, -0.8], [-2.2, 0.6], [-0.4, 2.1], [-2.4, 3.1], [-4.8, 3.4]] },
+          Y: { label: 'Sit / curl', detail: 'Push vertical, sit at linebacker depth, and show numbers to the QB.', points: [[3.5, -0.8], [3.5, 6.4], [3.4, 8.9], [3.4, 7.9]] },
+          Z: { label: 'Go / clear', detail: 'Clear the deep coverage and create grass underneath for the crossers.', points: [[8, -0.8], [8.3, 7.5], [8.4, 17.5]] }
+        }
+      },
+      Flood: {
+        type: 'Zone Beater',
+        desc: 'Three routes attack one sideline at short, intermediate, and deep depth to put the flat defender in conflict.',
+        keyRead: 'Read the flat defender. If he sinks with the corner route, dump the flat. If he drives the flat, throw the corner behind him.',
+        vulnerability: 'Tighter man coverage can carry the routes instead of passing them off.',
+        bestAgainst: 'Cover 2, Cover 3',
+        primary: 'H',
+        hotspot: { x: -8.4, z: 12.6, label: 'Corner window' },
+        routes: {
+          X: { label: 'Go / clear', detail: 'Push vertical to remove the corner from the underneath flood triangle.', points: [[-8, -0.8], [-8.1, 8.6], [-8.2, 18]] },
+          H: { label: 'Corner route', detail: 'Stem vertical, then break for the deep sideline void at 12 to 15 yards.', points: [[-3.5, -0.8], [-3.6, 7.5], [-5.4, 10.2], [-8.8, 14.2]] },
+          Y: { label: 'Flat / speed out', detail: 'Burst fast to the sideline and be ready right now if the flat defender bails.', points: [[3.5, -0.8], [4.8, 1.6], [6.8, 2.4]] },
+          Z: { label: 'Dig across', detail: 'Occupy the hook defenders inside and give the QB a backside answer.', points: [[8, -0.8], [7.7, 8.8], [4.6, 10.4], [0.8, 10.4], [-2, 10.4]] }
+        }
+      },
+      Smash: {
+        type: 'Zone Beater',
+        desc: 'Hitch plus corner. The hitch pulls the corner down and the corner route climbs over the top.',
+        keyRead: 'Read the outside corner. If he jumps the hitch, throw the corner behind him. If he sinks, bang the hitch.',
+        vulnerability: 'Cover 3 can squeeze the corner route into the deep-third defender.',
+        bestAgainst: 'Cover 2, Cover 4',
+        primary: 'H',
+        hotspot: { x: -6.8, z: 11.8, label: 'Smash corner void' },
+        routes: {
+          X: { label: 'Hitch 5', detail: 'Sell vertical, snap down quickly, and sit friendly outside.', points: [[-8, -0.8], [-7.9, 4.7], [-7.9, 3.8]] },
+          H: { label: 'Corner 12', detail: 'Climb inside the corner’s eyes, then break to daylight at the sideline.', points: [[-3.5, -0.8], [-3.4, 6.8], [-4.8, 9.4], [-6.9, 13.2]] },
+          Y: { label: 'Dig 12', detail: 'Hold the middle safety and present a second-window throw across the field.', points: [[3.5, -0.8], [3.6, 8.8], [0.6, 10.6], [-2.8, 10.6]] },
+          Z: { label: 'Go / clear', detail: 'Take the backside corner and safety deep.', points: [[8, -0.8], [8.1, 8], [8.1, 17.6]] }
+        }
+      },
+      '4 Verts': {
+        type: 'Zone Beater',
+        desc: 'All four receivers push vertical and stretch the shell. The seams stress the spacing between safeties.',
+        keyRead: 'Read the safeties. Against two-high, drive the seams. Against one-high, isolate the outside go routes.',
+        vulnerability: 'Quarters can match all four vertical stems and squeeze the seams.',
+        bestAgainst: 'Cover 3, Cover 1',
+        primary: 'Y',
+        hotspot: { x: 1.2, z: 13.6, label: 'Seam bender' },
+        routes: {
+          X: { label: 'Go', detail: 'Outside vertical. Stack the corner and stay on the red line.', points: [[-8, -0.8], [-7.8, 8.8], [-7.7, 18]] },
+          H: { label: 'Seam', detail: 'Press inside leverage and attack the hash seam between deep defenders.', points: [[-3.5, -0.8], [-2.4, 5.5], [-1.4, 10.8], [-1.2, 17.2]] },
+          Y: { label: 'Seam', detail: 'Take the inside lane and bend between the deep middle and quarter safety.', points: [[3.5, -0.8], [2.4, 5.5], [1.3, 10.8], [1.1, 17.2]] },
+          Z: { label: 'Go', detail: 'Outside vertical. Stay on top of the corner and threaten deep now.', points: [[8, -0.8], [7.9, 8.8], [7.8, 18]] }
+        }
+      },
+      'Stick/Snag': {
+        type: 'Zone Beater',
+        desc: 'A flat route, a stick route, and a corner route create a quick triangle and horizontal stretch.',
+        keyRead: 'Read the flat defender from short to deep: flat, then stick, then corner if both underneath options are covered.',
+        vulnerability: 'Physical press-man can reroute the timing before the triangle develops.',
+        bestAgainst: 'Cover 2, Cover 3, Cover 4',
+        primary: 'H',
+        hotspot: { x: -2.8, z: 5.6, label: 'Stick window' },
+        routes: {
+          X: { label: 'Flat 3', detail: 'Be the quick outlet. Get width right now and stay under control.', points: [[-8, -0.8], [-9.2, 0.8], [-10.2, 1.4]] },
+          H: { label: 'Stick / sit 6', detail: 'Settle inside the flat defender and present an easy body target.', points: [[-3.5, -0.8], [-3.1, 4.2], [-2.9, 5.8], [-3.1, 5.4]] },
+          Y: { label: 'Corner 12', detail: 'Climb past the hook defender and angle to the deep sideline.', points: [[3.5, -0.8], [3.5, 6.8], [5.5, 9.4], [8.1, 12.8]] },
+          Z: { label: 'Go / clear', detail: 'Take the outside corner deep and widen the shell.', points: [[8, -0.8], [8, 7.2], [8, 17.5]] }
+        }
+      },
+      'Curl-Flat': {
+        type: 'Zone Beater',
+        desc: 'A curl route behind a quick flat route stretches the underneath zone player horizontally.',
+        keyRead: 'Read the curl-flat defender. If he widens, throw the curl behind him. If he squats, flip it out quickly.',
+        vulnerability: 'Safeties can drive downhill on late curls if the QB hitches too long.',
+        bestAgainst: 'Cover 3, Cover 4',
+        primary: 'X',
+        hotspot: { x: -8, z: 8.6, label: 'Curl pocket' },
+        routes: {
+          X: { label: 'Curl 12', detail: 'Push vertical, snap back downhill, and shield the ball with your body.', points: [[-8, -0.8], [-8, 8.8], [-8, 10.2], [-8, 8.2]] },
+          H: { label: 'Flat 5', detail: 'Force the curl-flat defender to widen immediately.', points: [[-3.5, -0.8], [-4.8, 1.8], [-6.2, 2.6]] },
+          Y: { label: 'Dig 12', detail: 'Give the QB an inside answer if the boundary curl-flat is capped.', points: [[3.5, -0.8], [3.6, 8.8], [0.6, 10.5], [-2.4, 10.5]] },
+          Z: { label: 'Go / clear', detail: 'Occupy the deep corner and keep the top closed.', points: [[8, -0.8], [8.1, 8], [8.1, 17.5]] }
+        }
+      },
+      Slant: {
+        type: 'Blitz Beater',
+        desc: 'Quick game built to beat pressure. One step and the ball is gone inside.',
+        keyRead: 'If the blitz declares, replace it immediately with the slant before the rush gets home.',
+        vulnerability: 'A sitting middle linebacker can undercut the throwing lane.',
+        bestAgainst: 'Cover 0, Cover 1, Blitz',
+        primary: 'X',
+        hotspot: { x: -5.8, z: 3.8, label: 'Hot slant lane' },
+        routes: {
+          X: { label: 'Slant 5', detail: 'Win inside leverage fast and stay on the move after the catch.', points: [[-8, -0.8], [-7.2, 1.8], [-5.6, 4.6]] },
+          H: { label: 'Slant 5', detail: 'Be the inside hot answer if the outside slant is capped.', points: [[-3.5, -0.8], [-2.7, 1.8], [-1.1, 4.5]] },
+          Y: { label: 'Flat 3', detail: 'Stretch the underneath help horizontally and give the QB a safety valve.', points: [[3.5, -0.8], [4.6, 1.2], [6.1, 1.8]] },
+          Z: { label: 'Go / clear', detail: 'Occupy the corner and remove over-the-top help.', points: [[8, -0.8], [8, 7.4], [8, 17.2]] }
+        }
+      },
+      'Texas/Angle': {
+        type: 'Man Beater',
+        desc: 'The back sells the flat, then snaps inside on an angle route that man defenders hate to cover.',
+        keyRead: 'Track the linebacker over the running back. Once he widens with the fake, hit the angle cutting back inside.',
+        vulnerability: 'Zone hook defenders sitting inside can clog the angle lane.',
+        bestAgainst: 'Cover 0, Cover 1',
+        primary: 'RB',
+        hotspot: { x: 0.4, z: 4.6, label: 'Angle break' },
+        routes: {
+          X: { label: 'Go / clear', detail: 'Remove the boundary corner and keep the lane clean for the back.', points: [[-8, -0.8], [-8, 8], [-8, 17.4]] },
+          H: { label: 'Drag', detail: 'Cross shallow to create more traffic for man coverage.', points: [[-3.5, -0.8], [-2.1, 1.2], [1.1, 2.8], [4.4, 3.3]] },
+          Y: { label: 'Curl 10', detail: 'Sit in front of zone help and hold the deep safety with your stem.', points: [[3.5, -0.8], [3.6, 7.6], [3.6, 8.6], [3.5, 7.1]] },
+          Z: { label: 'Go / clear', detail: 'Keep the field-side safety occupied over the top.', points: [[8, -0.8], [8.1, 8], [8.1, 17.4]] },
+          RB: { label: 'Angle route', detail: 'Sell the flat first, then plant and cut sharply back across the linebacker’s face.', points: [[-1.3, -3], [-3.1, -1.6], [-2.3, 0.2], [0.2, 3], [2.2, 5.8]] }
+        }
+      },
+      'Drag/Shallow Cross': {
+        type: 'Man Beater',
+        desc: 'A shallow crosser outruns man leverage and uses the trash in the middle as a natural rub.',
+        keyRead: 'Throw the crosser as he clears the traffic. If linebackers bail, take the easy underneath grass.',
+        vulnerability: 'Bracketed inside help or wall defenders can sit on the crossing lane.',
+        bestAgainst: 'Cover 0, Cover 1',
+        primary: 'X',
+        hotspot: { x: 1.2, z: 3.2, label: 'Shallow cross catch point' },
+        routes: {
+          X: { label: 'Drag left-to-right', detail: 'Run flat across the formation and catch it on the move.', points: [[-8, -0.8], [-6.5, 0.9], [-2, 2.2], [2.4, 3.2], [6, 3.4]] },
+          H: { label: 'Go / clear', detail: 'Take the slot defender deep so the shallow cross can run underneath.', points: [[-3.5, -0.8], [-3.6, 7.6], [-3.6, 17.4]] },
+          Y: { label: 'Curl 12', detail: 'Settle behind the linebackers as a second-window option.', points: [[3.5, -0.8], [3.5, 8.8], [3.5, 10.2], [3.4, 8.5]] },
+          Z: { label: 'Drag right-to-left', detail: 'Mirror the shallow action from the opposite side and create a crossing pair.', points: [[8, -0.8], [6.7, 0.8], [2.4, 2.2], [-1.5, 3], [-4.8, 3.2]] }
+        }
+      }
+    };
+
+    const playerLookup = Object.fromEntries(OFFENSIVE_PLAYERS.map((player) => [player.role, player]));
+
+    const sceneRoot = document.getElementById('scene-root');
+    const conceptSelect = document.getElementById('concept-select');
+    const coverageSelect = document.getElementById('coverage-select');
+    const runPlayBtn = document.getElementById('run-play-btn');
+    const resetPlayBtn = document.getElementById('reset-play-btn');
+    const conceptPillEl = document.getElementById('concept-pill');
+    const conceptNameEl = document.getElementById('concept-name');
+    const conceptDescEl = document.getElementById('concept-desc');
+    const conceptKeyReadEl = document.getElementById('concept-key-read');
+    const conceptVulnerabilityEl = document.getElementById('concept-vulnerability');
+    const conceptBestAgainstEl = document.getElementById('concept-best-against');
+    const matchupBadgeEl = document.getElementById('matchup-badge');
+    const coverageNoteTitleEl = document.getElementById('coverage-note-title');
+    const coverageNoteCopyEl = document.getElementById('coverage-note-copy');
+    const receiverAssignmentTitleEl = document.getElementById('receiver-assignment-title');
+    const receiverAssignmentCopyEl = document.getElementById('receiver-assignment-copy');
+    const statusTextEl = document.getElementById('status-text');
+
+    const theme = getThemeColors();
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(theme.bgElevated);
+    scene.fog = new THREE.Fog(theme.bg, 26, 60);
+
+    const camera = new THREE.PerspectiveCamera(45, sceneRoot.clientWidth / sceneRoot.clientHeight, 0.1, 100);
+    camera.position.set(0, 23, 9.5);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(sceneRoot.clientWidth, sceneRoot.clientHeight);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    sceneRoot.appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.target.set(0, 0, 4.5);
+    controls.minDistance = 10;
+    controls.maxDistance = 30;
+    controls.maxPolarAngle = Math.PI / 2.15;
+    controls.minPolarAngle = 0.22;
+
+    scene.add(new THREE.HemisphereLight(theme.surface, theme.bg, 1.15));
+    const sun = new THREE.DirectionalLight(0xffffff, 1.2);
+    sun.position.set(7, 14, 10);
+    scene.add(sun);
+
+    const field = new THREE.Mesh(
+      new THREE.PlaneGeometry(24, 44),
+      new THREE.MeshStandardMaterial({ color: 0x1f7a43, roughness: 0.92, metalness: 0.02 })
+    );
+    field.rotation.x = -Math.PI / 2;
+    scene.add(field);
+
+    const los = new THREE.Mesh(
+      new THREE.BoxGeometry(24, 0.03, 0.22),
+      new THREE.MeshBasicMaterial({ color: 0xffffff })
+    );
+    los.position.set(0, 0.03, 0);
+    scene.add(los);
+
+    const yardGroup = new THREE.Group();
+    for (let z = -18; z <= 18; z += 3) {
+      if (z === 0) continue;
+      const stripe = new THREE.Mesh(
+        new THREE.BoxGeometry(22, 0.012, 0.06),
+        new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.18 })
+      );
+      stripe.position.set(0, 0.015, z);
+      yardGroup.add(stripe);
+    }
+    scene.add(yardGroup);
+
+    const offenseGroup = new THREE.Group();
+    const offenseMeshes = new Map();
+    scene.add(offenseGroup);
+
+    OFFENSIVE_PLAYERS.forEach((player) => {
+      const mesh = new THREE.Mesh(
+        new THREE.SphereGeometry(player.radius, 24, 24),
+        new THREE.MeshStandardMaterial({ color: player.color, roughness: 0.32, metalness: 0.15, emissive: 0x000000 })
+      );
+      mesh.position.copy(toWorld(player));
+      mesh.userData.role = player.role;
+      mesh.userData.home = toWorld(player);
+      mesh.userData.defaultColor = player.color;
+      mesh.userData.eligible = Boolean(player.eligible);
+      mesh.userData.selected = false;
+      offenseGroup.add(mesh);
+      offenseMeshes.set(player.role, mesh);
+    });
+
+    const qbDropTarget = toWorld({ x: 0, z: -3.2 });
+
+    const defenderSlots = Array.from({ length: 11 }, (_, index) => {
+      const mesh = new THREE.Mesh(
+        new THREE.SphereGeometry(0.46, 32, 32),
+        new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x000000, roughness: 0.24, metalness: 0.1 })
+      );
+      mesh.visible = false;
+      mesh.userData.slot = index;
+      mesh.userData.target = new THREE.Vector3();
+      mesh.userData.defaultColor = 0xffffff;
+      scene.add(mesh);
+      return mesh;
+    });
+
+    const zoneSlots = Array.from({ length: 4 }, () => {
+      const zone = new THREE.Mesh(
+        new THREE.CylinderGeometry(1, 1, 0.12, 48),
+        new THREE.MeshStandardMaterial({ transparent: true, opacity: 0.14, roughness: 0.4, metalness: 0.05 })
+      );
+      zone.position.y = 0.06;
+      zone.visible = false;
+      zone.userData.target = new THREE.Vector3();
+      zone.userData.targetRadius = 0;
+      scene.add(zone);
+      return zone;
+    });
+
+    const matchupLines = Array.from({ length: 5 }, () => {
+      const line = new THREE.Line(
+        new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]),
+        new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.28 })
+      );
+      line.visible = false;
+      scene.add(line);
+      return line;
+    });
+
+    const hotspot = new THREE.Group();
+    const hotspotDisk = new THREE.Mesh(
+      new THREE.CylinderGeometry(1, 1, 0.08, 48),
+      new THREE.MeshStandardMaterial({ color: 0xffd166, emissive: 0xffd166, emissiveIntensity: 0.45, transparent: true, opacity: 0.36 })
+    );
+    hotspotDisk.position.y = 0.04;
+    hotspot.add(hotspotDisk);
+    const hotspotRing = new THREE.Mesh(
+      new THREE.TorusGeometry(1.22, 0.08, 16, 64),
+      new THREE.MeshBasicMaterial({ color: 0xfff3bf, transparent: true, opacity: 0.85 })
+    );
+    hotspotRing.rotation.x = Math.PI / 2;
+    hotspotRing.position.y = 0.09;
+    hotspot.add(hotspotRing);
+    hotspot.visible = true;
+    scene.add(hotspot);
+
+    const routeVisuals = new Map();
+    Object.keys(ROUTE_COLORS).forEach((role) => {
+      const lineMaterial = new THREE.LineBasicMaterial({ color: ROUTE_COLORS[role], transparent: true, opacity: 0.96 });
+      const line = new THREE.Line(new THREE.BufferGeometry(), lineMaterial);
+      line.visible = false;
+      scene.add(line);
+      routeVisuals.set(role, {
+        role,
+        line,
+        samples: [],
+        route: null,
+        active: false
+      });
+    });
+
+    const raycaster = new THREE.Raycaster();
+    const pointer = new THREE.Vector2();
+    let lastTap = 0;
+    let activeConceptName = 'Mesh';
+    let activeCoverageName = 'Cover 1';
+    let selectedReceiverRole = null;
+    let playState = { running: false, startTime: 0, finished: false };
+
+    Object.keys(CONCEPTS).forEach((name) => {
+      const option = document.createElement('option');
+      option.value = name;
+      option.textContent = name;
+      conceptSelect.append(option);
+    });
+
+    Object.keys(COVERAGES).forEach((name) => {
+      const option = document.createElement('option');
+      option.value = name;
+      option.textContent = COVERAGES[name].label;
+      coverageSelect.append(option);
+    });
+
+    conceptSelect.value = activeConceptName;
+    coverageSelect.value = activeCoverageName;
+
+    conceptSelect.addEventListener('change', () => {
+      activeConceptName = conceptSelect.value;
+      selectedReceiverRole = null;
+      applySelection();
+    });
+
+    coverageSelect.addEventListener('change', () => {
+      activeCoverageName = coverageSelect.value;
+      applyCoverage(activeCoverageName);
+      refreshPanel();
+    });
+
+    runPlayBtn.addEventListener('click', runPlay);
+    resetPlayBtn.addEventListener('click', () => {
+      resetPlay(true);
+      statusTextEl.textContent = 'Reset complete. Offense is back at the line of scrimmage.';
+    });
+
+    renderer.domElement.addEventListener('pointerdown', (event) => {
+      const now = performance.now();
+      if (now - lastTap < 150) return;
+      lastTap = now;
+      const rect = renderer.domElement.getBoundingClientRect();
+      pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+      raycaster.setFromCamera(pointer, camera);
+      const eligibleMeshes = Array.from(offenseMeshes.values()).filter((mesh) => mesh.userData.eligible);
+      const hits = raycaster.intersectObjects(eligibleMeshes, false);
+      if (!hits.length) {
+        selectedReceiverRole = null;
+        refreshReceiverAssignment();
+        return;
+      }
+      selectedReceiverRole = hits[0].object.userData.role;
+      refreshReceiverAssignment();
+    });
+
+    window.addEventListener('resize', onResize);
+
+    applySelection();
+
+    const clock = new THREE.Clock();
+    function animate() {
+      const delta = clock.getDelta();
+      const elapsed = clock.elapsedTime;
+      controls.update();
+      updateCoverageVisuals(delta);
+      updatePlayAnimation(elapsed);
+      updateHighlights(elapsed);
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    function applySelection() {
+      resetPlay(false);
+      applyCoverage(activeCoverageName, true);
+      buildRoutes(activeConceptName);
+      refreshPanel();
+      refreshReceiverAssignment();
+      statusTextEl.textContent = 'Ready. Click a receiver any time to inspect the assignment tied to this concept.';
+    }
+
+    function applyCoverage(name, immediate = false) {
+      const coverage = COVERAGES[name];
+      const assignments = assignManCoverage(coverage.defenders.filter((defender) => defender.man));
+
+      defenderSlots.forEach((mesh, index) => {
+        const defender = coverage.defenders[index];
+        if (!defender) {
+          mesh.visible = false;
+          return;
+        }
+        mesh.visible = true;
+        mesh.userData.defaultColor = defender.color;
+        mesh.userData.defender = defender;
+        mesh.userData.target.copy(toWorld(defender));
+        mesh.userData.assignment = describeCoverageAssignment(defender, assignments.get(defender));
+        if (immediate) {
+          mesh.position.copy(mesh.userData.target);
+        }
+      });
+
+      zoneSlots.forEach((zone, index) => {
+        const data = coverage.zones?.[index];
+        if (!data) {
+          zone.userData.targetRadius = 0;
+          return;
+        }
+        zone.material.color.setHex(data.color);
+        zone.userData.target.copy(new THREE.Vector3(data.x * WORLD_SCALE, 0.06, data.z * WORLD_SCALE));
+        zone.userData.targetRadius = data.radius * WORLD_SCALE;
+        if (immediate) {
+          zone.position.copy(zone.userData.target);
+          zone.scale.set(zone.userData.targetRadius, 1, zone.userData.targetRadius);
+          zone.visible = true;
+        }
+      });
+
+      if (!coverage.zones?.length) {
+        zoneSlots.forEach((zone) => {
+          zone.visible = false;
+          zone.scale.set(0.001, 1, 0.001);
+          zone.userData.targetRadius = 0;
+        });
+      }
+
+      updateMatchupLines(assignments);
+    }
+
+    function buildRoutes(conceptName) {
+      const concept = CONCEPTS[conceptName];
+      routeVisuals.forEach((visual) => {
+        visual.active = false;
+        visual.route = null;
+        visual.samples = [];
+        visual.line.visible = false;
+      });
+
+      Object.entries(concept.routes).forEach(([role, route]) => {
+        const start = playerLookup[role];
+        if (!start) return;
+        const waypoints = route.points.map(([x, z]) => toWorld({ x, z }));
+        const samples = samplePolyline(waypoints, ROUTE_SAMPLE_COUNT);
+        const visual = routeVisuals.get(role);
+        visual.active = true;
+        visual.route = route;
+        visual.samples = samples;
+        visual.line.geometry.dispose();
+        visual.line.geometry = new THREE.BufferGeometry().setFromPoints(samples);
+        visual.line.geometry.setDrawRange(0, 0);
+      });
+
+      hotspot.position.copy(toWorld(concept.hotspot));
+      hotspot.userData.label = concept.hotspot.label;
+    }
+
+    function runPlay() {
+      resetPlay(false);
+      playState = { running: true, startTime: performance.now(), finished: false };
+      statusTextEl.textContent = 'Routes are live. Follow the trail and watch the hot window develop.';
+      routeVisuals.forEach((visual) => {
+        if (!visual.active) return;
+        visual.line.visible = true;
+        visual.line.geometry.setDrawRange(0, 2);
+      });
+    }
+
+    function resetPlay(updateCoverageState = false) {
+      playState = { running: false, startTime: 0, finished: false };
+      offenseMeshes.forEach((mesh) => {
+        mesh.position.copy(mesh.userData.home);
+      });
+      routeVisuals.forEach((visual) => {
+        if (!visual.active) return;
+        visual.line.visible = false;
+        visual.line.geometry.setDrawRange(0, 0);
+      });
+      if (updateCoverageState) {
+        applyCoverage(activeCoverageName, true);
+      }
+      refreshReceiverAssignment();
+    }
+
+    function updatePlayAnimation(elapsedSeconds) {
+      if (!playState.running) return;
+      const progress = THREE.MathUtils.clamp((performance.now() - playState.startTime) / (ROUTE_DURATION * 1000), 0, 1);
+
+      routeVisuals.forEach((visual) => {
+        if (!visual.active || !visual.samples.length) return;
+        const count = Math.max(2, Math.floor(visual.samples.length * progress));
+        visual.line.geometry.setDrawRange(0, count);
+        const mesh = offenseMeshes.get(visual.role);
+        if (mesh) {
+          mesh.position.copy(getSampleAtProgress(visual.samples, progress));
+        }
+      });
+
+      const qb = offenseMeshes.get('QB');
+      if (qb) {
+        qb.position.lerpVectors(qb.userData.home, qbDropTarget, Math.min(progress * 1.3, 1));
+      }
+
+      if (progress >= 1 && !playState.finished) {
+        playState.finished = true;
+        playState.running = false;
+        const concept = CONCEPTS[activeConceptName];
+        statusTextEl.textContent = `Play complete. Primary read: ${concept.primary} — ${concept.hotspot.label}.`;
+      }
+    }
+
+    function updateCoverageVisuals(delta) {
+      defenderSlots.forEach((mesh) => {
+        if (!mesh.visible) return;
+        mesh.position.lerp(mesh.userData.target, Math.min(1, delta * 5.5));
+      });
+
+      zoneSlots.forEach((zone) => {
+        if (!zone.visible && zone.userData.targetRadius === 0) return;
+        zone.position.lerp(zone.userData.target, Math.min(1, delta * 5));
+        const radius = THREE.MathUtils.lerp(zone.scale.x || 0.001, zone.userData.targetRadius || 0.001, Math.min(1, delta * 5));
+        zone.scale.set(radius, 1, radius);
+        zone.visible = radius > 0.05;
+      });
+    }
+
+    function updateHighlights(elapsedSeconds) {
+      const concept = CONCEPTS[activeConceptName];
+      const pulse = 0.55 + Math.sin(elapsedSeconds * 3.2) * 0.2;
+      const finisherPulse = playState.finished ? 0.85 + Math.sin(elapsedSeconds * 5.2) * 0.25 : 0.45;
+
+      offenseMeshes.forEach((mesh) => {
+        const role = mesh.userData.role;
+        const isPrimary = role === concept.primary;
+        const isSelected = role === selectedReceiverRole;
+        mesh.material.color.setHex(mesh.userData.defaultColor);
+        if (isPrimary && playState.finished) {
+          mesh.material.emissive.setHex(ROUTE_COLORS[role] || 0xffd166);
+          mesh.material.emissiveIntensity = finisherPulse;
+          mesh.scale.setScalar(1.18);
+        } else if (isSelected) {
+          mesh.material.emissive.setHex(0xffffff);
+          mesh.material.emissiveIntensity = 0.38 + pulse * 0.25;
+          mesh.scale.setScalar(1.1);
+        } else {
+          mesh.material.emissive.setHex(0x000000);
+          mesh.material.emissiveIntensity = mesh.userData.eligible ? 0.04 : 0;
+          mesh.scale.setScalar(1);
+        }
+      });
+
+      hotspotRing.scale.setScalar(playState.finished ? 1 + pulse * 0.2 : 0.95 + pulse * 0.08);
+      hotspotDisk.material.emissiveIntensity = playState.finished ? 0.95 + pulse * 0.4 : 0.38 + pulse * 0.12;
+      hotspotDisk.material.opacity = playState.finished ? 0.48 : 0.24;
+    }
+
+    function refreshPanel() {
+      const concept = CONCEPTS[activeConceptName];
+      const coverage = COVERAGES[activeCoverageName];
+      const typeKey = concept.type.includes('Zone') ? 'zone' : concept.type.includes('Blitz') ? 'blitz' : 'man';
+
+      conceptPillEl.textContent = concept.type;
+      conceptPillEl.className = `pill ${typeKey}`;
+      conceptNameEl.textContent = `🏈 ${activeConceptName}`;
+      conceptDescEl.textContent = concept.desc;
+      conceptKeyReadEl.textContent = concept.keyRead;
+      conceptVulnerabilityEl.textContent = concept.vulnerability;
+      conceptBestAgainstEl.textContent = concept.bestAgainst;
+
+      const favored = concept.bestAgainst.includes(activeCoverageName) || (activeCoverageName === 'Cover 0' && concept.bestAgainst.includes('Blitz'));
+      matchupBadgeEl.textContent = favored ? `✅ ${coverage.label}` : `⚠️ ${coverage.label}`;
+      coverageNoteTitleEl.textContent = `🧠 ${coverage.label}`;
+      coverageNoteCopyEl.innerHTML = `<strong>${favored ? 'Matchup angle:' : 'Stress point:'}</strong> ${coverage.desc} ${favored ? 'This concept is built to attack this shell’s soft spot.' : 'You may need to work the secondary answer if the primary read is capped.'} Weakness: ${coverage.weakness}`;
+    }
+
+    function refreshReceiverAssignment() {
+      offenseMeshes.forEach((mesh) => {
+        mesh.userData.selected = mesh.userData.role === selectedReceiverRole;
+      });
+
+      if (!selectedReceiverRole) {
+        receiverAssignmentTitleEl.textContent = '👆 Click a receiver';
+        receiverAssignmentCopyEl.textContent = 'Assignments update here when you click X, H, Y, Z, or the RB on the field.';
+        return;
+      }
+
+      const concept = CONCEPTS[activeConceptName];
+      const route = concept.routes[selectedReceiverRole];
+      const isPrimary = concept.primary === selectedReceiverRole;
+      if (!route) {
+        receiverAssignmentTitleEl.textContent = `🏃 ${selectedReceiverRole} assignment`;
+        receiverAssignmentCopyEl.textContent = `${selectedReceiverRole} is not a featured route in this concept and stays home to support the structure of the play.`;
+        return;
+      }
+
+      receiverAssignmentTitleEl.textContent = `${isPrimary ? '🎯' : '🏃'} ${selectedReceiverRole} — ${route.label}`;
+      receiverAssignmentCopyEl.textContent = `${route.detail} ${isPrimary ? 'This is the primary read and the hotspot on the field marks the throw window.' : 'This route works as the complementary stress point in the concept.'}`;
+    }
+
+    function updateMatchupLines(assignments) {
+      let index = 0;
+      defenderSlots.forEach((mesh) => {
+        const defender = mesh.userData.defender;
+        if (!mesh.visible || !defender?.man) return;
+        const targetRole = assignments.get(defender);
+        const targetMesh = targetRole ? offenseMeshes.get(targetRole) : null;
+        const line = matchupLines[index++];
+        if (!targetMesh) {
+          line.visible = false;
+          return;
+        }
+        line.visible = true;
+        line.material.color.set(defender.color);
+        line.geometry.dispose();
+        line.geometry = new THREE.BufferGeometry().setFromPoints([mesh.position.clone(), targetMesh.position.clone()]);
+      });
+      matchupLines.slice(index).forEach((line) => {
+        line.visible = false;
+      });
+    }
+
+    function assignManCoverage(manDefenders) {
+      const concept = CONCEPTS[activeConceptName];
+      const eligibleRoles = Object.keys(concept.routes);
+      const remaining = eligibleRoles.map((role) => ({ role, ...playerLookup[role] })).filter(Boolean);
+      const assignments = new Map();
+      manDefenders.forEach((defender) => {
+        if (!remaining.length) return;
+        let bestIndex = 0;
+        let bestDistance = Infinity;
+        remaining.forEach((receiver, index) => {
+          const dx = defender.x - receiver.x;
+          const dz = defender.z - receiver.z;
+          const distance = dx * dx + dz * dz;
+          if (distance < bestDistance) {
+            bestDistance = distance;
+            bestIndex = index;
+          }
+        });
+        assignments.set(defender, remaining.splice(bestIndex, 1)[0].role);
+      });
+      return assignments;
+    }
+
+    function describeCoverageAssignment(defender, receiverRole) {
+      if (defender.man && receiverRole) {
+        return `${defender.role} is matched on ${receiverRole}. Expect a man leverage chase through the stem and break.`;
+      }
+      if (defender.role === 'DE' || defender.role === 'DT') {
+        return `${defender.role} is part of the rush lane. Attack the pocket and force the ball out on rhythm.`;
+      }
+      if (defender.role === 'FS' && defender.z >= 7.5) {
+        return `${defender.role} is the deep overlap player protecting vertical routes.`;
+      }
+      if ((defender.role === 'CB' || defender.role === 'SS' || defender.role === 'FS') && defender.z >= 6.5) {
+        return `${defender.role} owns a deep landmark in the shell and stays over the top.`;
+      }
+      return `${defender.role} is working an underneath zone window and rallying downhill to the throw.`;
+    }
+
+    function samplePolyline(points, totalSamples) {
+      if (points.length < 2) return points;
+      const segments = [];
+      let totalLength = 0;
+      for (let index = 0; index < points.length - 1; index += 1) {
+        const length = points[index].distanceTo(points[index + 1]);
+        segments.push({ start: points[index], end: points[index + 1], length });
+        totalLength += length;
+      }
+      const samples = [];
+      for (let sampleIndex = 0; sampleIndex < totalSamples; sampleIndex += 1) {
+        const distance = (sampleIndex / (totalSamples - 1)) * totalLength;
+        let traveled = 0;
+        let point = points.at(-1).clone();
+        for (const segment of segments) {
+          if (traveled + segment.length >= distance) {
+            const ratio = segment.length === 0 ? 0 : (distance - traveled) / segment.length;
+            point = segment.start.clone().lerp(segment.end, ratio);
+            break;
+          }
+          traveled += segment.length;
+        }
+        samples.push(point);
+      }
+      return samples;
+    }
+
+    function getSampleAtProgress(samples, progress) {
+      if (!samples.length) return new THREE.Vector3();
+      const scaled = progress * (samples.length - 1);
+      const lower = Math.floor(scaled);
+      const upper = Math.min(samples.length - 1, lower + 1);
+      return samples[lower].clone().lerp(samples[upper], scaled - lower);
+    }
+
+    function toWorld(position) {
+      return new THREE.Vector3(position.x * WORLD_SCALE, 0.4, position.z * WORLD_SCALE);
+    }
+
+    function onResize() {
+      const width = sceneRoot.clientWidth;
+      const height = sceneRoot.clientHeight;
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    }
+
+    function getThemeColors() {
+      const styles = getComputedStyle(document.documentElement);
+      const color = (name) => styles.getPropertyValue(name).trim();
+      const toNumber = (value) => Number.parseInt(value.replace('#', ''), 16);
+      return {
+        bg: color('--cp-bg'),
+        bgElevated: color('--cp-bg-elevated'),
+        surface: toNumber(color('--cp-surface'))
+      };
+    }
+  </script>
+</body>
+</html>
