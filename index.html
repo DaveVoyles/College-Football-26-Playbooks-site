@@ -38,8 +38,8 @@
     .hero {
       position: relative;
       overflow: hidden;
-      min-height: clamp(380px, 50vw, 520px);
-      padding: clamp(1.5rem, 4vw, 3rem);
+      min-height: clamp(180px, 24vw, 260px);
+      padding: clamp(1rem, 2vw, 1.5rem);
       display: flex;
       align-items: flex-end;
       border: 1px solid var(--cp-border);
@@ -145,6 +145,11 @@
     .section {
       display: grid;
       gap: 1rem;
+      padding: 1.25rem;
+      border: 1px solid var(--cp-border);
+      border-radius: 1rem;
+      background: var(--cp-surface);
+      box-shadow: var(--cp-shadow);
     }
 
     .section__heading { margin-bottom: 0.25rem; }
@@ -218,7 +223,7 @@
 
     @media (max-width: 600px) {
       .card-grid { grid-template-columns: 1fr; }
-      .hero { min-height: 400px; align-items: stretch; }
+      .hero { min-height: 180px; align-items: stretch; }
     }
   </style>
 </head>
