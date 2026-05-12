@@ -204,6 +204,13 @@
       background: var(--cp-surface);
       color: var(--cp-text-muted);
       font-size: 0.88rem;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .legend-item:hover {
+      border-color: var(--cp-border-strong);
+      background: var(--cp-surface-soft);
     }
 
     .legend-item strong {
@@ -265,7 +272,7 @@
           <span>Beats</span>
           <strong id="routeBeats">Cover 0, Cover 1</strong>
         </div>
-        <p class="route-tip">Click a route tube in the 3D scene to focus it. Drag to orbit, scroll to zoom, and compare leverage from the same release point.</p>
+        <p class="route-tip">Click a route tube in the 3D scene or a legend item to focus it. Drag to orbit, scroll to zoom.</p>
       </section>
 
       <aside class="panel">
@@ -282,63 +289,63 @@
 
     const routes = {
       "Go/Fade": {
-        color: 0xef476f, category: "Deep",
+        num: 9, color: 0xef476f, category: "Deep",
         points: [[0,0,0], [0,0,-2], [0.3,0,-6], [0.5,0,-10]],
-        desc: "Straight vertical stem. Beat Cover 0/1 with speed.",
+        desc: "A pure vertical route where the receiver sprints straight upfield, stacking the defender with speed. The goal is to get on top of the DB and create separation deep. Effective against press-man coverage where the receiver can win at the line of scrimmage with a clean release.",
         beats: "Cover 0, Cover 1"
       },
       "Post": {
-        color: 0xe63946, category: "Deep",
+        num: 8, color: 0xe63946, category: "Deep",
         points: [[0,0,0], [0,0,-2], [0,0,-5], [-2,0,-8]],
-        desc: "Vertical stem, break inside toward the post. Attacks deep middle.",
+        desc: "The receiver drives vertically for 12-15 yards then breaks at a 45° angle toward the goalpost. Attacks the deep middle of the field, splitting safeties in Cover 2 or exploiting the vacated area in Cover 3 when the middle safety rotates.",
         beats: "Cover 2 (between safeties), Cover 3 (middle hole)"
       },
       "Corner": {
-        color: 0xffd166, category: "Deep",
+        num: 7, color: 0xffd166, category: "Deep",
         points: [[0,0,0], [0,0,-2], [0,0,-5], [2.5,0,-8]],
-        desc: "Vertical stem, break to sideline corner. The Cover 2 killer.",
+        desc: "A deep route where the receiver stems vertically for 12-15 yards then breaks at a 45° angle toward the sideline corner of the end zone. The classic Cover 2 killer — targets the 'honey hole' between the corner dropping into the flat and the safety covering the deep half.",
         beats: "Cover 2 (honey hole), Cover 6 (field side)"
       },
       "Dig/In": {
-        color: 0x06d6a0, category: "Intermediate",
+        num: 6, color: 0x06d6a0, category: "Intermediate",
         points: [[0,0,0], [0,0,-2], [0,0,-5], [-3,0,-5]],
-        desc: "Vertical stem, sharp break inside at 12-15 yards.",
+        desc: "The receiver runs 12-15 yards upfield then makes a sharp 90° cut across the middle of the field. One of the most reliable intermediate routes because the receiver works into open windows between zone defenders. Requires precise timing with the quarterback.",
         beats: "Cover 4 (underneath), Cover 3 (between zones)"
       },
       "Out": {
-        color: 0x118ab2, category: "Intermediate",
+        num: 5, color: 0x118ab2, category: "Intermediate",
         points: [[0,0,0], [0,0,-2], [0,0,-5], [3,0,-5]],
-        desc: "Vertical stem, sharp break to sideline at 12-15 yards.",
+        desc: "The receiver drives 12-15 yards upfield then makes a sharp 90° break toward the sideline. A high-velocity throw that requires arm strength from the QB. Effective against Cover 3 where the flat defender has vacated, leaving the sideline open.",
         beats: "Cover 3 (flat area), Man coverage"
       },
       "Comeback": {
-        color: 0x8338ec, category: "Intermediate",
+        num: 3, color: 0x8338ec, category: "Intermediate",
         points: [[0,0,0], [0,0,-2], [0,0,-6], [1,0,-4.5]],
-        desc: "Deep stem, plant and come back to sideline.",
+        desc: "The receiver sells a deep route by driving 12-15 yards upfield, then plants hard and comes back toward the sideline at a 45° angle. Forces the DB to flip their hips and recover. One of the hardest routes to defend when the receiver sells the vertical threat convincingly.",
         beats: "Cover 3, Cover 4, soft man"
       },
       "Curl/Hitch": {
-        color: 0x2d6a4f, category: "Short",
+        num: 4, color: 0x2d6a4f, category: "Short",
         points: [[0,0,0], [0,0,-2], [0,0,-4], [0,0,-3.5]],
-        desc: "5-yard stem, stop and turn back to QB.",
+        desc: "A quick 5-8 yard route where the receiver drives upfield, stops, and turns back toward the quarterback. The bread-and-butter timing route in most offenses. Works best against off-coverage where the DB gives a cushion — the receiver simply sits in the soft spot.",
         beats: "Cover 4, soft zone, any off-coverage"
       },
       "Slant": {
-        color: 0xff6b35, category: "Short",
+        num: 2, color: 0xff6b35, category: "Short",
         points: [[0,0,0], [0,0,-1], [-2,0,-3]],
-        desc: "Quick inside break at 1-3 yards. Standard hot route.",
+        desc: "A quick 1-3 step route where the receiver takes one step upfield then breaks sharply at a 45° angle across the middle. The go-to hot route against the blitz because the ball comes out fast. Highly effective against off-man coverage and zone blitzes.",
         beats: "Cover 0, Blitz, off-man"
       },
       "Flat/Arrow": {
-        color: 0x4dabf7, category: "Short",
+        num: 1, color: 0x4dabf7, category: "Short",
         points: [[0,0,0], [0,0,-0.5], [3,0,-1]],
-        desc: "Quick out to the flat. Screen/check-down option.",
+        desc: "The shortest route on the tree — the receiver immediately breaks toward the sideline at or behind the line of scrimmage. Functions as a quick outlet, check-down, or screen option. Essential against heavy blitz packages as a pressure release valve.",
         beats: "Blitz (hot), Cover 3/4 (flat void)"
       },
       "Drag/Shallow": {
-        color: 0xf7b267, category: "Short",
+        num: 0, color: 0xf7b267, category: "Short",
         points: [[0,0,0], [0,0,-1], [-4,0,-1.5]],
-        desc: "Shallow cross across the field. Man beater.",
+        desc: "A shallow crossing route where the receiver runs across the formation at 1-3 yards depth. The premier man-coverage beater — creates natural picks as the receiver weaves through traffic. Often paired with a deeper crossing route to create a high-low read.",
         beats: "Man coverage, Cover 1"
       }
     };
@@ -425,6 +432,47 @@
     const routeMeshes = [];
     const legendItems = new Map();
 
+    const makeTextSprite = (text, color) => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const fontSize = 48;
+      ctx.font = `bold ${fontSize}px "Segoe UI", Aptos, sans-serif`;
+      const metrics = ctx.measureText(text);
+      const pad = 16;
+      canvas.width = metrics.width + pad * 2;
+      canvas.height = fontSize + pad * 2;
+
+      ctx.fillStyle = 'rgba(0,0,0,0.55)';
+      const r = 10;
+      const w = canvas.width, h = canvas.height;
+      ctx.beginPath();
+      ctx.moveTo(r, 0);
+      ctx.lineTo(w - r, 0);
+      ctx.quadraticCurveTo(w, 0, w, r);
+      ctx.lineTo(w, h - r);
+      ctx.quadraticCurveTo(w, h, w - r, h);
+      ctx.lineTo(r, h);
+      ctx.quadraticCurveTo(0, h, 0, h - r);
+      ctx.lineTo(0, r);
+      ctx.quadraticCurveTo(0, 0, r, 0);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.font = `bold ${fontSize}px "Segoe UI", Aptos, sans-serif`;
+      ctx.fillStyle = `#${color.toString(16).padStart(6, '0')}`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, w / 2, h / 2);
+
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.colorSpace = THREE.SRGBColorSpace;
+      const mat = new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false });
+      const sprite = new THREE.Sprite(mat);
+      const aspect = canvas.width / canvas.height;
+      sprite.scale.set(aspect * 0.7, 0.7, 1);
+      return sprite;
+    };
+
     const makeLegendIcon = (color) => {
       const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
       icon.setAttribute('width', '18');
@@ -457,10 +505,19 @@
       scene.add(mesh);
       routeMeshes.push(mesh);
 
+      const endpoint = points[points.length - 1];
+      const label = route.num > 0 ? `${route.num} – ${name}` : name;
+      const sprite = makeTextSprite(label, route.color);
+      sprite.position.set(endpoint.x, endpoint.y + 0.55, endpoint.z);
+      sprite.userData = { routeName: name };
+      scene.add(sprite);
+
+      const numLabel = route.num > 0 ? `${route.num} – ${name}` : `● ${name}`;
       const item = document.createElement('div');
       item.className = 'legend-item';
-      item.innerHTML = `<span class="legend-label"><span class="legend-icon"></span><span><strong>${name}</strong><br>${route.category}</span></span><span>${route.beats.split(',')[0]}</span>`;
+      item.innerHTML = `<span class="legend-label"><span class="legend-icon"></span><span><strong>${numLabel}</strong><br>${route.category}</span></span><span>${route.beats.split(',')[0]}</span>`;
       item.querySelector('.legend-icon').append(makeLegendIcon(route.color));
+      item.addEventListener('click', () => setSelection(name));
       legend.append(item);
       legendItems.set(name, item);
     });
@@ -471,7 +528,8 @@
 
     const updateInfo = (name) => {
       const route = routes[name];
-      routeName.textContent = name;
+      const label = route.num > 0 ? `${route.num} – ${name}` : name;
+      routeName.textContent = label;
       routeCategory.textContent = route.category;
       routeDesc.textContent = route.desc;
       routeBeats.textContent = route.beats;
