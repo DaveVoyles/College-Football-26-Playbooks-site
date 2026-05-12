@@ -151,6 +151,13 @@ h1, h2, h3 {
   display: grid;
   gap: 1rem;
 }
+.wrap > .card,
+.wrap > .purpose-section {
+  margin-top: 1.5rem;
+}
+.wrap > section + section {
+  margin-top: 2rem;
+}
 .card,
 .scheme-card,
 .purpose-card,
@@ -387,7 +394,7 @@ tbody tr:last-child td {
   </div>
 </section>
 
-<section class="stack">
+<section class="card stack" style="margin-top:1.5rem">
   <div class="section-header">
     <div>
       <h2>2. Route Concepts by “Purpose” 🎯</h2>
@@ -437,7 +444,7 @@ tbody tr:last-child td {
   </div>
 </section>
 
-<section class="card stack">
+<section class="card stack" style="margin-top:1.5rem">
   <div class="section-header">
     <div>
       <h2>3. Audibles Blueprint (What to set in your “Custom Audibles”) 🗣️</h2>
