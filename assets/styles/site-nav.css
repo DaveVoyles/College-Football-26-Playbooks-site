@@ -150,3 +150,43 @@
   background: var(--cp-accent-soft);
   outline: none;
 }
+
+/* ---- Desktop: show links inline, hide hamburger ---- */
+@media (min-width: 768px) {
+  .site-nav__toggle {
+    display: none;
+  }
+
+  .site-nav__menu,
+  .site-nav__menu[hidden] {
+    display: grid;
+    width: auto;
+    padding: 0;
+  }
+
+  .site-nav__inner {
+    flex-wrap: nowrap;
+    gap: 1.5rem;
+  }
+
+  .site-nav__menu {
+    grid-auto-flow: column;
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+  .site-nav__group {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .site-nav__group-label {
+    padding: 0.25rem 0.4rem;
+    white-space: nowrap;
+  }
+
+  .site-nav__group-links {
+    flex-wrap: nowrap;
+  }
+}
