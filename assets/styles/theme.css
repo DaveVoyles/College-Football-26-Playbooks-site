@@ -1,3 +1,64 @@
+/* ---- UNC Tar Heels color palette ----
+   Carolina Blue  #7BAFD4
+   Navy Blue      #13294B
+   Silver         #8D9092
+   ---------------------------------------- */
+
+:root {
+  color-scheme: light;
+  --cp-bg: #f7f4ef;
+  --cp-bg-elevated: #fcfbf8;
+  --cp-surface: #ffffff;
+  --cp-surface-soft: #f5f5f5;
+  --cp-border: #c8d6e0;
+  --cp-border-strong: #7BAFD4;
+  --cp-text: #13294B;
+  --cp-text-muted: #4a5c6a;
+  --cp-text-soft: #5e7080;
+  --cp-accent: #13294B;
+  --cp-accent-hover: #0f2040;
+  --cp-accent-soft: rgba(123, 175, 212, 0.12);
+  --cp-accent-fg: #ffffff;
+  --cp-success: #16a34a;
+  --cp-danger: #dc2626;
+  --cp-warning: #f59e0b;
+  --cp-link: #13294B;
+  --cp-shadow: 0 18px 48px rgba(19, 41, 75, 0.10);
+  --cp-overlay: rgba(255, 255, 255, 0.8);
+  --cp-panel: rgba(255, 255, 255, 0.86);
+  --cp-panel-strong: rgba(255, 255, 255, 0.96);
+  --cp-sheen: rgba(255, 255, 255, 0.55);
+  --cp-highlight: rgba(123, 175, 212, 0.15);
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --cp-bg: #0e1e33;
+  --cp-bg-elevated: #132840;
+  --cp-surface: #13294B;
+  --cp-surface-soft: #1a3358;
+  --cp-border: rgba(123, 175, 212, 0.30);
+  --cp-border-strong: #7BAFD4;
+  --cp-text: #e0eaf2;
+  --cp-text-muted: #8D9092;
+  --cp-text-soft: #a8b8c4;
+  --cp-accent: #7BAFD4;
+  --cp-accent-hover: #92c3e0;
+  --cp-accent-soft: rgba(123, 175, 212, 0.14);
+  --cp-accent-fg: #0e1e33;
+  --cp-success: #4ade80;
+  --cp-danger: #f87171;
+  --cp-warning: #fbbf24;
+  --cp-link: #7BAFD4;
+  --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+  --cp-overlay: rgba(14, 30, 51, 0.88);
+  --cp-panel: rgba(19, 41, 75, 0.72);
+  --cp-panel-strong: rgba(19, 41, 75, 0.96);
+  --cp-sheen: rgba(123, 175, 212, 0.06);
+  --cp-highlight: rgba(123, 175, 212, 0.12);
+}
+
+html { scroll-behavior: smooth; }
 html, body { min-height: 100%; }
 body { background: var(--cp-bg); color: var(--cp-text); font-family: Aptos, "Segoe UI", Calibri, -apple-system, BlinkMacSystemFont, sans-serif; }
 a { color: var(--cp-link); }
