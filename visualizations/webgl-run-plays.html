@@ -559,14 +559,14 @@
     scene.fog = new THREE.Fog(0x113b1d, 18, 40);
 
     const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
-    camera.position.set(0, 18, 10);
+    camera.position.set(0, 22, 14);
     camera.lookAt(0, 0, 1.6);
 
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.target.set(0, 0, 1.2);
     controls.enableDamping = true;
     controls.minDistance = 10;
-    controls.maxDistance = 28;
+    controls.maxDistance = 36;
     controls.maxPolarAngle = Math.PI / 2.08;
     controls.minPolarAngle = 0.18;
 

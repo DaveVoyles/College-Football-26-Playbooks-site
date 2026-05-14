@@ -585,7 +585,7 @@ if (container) {
     scene.background = new THREE.Color(0x1a3d18);
 
     const camera = new THREE.OrthographicCamera(-60, 60, 38, -38, 0.1, 250);
-    camera.position.set(0, 78, 18);
+    camera.position.set(0, 88, 24);
     camera.lookAt(0, 0, -4);
 
     const controls = new OrbitControls(camera, renderer.domElement);
@@ -594,7 +594,7 @@ if (container) {
     controls.rotateSpeed = 0.45;
     controls.zoomSpeed = 0.7;
     controls.panSpeed = 0.6;
-    controls.minZoom = 0.9;
+    controls.minZoom = 0.8;
     controls.maxZoom = 1.35;
     controls.minPolarAngle = 0.18;
     controls.maxPolarAngle = 0.62;
@@ -756,7 +756,7 @@ if (container) {
       const width = container.clientWidth || 640;
       const height = 320;
       const aspect = width / height;
-      const frustumHeight = 76;
+      const frustumHeight = 88;
       camera.left = (-frustumHeight * aspect) / 2;
       camera.right = (frustumHeight * aspect) / 2;
       camera.top = frustumHeight / 2;

@@ -564,13 +564,13 @@ details > :not(summary) {
       scene.fog = new THREE.Fog(0x183117, 60, 140);
 
       const camera = new THREE.OrthographicCamera(-40, 40, 24, -24, 0.1, 200);
-      camera.position.set(0, 56, 20);
+      camera.position.set(0, 64, 24);
       camera.lookAt(0, 0, -4);
 
       const controls = new OrbitControls(camera, canvas);
       controls.enableDamping = true;
       controls.dampingFactor = 0.06;
-      controls.minZoom = 0.85;
+      controls.minZoom = 0.75;
       controls.maxZoom = 1.9;
       controls.enablePan = true;
       controls.target.set(0, 0, -4);
@@ -661,7 +661,7 @@ details > :not(summary) {
         const width = formationRoot.clientWidth;
         const height = 320;
         const aspect = width / height;
-        const frustum = 26;
+        const frustum = 30;
         camera.left = -frustum * aspect;
         camera.right = frustum * aspect;
         camera.top = frustum;

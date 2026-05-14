@@ -522,7 +522,7 @@
     scene.fog = new THREE.Fog(theme.bg, 20, 58);
 
     const camera = new THREE.PerspectiveCamera(45, sceneRoot.clientWidth / sceneRoot.clientHeight, 0.1, 100);
-    camera.position.set(0, 23, 11);
+    camera.position.set(0, 28, 15);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -534,7 +534,7 @@
     controls.enableDamping = true;
     controls.target.set(0, 0, 3.2);
     controls.minDistance = 10;
-    controls.maxDistance = 30;
+    controls.maxDistance = 40;
     controls.minPolarAngle = 0.25;
     controls.maxPolarAngle = Math.PI / 2.1;
 
