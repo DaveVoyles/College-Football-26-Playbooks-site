@@ -1,3 +1,13 @@
+/* Lock body scroll when mobile menu is open */
+body.nav-open {
+  overflow: hidden;
+}
+
+/* Spacer element inserted by JS to offset fixed nav */
+.site-nav-spacer {
+  height: 3.5rem;
+}
+
 .site-nav {
   position: fixed;
   inset: 0 0 auto;
@@ -60,6 +70,8 @@
   background: rgba(19, 41, 75, 0.6);
   color: #fff;
   cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
   transition: background 150ms ease, border-color 150ms ease;
   animation: pulse-glow 2.5s ease-in-out infinite;
 }
@@ -115,9 +127,22 @@
   padding: 0.75rem 0 0.5rem;
   display: grid;
   gap: 1rem;
+  transition: opacity 200ms ease, transform 200ms ease;
 }
 
-.site-nav__menu[hidden] { display: none; }
+.site-nav__menu[hidden] {
+  display: none;
+}
+
+.site-nav__menu.opening {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+.site-nav__menu.open {
+  opacity: 1;
+  transform: translateY(0);
+}
 
 .site-nav__group {
   display: grid;
@@ -174,6 +199,8 @@
     display: grid;
     width: auto;
     padding: 0;
+    opacity: 1;
+    transform: none;
   }
 
   .site-nav__inner {

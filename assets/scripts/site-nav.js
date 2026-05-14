@@ -69,6 +69,15 @@
 
   document.body.prepend(nav);
 
+  // Add spacer so page content isn't hidden behind the fixed nav,
+  // unless the page already manages its own offset (e.g., visualizations).
+  if (!document.querySelector('[data-nav-offset="none"]')) {
+    const spacer = document.createElement('div');
+    spacer.className = 'site-nav-spacer';
+    spacer.setAttribute('aria-hidden', 'true');
+    nav.insertAdjacentElement('afterend', spacer);
+  }
+
   // Hamburger toggle
   const toggle = nav.querySelector('.site-nav__toggle');
   const menu = nav.querySelector('.site-nav__menu');
@@ -77,22 +86,50 @@
     const open = toggle.getAttribute('aria-expanded') === 'true';
     toggle.setAttribute('aria-expanded', String(!open));
     toggle.setAttribute('aria-label', open ? 'Open menu' : 'Close menu');
-    menu.hidden = open;
+
+    if (open) {
+      // Closing
+      menu.classList.remove('open');
+      menu.addEventListener('transitionend', () => {
+        menu.hidden = true;
+        menu.classList.remove('opening');
+      }, { once: true });
+      // Fallback if transition doesn't fire
+      setTimeout(() => { menu.hidden = true; menu.classList.remove('opening'); }, 250);
+      document.body.classList.remove('nav-open');
+    } else {
+      // Opening
+      menu.hidden = false;
+      menu.classList.add('opening');
+      // Force reflow so the transition triggers
+      void menu.offsetHeight;
+      menu.classList.remove('opening');
+      menu.classList.add('open');
+      document.body.classList.add('nav-open');
+    }
   });
+
+  // Helper to close the menu consistently
+  function closeMenu() {
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-label', 'Open menu');
+    menu.classList.remove('open');
+    menu.hidden = true;
+    menu.classList.remove('opening');
+    document.body.classList.remove('nav-open');
+  }
 
   // Close menu on link click
   menu.addEventListener('click', (e) => {
     if (e.target.closest('.site-nav__link')) {
-      toggle.setAttribute('aria-expanded', 'false');
-      menu.hidden = true;
+      closeMenu();
     }
   });
 
   // Close on Escape
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && !menu.hidden) {
-      toggle.setAttribute('aria-expanded', 'false');
-      menu.hidden = true;
+      closeMenu();
       toggle.focus();
     }
   });
@@ -100,9 +137,7 @@
   // Close when clicking outside the nav
   document.addEventListener('click', (e) => {
     if (!menu.hidden && !nav.contains(e.target)) {
-      toggle.setAttribute('aria-expanded', 'false');
-      toggle.setAttribute('aria-label', 'Open menu');
-      menu.hidden = true;
+      closeMenu();
     }
   });
 
