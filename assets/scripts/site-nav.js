@@ -97,6 +97,15 @@
     }
   });
 
+  // Close when clicking outside the nav
+  document.addEventListener('click', (e) => {
+    if (!menu.hidden && !nav.contains(e.target)) {
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Open menu');
+      menu.hidden = true;
+    }
+  });
+
   // Mark current page
   const current = window.location.pathname.split('/').pop();
   nav.querySelectorAll('.site-nav__link').forEach((anchor) => {

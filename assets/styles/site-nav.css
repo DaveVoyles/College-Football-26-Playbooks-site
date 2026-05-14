@@ -2,6 +2,9 @@
   position: fixed;
   inset: 0 0 auto;
   z-index: 40;
+  max-height: 100vh;
+  max-height: 100dvh;
+  overflow-y: auto;
   border-bottom: 1px solid var(--cp-border);
   background: var(--cp-panel-strong);
   backdrop-filter: blur(10px);
@@ -76,7 +79,7 @@
   height: 3px;
   background-color: #fff;
   border-radius: 2px;
-  transition: background 200ms ease;
+  transition: background-color 200ms ease;
 }
 
 .site-nav__hamburger::before,
@@ -95,7 +98,7 @@
 .site-nav__hamburger::after { top: 7px; }
 
 .site-nav__toggle[aria-expanded="true"] .site-nav__hamburger {
-  background: transparent;
+  background-color: transparent;
 }
 
 .site-nav__toggle[aria-expanded="true"] .site-nav__hamburger::before {

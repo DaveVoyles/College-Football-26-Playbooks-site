@@ -1,4 +1,4 @@
-const CACHE_NAME = "cfb26-playbook-v2";
+const CACHE_NAME = "cfb26-playbook-v3";
 const OFFLINE_URL = "./offline.html";
 const PRECACHE_PATHS = [
   "./",
