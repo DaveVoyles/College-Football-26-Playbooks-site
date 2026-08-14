@@ -10,3 +10,5 @@ Features:
 - PWA with offline support
 
 **Live site:** [davevoyles.github.io/College-Football-26-Playbooks-site](https://davevoyles.github.io/College-Football-26-Playbooks-site/)
+
+**Design system:** see [docs/DESIGN.md](docs/DESIGN.md) for the current visual/design inventory.
