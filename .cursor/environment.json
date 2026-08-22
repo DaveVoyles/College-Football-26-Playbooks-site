@@ -1,0 +1,4 @@
+{
+  "name": "CFB26 playbooks site portable cloud",
+  "install": "bash scripts/setup-cursor-cloud.sh"
+}
