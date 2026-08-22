@@ -5,3 +5,5 @@ Cloud: `scripts/setup-cursor-cloud.sh` checks that the static Pages files exist 
 Do not put Mini secrets, deploy tokens, or a live `.env` into Cloud.
 
 Mini / local: edit HTML/CSS, preview in a browser, GitHub Pages publish from `main`.
+
+GitHub Actions: `.github/workflows/cursor-cloud-setup.yml` runs the same script on `ubuntu-latest` (Node 22 when the prove needs npm/pnpm).
